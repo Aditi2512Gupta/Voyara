@@ -1,17 +1,67 @@
-# voyara
+# Voyara 🌍
 
-A new Flutter project.
+Voyara is an AI-powered travel planning and management application designed to make trip planning simpler, smarter, and more personalized.
 
-## Getting Started
+## ✨ Features
 
-This project is a starting point for a Flutter application.
+* 🤖 AI-powered personalized trip planning
+* 🗺️ Create and manage travel itineraries
+* 📍 Explore destinations and places
+* 💰 Track and manage travel expenses
+* 🧳 Organize trips in one place
+* 🔐 Secure user authentication
+* ☁️ Firebase-powered backend and data storage
 
-A few resources to get you started if this is your first Flutter project:
+## 🛠️ Tech Stack
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+* **Frontend:** Flutter & Dart
+* **Backend:** Firebase
+* **Authentication:** Firebase Authentication
+* **Database:** Cloud Firestore
+* **Storage:** Firebase Storage
+* **AI:** AI-powered travel planning
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Getting Started
+
+### Prerequisites
+
+* Flutter SDK
+* Dart SDK
+* Firebase account
+* Android device/emulator or supported Flutter platform
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Aditi2512Gupta/Voyara.git
+```
+
+Navigate to the project:
+
+```bash
+cd Voyara
+```
+
+Install dependencies:
+
+```bash
+flutter pub get
+```
+
+Run the application:
+
+```bash
+flutter run
+```
+
+## 📌 Project Status
+
+Voyara is currently under active development. New features and improvements are being added progressively.
+
+## 👩‍💻 Developer
+
+**Aditi Gupta**
+
+Built with Flutter ❤️
