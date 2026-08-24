@@ -1,0 +1,3 @@
+class DestinationDetailsRepository {
+  const DestinationDetailsRepository();
+}

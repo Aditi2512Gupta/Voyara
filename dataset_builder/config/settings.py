@@ -1,0 +1,7 @@
+COUNTRY = "India"
+
+MAX_THREADS = 20
+
+CHECKPOINT_INTERVAL = 50
+
+USER_AGENT = "VoyaraDatasetBuilder/1.0"

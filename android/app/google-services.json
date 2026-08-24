@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "308035912254",
+    "project_id": "voyara-38487",
+    "storage_bucket": "voyara-38487.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308035912254:android:a322ebc5ba0f341067076f",
+        "android_client_info": {
+          "package_name": "com.aditigupta.voyara"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308035912254-fedu35vkd1pv0b2f6fa235srfqpn1sv8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aditigupta.voyara",
+            "certificate_hash": "0c0454fa2a713dc6ff924fbf2545d959828720d3"
+          }
+        },
+        {
+          "client_id": "308035912254-89mv1r23svkg4j1ousf2cacvl7d8mvfh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLc4JPFQlxA01pqE340AW5Mr97PWTQTv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308035912254-89mv1r23svkg4j1ousf2cacvl7d8mvfh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "308035912254-3j263i9388o278qu0n7dlnob3i2gst56.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.voyara"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
