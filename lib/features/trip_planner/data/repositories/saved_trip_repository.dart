@@ -1,3 +1,4 @@
+import '../../../../core/services/notification_service.dart';
 import '../models/saved_trip_model.dart';
 import '../services/saved_trip_service.dart';
 
@@ -10,8 +11,30 @@ class SavedTripRepository {
 
   Future<void> saveTrip(
     SavedTripModel trip,
-  ) {
-    return _service.saveTrip(trip);
+  ) async {
+    await _service.saveTrip(trip);
+
+    try {
+      await NotificationService.instance.scheduleTripReminder(
+        destination: trip.destination,
+        travelDate: trip.startDate,
+        tripId: trip.id,
+      );
+    } catch (_) {}
+  }
+
+  Future<void> updateTrip(
+    SavedTripModel trip,
+  ) async {
+    await _service.updateTrip(trip);
+
+    try {
+      await NotificationService.instance.scheduleTripReminder(
+        destination: trip.destination,
+        travelDate: trip.startDate,
+        tripId: trip.id,
+      );
+    } catch (_) {}
   }
 
   Stream<List<SavedTripModel>> getTrips() {
@@ -20,7 +43,11 @@ class SavedTripRepository {
 
   Future<void> deleteTrip(
     String id,
-  ) {
-    return _service.deleteTrip(id);
+  ) async {
+    await _service.deleteTrip(id);
+
+    try {
+      await NotificationService.instance.cancelTripReminder(id);
+    } catch (_) {}
   }
 }

@@ -11,4 +11,8 @@ class TravelInterestRepository {
   Future<List<TravelInterestModel>> getInterests() {
     return _service.getInterests();
   }
+
+  Future<void> saveInterest(String name) {
+    return _service.saveInterest(name);
+  }
 }

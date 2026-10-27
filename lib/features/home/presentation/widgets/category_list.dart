@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../providers/selected_category_provider.dart';
 import '../../providers/category_list_provider.dart';
+import '../../providers/search_filter_provider.dart';
+import '../../providers/selected_category_provider.dart';
 import 'category_chip.dart';
 
 class CategoryList extends ConsumerWidget {
@@ -14,7 +16,7 @@ class CategoryList extends ConsumerWidget {
     final categoriesAsync = ref.watch(categoryListProvider);
 
     return SizedBox(
-      height: 42,
+      height: 84,
       child: categoriesAsync.when(
         loading: () => const Center(
           child: SizedBox(
@@ -43,8 +45,9 @@ class CategoryList extends ConsumerWidget {
                 label: category,
                 selected: isSelected,
                 onTap: () {
-                  ref.read(selectedCategoryProvider.notifier).state =
-                      category == "All" ? null : category;
+                  final newCategory = category == "All" ? null : category;
+                  ref.read(searchFilterProvider.notifier).setCategory(newCategory);
+                  context.push('/search');
                 },
               );
             },

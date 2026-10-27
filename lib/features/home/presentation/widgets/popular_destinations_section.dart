@@ -13,11 +13,13 @@ class PopularDestinationsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final popularAsync = ref.watch(popularDestinationsProvider);
-
     final countryAsync = ref.watch(popularCountryProvider);
 
     return popularAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const SizedBox(
+        height: 250,
+        child: Center(child: CircularProgressIndicator()),
+      ),
 
       error: (e, _) => Center(child: Text(e.toString())),
 
@@ -33,20 +35,21 @@ class PopularDestinationsSection extends ConsumerWidget {
           children: [
             SectionTitle(
               title: countryAsync.maybeWhen(
-                data: (location) => "⭐ Popular in ${location.country}",
-                orElse: () => "⭐ Popular",
+                data: (location) => "Popular in ${location.country}",
+                orElse: () => "Popular Destinations",
               ),
               onSeeAll: () {
                 context.push('/popular-destinations');
               },
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             SizedBox(
-              height: 280,
+              height: 255,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
+                clipBehavior: Clip.none,
                 itemCount: destinations.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 16),
                 itemBuilder: (_, index) {

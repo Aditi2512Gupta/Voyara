@@ -49,6 +49,30 @@ class SavedTripDayModel {
       estimatedCostValue: (map['estimatedCostValue'] as num?)?.toDouble() ?? 0,
     );
   }
+
+  SavedTripDayModel copyWith({
+    int? day,
+    String? date,
+    String? morning,
+    String? afternoon,
+    String? evening,
+    String? meals,
+    String? transport,
+    String? estimatedCost,
+    double? estimatedCostValue,
+  }) {
+    return SavedTripDayModel(
+      day: day ?? this.day,
+      date: date ?? this.date,
+      morning: morning ?? this.morning,
+      afternoon: afternoon ?? this.afternoon,
+      evening: evening ?? this.evening,
+      meals: meals ?? this.meals,
+      transport: transport ?? this.transport,
+      estimatedCost: estimatedCost ?? this.estimatedCost,
+      estimatedCostValue: estimatedCostValue ?? this.estimatedCostValue,
+    );
+  }
 }
 
 class SavedTripModel {
@@ -143,6 +167,44 @@ class SavedTripModel {
       createdAt: DateTime.parse(
         map['createdAt']?.toString() ?? DateTime.now().toIso8601String(),
       ),
+    );
+  }
+
+  SavedTripModel copyWith({
+    String? id,
+    String? destination,
+    double? latitude,
+    double? longitude,
+    DateTime? startDate,
+    int? days,
+    double? budget,
+    int? travelers,
+    List<String>? interests,
+    String? overview,
+    String? budgetSummary,
+    List<SavedTripDayModel>? dailyItinerary,
+    List<String>? packingChecklist,
+    List<String>? safetyTips,
+    List<String>? localTips,
+    DateTime? createdAt,
+  }) {
+    return SavedTripModel(
+      id: id ?? this.id,
+      destination: destination ?? this.destination,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      startDate: startDate ?? this.startDate,
+      days: days ?? this.days,
+      budget: budget ?? this.budget,
+      travelers: travelers ?? this.travelers,
+      interests: interests ?? this.interests,
+      overview: overview ?? this.overview,
+      budgetSummary: budgetSummary ?? this.budgetSummary,
+      dailyItinerary: dailyItinerary ?? this.dailyItinerary,
+      packingChecklist: packingChecklist ?? this.packingChecklist,
+      safetyTips: safetyTips ?? this.safetyTips,
+      localTips: localTips ?? this.localTips,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

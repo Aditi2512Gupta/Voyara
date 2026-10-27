@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../models/geoapify_place_model.dart';
 import '../models/location_model.dart';
+import '../models/route_model.dart';
 import '../services/geoapify_service.dart';
 
 class GeoapifyRepository {
@@ -262,6 +263,46 @@ class GeoapifyRepository {
       return places;
     } catch (_) {
       return [];
+    }
+  }
+
+  Future<RouteModel?> getRoute({
+    required double startLat,
+    required double startLon,
+    required double endLat,
+    required double endLon,
+    String mode = 'drive',
+  }) async {
+    // 1. Guard against invalid or uninitialized coordinates
+    if (startLat.isNaN || startLon.isNaN || endLat.isNaN || endLon.isNaN) return null;
+    if (startLat == 0.0 && startLon == 0.0) return null;
+    if (endLat == 0.0 && endLon == 0.0) return null;
+    if (startLat < -90.0 || startLat > 90.0 || endLat < -90.0 || endLat > 90.0) return null;
+    if (startLon < -180.0 || startLon > 180.0 || endLon < -180.0 || endLon > 180.0) return null;
+
+    try {
+      final data = await service.getRoute(
+        startLat: startLat,
+        startLon: startLon,
+        endLat: endLat,
+        endLon: endLon,
+        mode: mode,
+      );
+      if (data is Map<String, dynamic>) {
+        // If API returned an error payload
+        if (data.containsKey('error') || (data.containsKey('statusCode') && data['statusCode'] != 200)) {
+          debugPrint("Geoapify getRoute error payload: ${data['message'] ?? data['error']}");
+          return null;
+        }
+        final route = RouteModel.fromGeoapify(data);
+        if (route.points.isNotEmpty) {
+          return route;
+        }
+      }
+      return null;
+    } catch (e) {
+      debugPrint("Geoapify getRoute error: $e");
+      return null;
     }
   }
 }

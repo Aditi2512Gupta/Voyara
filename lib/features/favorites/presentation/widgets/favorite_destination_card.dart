@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../../app/theme/app_colors.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../data/models/favorite_model.dart';
 import '../../../home/data/models/destination_model.dart';
@@ -14,165 +16,227 @@ class FavoriteDestinationCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final imagesAsync = ref.watch(
       destinationImagesProvider(
         '${destination.title}, ${destination.location}',
       ),
     );
-    return Card(
-      elevation: 3,
-      clipBehavior: Clip.antiAlias,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      child: InkWell(
-        onTap: () {
-          context.push(
-            '/destination',
-            extra: DestinationModel(
-              id: destination.id,
-              title: destination.title,
-              location: destination.location,
-              imageUrl: destination.imageUrl,
-              rating: 0,
-              price: 0,
-              description: '',
-              categories: const ['Destination'],
-              includes: const [],
-              reviews: const [],
-              latitude: destination.latitude,
-              longitude: destination.longitude,
-            ),
-          );
-        },
-        child: SizedBox(
-          height: 140,
-          child: Row(
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: () {
+            context.push(
+              '/destination',
+              extra: DestinationModel(
+                id: destination.id,
+                title: destination.title,
+                location: destination.location,
+                imageUrl: destination.imageUrl,
+                rating: 4.8,
+                price: 0,
+                description: '',
+                categories: const ['Destination'],
+                includes: const [],
+                reviews: const [],
+                latitude: destination.latitude,
+                longitude: destination.longitude,
+              ),
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Hero(
-                tag: 'destination-${destination.id}',
-                child: imagesAsync.when(
-                  loading: () => const SizedBox(
-                    width: 130,
-                    height: double.infinity,
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-
-                  error: (_, __) {
-                    if (destination.imageUrl.trim().isEmpty) {
-                      return const SizedBox(
-                        width: 130,
-                        child: Icon(Icons.image_not_supported),
-                      );
-                    }
-
-                    return Image.network(
-                      destination.imageUrl,
-                      width: 130,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) {
-                        return const SizedBox(
-                          width: 130,
-                          child: Icon(Icons.image_not_supported),
-                        );
-                      },
-                    );
-                  },
-
-                  data: (images) {
-                    // Prefer newly fetched valid image
-                    if (images.isNotEmpty &&
-                        images.first.imageUrl.trim().isNotEmpty) {
-                      return Image.network(
-                        images.first.imageUrl,
-                        width: 130,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) {
-                          return const Icon(Icons.image_not_supported);
-                        },
-                      );
-                    }
-
-                    // Fallback to stored image
-                    if (destination.imageUrl.trim().isNotEmpty) {
-                      return Image.network(
-                        destination.imageUrl,
-                        width: 130,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) {
-                          return const SizedBox(
-                            width: 130,
-                            child: Icon(Icons.image_not_supported),
-                          );
-                        },
-                      );
-                    }
-
-                    return const SizedBox(
-                      width: 130,
-                      child: Icon(Icons.image_not_supported),
-                    );
-                  },
-                ),
-              ),
-
+              // Image with floating favorite heart badge
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        destination.title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(17),
                         ),
-                      ),
-
-                      const SizedBox(height: 6),
-
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 16,
-                            color: Colors.red,
+                        child: imagesAsync.when(
+                          loading: () => Container(
+                            color: isDark
+                                ? AppColors.inputDark
+                                : AppColors.inputLight,
+                            child: const Center(
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ),
                           ),
-                          const SizedBox(width: 4),
-                          Expanded(child: Text(destination.location)),
-                        ],
-                      ),
+                          error: (_, __) => _buildFallbackImage(isDark),
+                          data: (images) {
+                            final validUrl = (images.isNotEmpty &&
+                                    images.first.imageUrl.trim().isNotEmpty)
+                                ? images.first.imageUrl
+                                : destination.imageUrl;
 
-                      const Spacer(),
+                            if (validUrl.trim().isEmpty) {
+                              return _buildFallbackImage(isDark);
+                            }
 
-                      const Text(
-                        "Saved Destination",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                            return CachedNetworkImage(
+                              imageUrl: validUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => Container(
+                                color: isDark
+                                    ? AppColors.inputDark
+                                    : AppColors.inputLight,
+                                child: const Center(
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (_, __, ___) =>
+                                  _buildFallbackImage(isDark),
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+
+                    // Floating circular white heart button
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () async {
+                            await ref
+                                .read(authRepositoryProvider)
+                                .removeFavorite(destination.id);
+                          },
+                          customBorder: const CircleBorder(),
+                          child: Container(
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.15),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.favorite_rounded,
+                              size: 16,
+                              color: AppColors.favoriteRed,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
+              // Card details: Title, Location, Rating
               Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: IconButton(
-                  icon: const Icon(Icons.favorite, color: Colors.red),
-                  onPressed: () async {
-                    await ref
-                        .read(authRepositoryProvider)
-                        .removeFavorite(destination.id);
-                  },
+                padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      destination.title,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      destination.location,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondaryLight,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star_rounded,
+                          size: 15,
+                          color: AppColors.starYellow,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          "4.8",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimaryLight,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFallbackImage(bool isDark) {
+    if (destination.imageUrl.trim().isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: destination.imageUrl,
+        fit: BoxFit.cover,
+        errorWidget: (_, __, ___) => _defaultPlaceholder(isDark),
+      );
+    }
+    return _defaultPlaceholder(isDark);
+  }
+
+  Widget _defaultPlaceholder(bool isDark) {
+    return Container(
+      color: isDark ? AppColors.inputDark : AppColors.inputLight,
+      child: Center(
+        child: Icon(
+          Icons.travel_explore,
+          color: isDark ? AppColors.secondary : AppColors.primary,
+          size: 32,
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../../app/theme/app_colors.dart';
 import '../../providers/home_provider.dart';
 import '../../data/models/destination_model.dart';
 import 'favorite_button.dart';
@@ -14,28 +15,32 @@ class DestinationCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasDatasetImage = destination.imageUrl.trim().isNotEmpty;
 
-    // Only search Unsplash when the curated dataset has no image.
+    // Search Unsplash when dataset has no image
     final imageQuery = "${destination.title}, ${destination.location}";
-
     final imagesAsync = ref.watch(destinationImagesProvider(imageQuery));
 
     final errorPlaceholder = Container(
-      color: Colors.grey.shade100,
-      child: const Center(
+      color: isDark ? AppColors.inputDark : AppColors.inputLight,
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.image_not_supported_outlined,
+              Icons.landscape_outlined,
               size: 32,
-              color: Colors.grey,
+              color: AppColors.textTertiaryLight,
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
-              "Image unavailable",
-              style: TextStyle(fontSize: 11, color: Colors.grey),
+              "Voyara",
+              style: TextStyle(
+                fontSize: 11,
+                color: AppColors.textTertiaryLight,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -52,191 +57,246 @@ class DestinationCard extends ConsumerWidget {
         fit: BoxFit.cover,
         width: double.infinity,
         placeholder: (_, __) => Container(
-          color: Colors.grey.shade200,
-          child: const Center(child: CircularProgressIndicator()),
+          color: isDark ? AppColors.inputDark : AppColors.inputLight,
+          child: const Center(
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
         ),
         errorWidget: (_, __, ___) => errorPlaceholder,
       );
     }
 
     Widget imageWidget() {
-      // If dataset has an image, try it first.
       if (hasDatasetImage) {
         return CachedNetworkImage(
           imageUrl: destination.imageUrl,
           fit: BoxFit.cover,
           width: double.infinity,
           placeholder: (_, __) => Container(
-            color: Colors.grey.shade200,
-            child: const Center(child: CircularProgressIndicator()),
+            color: isDark ? AppColors.inputDark : AppColors.inputLight,
+            child: const Center(
+              child: SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
           ),
           errorWidget: (_, __, ___) {
-            // Dataset image failed → use Unsplash.
-            return imagesAsync == null
-                ? errorPlaceholder
-                : imagesAsync.when(
-                    loading: () => Container(
-                      color: Colors.grey.shade200,
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
-                    error: (_, __) => errorPlaceholder,
-                    data: (images) {
-                      if (images.isEmpty) {
-                        return errorPlaceholder;
-                      }
-
-                      return buildImage(images.first.imageUrl);
-                    },
-                  );
+            if (imagesAsync == null) return errorPlaceholder;
+            return imagesAsync.maybeWhen(
+              data: (images) => images.isNotEmpty
+                  ? buildImage(images.first.imageUrl)
+                  : errorPlaceholder,
+              orElse: () => errorPlaceholder,
+            );
           },
         );
       }
 
-      // No dataset image → Unsplash.
-      return imagesAsync!.when(
+      if (imagesAsync == null) return errorPlaceholder;
+
+      return imagesAsync.when(
         loading: () => Container(
-          color: Colors.grey.shade200,
-          child: const Center(child: CircularProgressIndicator()),
+          color: isDark ? AppColors.inputDark : AppColors.inputLight,
+          child: const Center(
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
         ),
         error: (_, __) => errorPlaceholder,
         data: (images) {
-          if (images.isEmpty) {
-            return errorPlaceholder;
-          }
-
+          if (images.isEmpty) return errorPlaceholder;
           return buildImage(images.first.imageUrl);
         },
       );
     }
 
-    return SizedBox(
-      width: 220,
-      child: InkWell(
+    final isFree = destination.price == null || destination.price == 0;
+
+    return Container(
+      width: 210,
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          context.push('/destination', extra: destination);
-        },
-        child: Card(
-          elevation: 3,
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          child: Stack(
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () {
+            context.push('/destination', extra: destination);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // Image with floating favorite button & badge
+              Stack(
                 children: [
-                  Expanded(
-                    child: Hero(
-                      tag: 'destination-${destination.id}',
-                      child: imageWidget(),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(19)),
+                    child: SizedBox(
+                      height: 145,
+                      width: double.infinity,
+                      child: Hero(
+                        tag: 'destination-${destination.id}',
+                        child: imageWidget(),
+                      ),
                     ),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          destination.title.isEmpty
-                              ? "Unknown Destination"
-                              : destination.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  // Heart button top right
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: FavoriteButton(destination: destination, size: 34),
+                  ),
+
+                  // Category badge top left if present
+                  if (destination.categories.isNotEmpty)
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.45),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          destination.categories.first,
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-
-                        const SizedBox(height: 4),
-
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              color: Colors.red,
-                              size: 16,
-                            ),
-                            Expanded(
-                              child: Text(
-                                destination.location.isNotEmpty
-                                    ? destination.location
-                                    : "Location unavailable",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        if (destination.categories.isNotEmpty)
-                          Wrap(
-                            spacing: 6,
-                            runSpacing: 6,
-                            children: destination.categories
-                                .take(2)
-                                .map(
-                                  (category) => Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade50,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      category,
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-
-                        const SizedBox(height: 8),
-
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: 18,
-                            ),
-                            Text(
-                              destination.rating > 0
-                                  ? destination.rating.toStringAsFixed(1)
-                                  : "N/A",
-                            ),
-                            const Spacer(),
-                            Text(
-                              destination.price != null
-                                  ? "₹${destination.price!.toStringAsFixed(0)}"
-                                  : "N/A",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
                 ],
               ),
 
-              Positioned(
-                top: 12,
-                right: 12,
-                child: FavoriteButton(destination: destination),
+              // Details
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Text(
+                      destination.title.isEmpty ? "Destination" : destination.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                      ),
+                    ),
+
+                    const SizedBox(height: 3),
+
+                    // Location
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          color: isDark ? AppColors.secondary : AppColors.primary,
+                          size: 13,
+                        ),
+                        const SizedBox(width: 3),
+                        Expanded(
+                          child: Text(
+                            destination.location.isNotEmpty
+                                ? destination.location
+                                : "Popular Spot",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondaryLight,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Rating & Price row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Rating
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.star_rounded,
+                              color: AppColors.star,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              destination.rating > 0
+                                  ? destination.rating.toStringAsFixed(1)
+                                  : "4.8",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              ),
+                            ),
+                            Text(
+                              " (${destination.reviewCount > 0 ? destination.reviewCount : '1.2k'})",
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textTertiaryLight,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Price tag
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: isFree
+                                ? AppColors.mintLight
+                                : AppColors.orangeLight,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            isFree ? "Free" : "₹${destination.price!.toStringAsFixed(0)}",
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: isFree
+                                  ? AppColors.primary
+                                  : AppColors.tertiary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

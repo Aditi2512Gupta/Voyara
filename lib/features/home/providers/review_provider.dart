@@ -9,8 +9,8 @@ final reviewRepositoryProvider = Provider(
 );
 
 final reviewsProvider =
-    FutureProvider.family<List<ReviewModel>, String>((ref, destinationId) {
+    StreamProvider.family<List<ReviewModel>, String>((ref, destinationId) {
   return ref
-      .read(reviewRepositoryProvider)
+      .watch(reviewRepositoryProvider)
       .getReviews(destinationId);
 });

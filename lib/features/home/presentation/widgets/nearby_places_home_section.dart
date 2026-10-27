@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/home_data_provider.dart';
 import 'destination_card.dart';
+import 'section_title.dart';
 
 class NearbyPlacesHomeSection extends ConsumerWidget {
   const NearbyPlacesHomeSection({super.key});
@@ -28,17 +29,15 @@ class NearbyPlacesHomeSection extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (weekend.isNotEmpty) ...[
-              Text(
-                "🚗 Weekend Getaways (100–300 km)",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+              const SectionTitle(
+                title: "🚗 Weekend Getaways",
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               SizedBox(
-                height: 280,
+                height: 255,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
+                  clipBehavior: Clip.none,
                   itemCount: weekend.length,
                   separatorBuilder: (_, __) => const SizedBox(width: 16),
                   itemBuilder: (_, index) {
@@ -46,20 +45,18 @@ class NearbyPlacesHomeSection extends ConsumerWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
             ],
             if (beyond.isNotEmpty) ...[
-              Text(
-                "✈️ Explore Beyond (300–1000 km)",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+              const SectionTitle(
+                title: "✈️ Explore Beyond",
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               SizedBox(
-                height: 280,
+                height: 255,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
+                  clipBehavior: Clip.none,
                   itemCount: beyond.length,
                   separatorBuilder: (_, __) => const SizedBox(width: 16),
                   itemBuilder: (_, index) {

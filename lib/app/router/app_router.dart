@@ -39,7 +39,48 @@ final appRouter = GoRouter(
     // ),
     GoRoute(
       path: '/home',
-      builder: (context, state) => const MainNavigationPage(),
+      redirect: (context, state) {
+        final tabParam = state.uri.queryParameters['tab'];
+        if (tabParam == 'ai' || tabParam == 'planner') {
+          return '/trip-planner';
+        }
+        return null;
+      },
+      builder: (context, state) {
+        int initialIndex = 0;
+        final tabParam = state.uri.queryParameters['tab'];
+        if (tabParam != null) {
+          if (tabParam == 'trips' || tabParam == '1') {
+            initialIndex = 1;
+          } else if (tabParam == 'favorites' || tabParam == '2') {
+            initialIndex = 2;
+          } else if (tabParam == 'profile' || tabParam == '3' || tabParam == '4') {
+            initialIndex = 3;
+          } else {
+            final parsed = int.tryParse(tabParam);
+            if (parsed != null && parsed >= 0 && parsed < 4) {
+              initialIndex = parsed;
+            }
+          }
+        } else if (state.extra is int) {
+          final extra = state.extra as int;
+          if (extra == 4) {
+            initialIndex = 3;
+          } else if (extra >= 0 && extra < 4) {
+            initialIndex = extra;
+          }
+        }
+
+        return MainNavigationPage(initialIndex: initialIndex);
+      },
+    ),
+    GoRoute(
+      path: '/trips',
+      redirect: (context, state) => '/home?tab=1',
+    ),
+    GoRoute(
+      path: '/favorites',
+      redirect: (context, state) => '/home?tab=2',
     ),
 
     GoRoute(
@@ -93,9 +134,9 @@ final appRouter = GoRouter(
       builder: (context, state) => const EditProfilePage(),
     ),
 
-    GoRoute(path: '/settings', builder: (_, __) => const SettingsPage()),
+    GoRoute(path: '/settings', builder: (_, _) => const SettingsPage()),
 
-    GoRoute(path: '/search', builder: (_, __) => const SearchResultsPage()),
+    GoRoute(path: '/search', builder: (_, _) => const SearchResultsPage()),
 
     GoRoute(
       path: '/trip-planner',

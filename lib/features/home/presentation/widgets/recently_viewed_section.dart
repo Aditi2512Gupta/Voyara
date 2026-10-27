@@ -26,9 +26,10 @@ class RecentlyViewedSection extends ConsumerWidget {
         const SizedBox(height: 16),
 
         SizedBox(
-          height: 280,
+          height: 255,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
             itemCount: destinations.length,
             separatorBuilder: (_, __) =>
                 const SizedBox(width: 16),

@@ -16,4 +16,10 @@ class TravelInterestModel {
       name: map['name'] ?? '',
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+    };
+  }
 }

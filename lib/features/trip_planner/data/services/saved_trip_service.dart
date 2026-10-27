@@ -4,9 +4,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/saved_trip_model.dart';
 
 class SavedTripService {
-  final _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore? _firestoreInstance;
+  FirebaseFirestore get _firestore =>
+      _firestoreInstance ??= FirebaseFirestore.instance;
 
   Future<void> saveTrip(SavedTripModel trip) {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('saved_trips')
+        .doc(trip.id)
+        .set(trip.toMap());
+  }
+
+  Future<void> updateTrip(SavedTripModel trip) {
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
     return _firestore

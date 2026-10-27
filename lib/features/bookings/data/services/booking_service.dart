@@ -2,19 +2,46 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../core/data/repositories/notification_repository.dart';
+import '../../../../core/services/notification_service.dart';
 import '../models/booking_model.dart';
 
 class BookingService {
-  BookingService();
+  BookingService({
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+    NotificationRepository? notificationRepository,
+  })  : _customFirestore = firestore,
+        _customAuth = auth,
+        _customNotificationRepository = notificationRepository;
 
-  final _firestore = FirebaseFirestore.instance;
-  final _auth = FirebaseAuth.instance;
-  final _notificationRepository = NotificationRepository();
+  final FirebaseFirestore? _customFirestore;
+  final FirebaseAuth? _customAuth;
+  final NotificationRepository? _customNotificationRepository;
+
+  FirebaseFirestore get _firestore =>
+      _customFirestore ?? FirebaseFirestore.instance;
+
+  FirebaseAuth? get _auth {
+    if (_customAuth != null) return _customAuth;
+    try {
+      return FirebaseAuth.instance;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  NotificationRepository get _notificationRepository =>
+      _customNotificationRepository ?? NotificationRepository();
 
   Future<void> createBooking(BookingModel booking) async {
+    final user = _auth?.currentUser;
+    if (user == null) {
+      throw Exception('User must be logged in to create a booking');
+    }
+
     await _firestore
         .collection('users')
-        .doc(_auth.currentUser!.uid)
+        .doc(user.uid)
         .collection('bookings')
         .doc(booking.id)
         .set(booking.toMap());
@@ -27,9 +54,14 @@ class BookingService {
   }
 
   Stream<List<BookingModel>> bookings() {
+    final user = _auth?.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
+
     return _firestore
         .collection('users')
-        .doc(_auth.currentUser!.uid)
+        .doc(user.uid)
         .collection('bookings')
         .orderBy('travelDate', descending: false)
         .snapshots()
@@ -41,9 +73,14 @@ class BookingService {
   }
 
   Future cancelBooking(String bookingId) async {
+    final user = _auth?.currentUser;
+    if (user == null) {
+      throw Exception('User must be logged in to cancel a booking');
+    }
+
     final bookingRef = _firestore
         .collection('users')
-        .doc(_auth.currentUser!.uid)
+        .doc(user.uid)
         .collection('bookings')
         .doc(bookingId);
 
@@ -60,6 +97,10 @@ class BookingService {
 
     await bookingRef.update({'status': 'cancelled'});
 
+    try {
+      await NotificationService.instance.cancelTripReminder(bookingId);
+    } catch (_) {}
+
     await _notificationRepository.addNotification(
       title: 'Trip Cancelled',
       body: 'Your trip to ${booking.destinationName} has been cancelled.',
@@ -67,9 +108,12 @@ class BookingService {
   }
 
   Future<void> updateCompletedTrips() async {
+    final user = _auth?.currentUser;
+    if (user == null) return;
+
     final snapshot = await _firestore
         .collection('users')
-        .doc(_auth.currentUser!.uid)
+        .doc(user.uid)
         .collection('bookings')
         .where('status', isEqualTo: 'upcoming')
         .get();

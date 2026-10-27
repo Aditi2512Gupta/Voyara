@@ -12,4 +12,20 @@ class UserProfileModel {
   final String photoUrl;
   final String phone;
   final DateTime joinedOn;
+
+  UserProfileModel copyWith({
+    String? name,
+    String? email,
+    String? photoUrl,
+    String? phone,
+    DateTime? joinedOn,
+  }) {
+    return UserProfileModel(
+      name: name ?? this.name,
+      email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
+      phone: phone ?? this.phone,
+      joinedOn: joinedOn ?? this.joinedOn,
+    );
+  }
 }

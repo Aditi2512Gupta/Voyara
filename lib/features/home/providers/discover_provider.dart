@@ -259,10 +259,10 @@ final discoverSearchProvider =
 
     filtered.sort((a, b) {
       final scoreA =
-          _calculateSearchScore(a, q, userLoc);
+          calculateSearchScore(a, q, userLoc);
 
       final scoreB =
-          _calculateSearchScore(b, q, userLoc);
+          calculateSearchScore(b, q, userLoc);
 
       return scoreB.compareTo(scoreA);
     });
@@ -271,7 +271,7 @@ final discoverSearchProvider =
   },
 );
 
-int _calculateSearchScore(
+int calculateSearchScore(
   DestinationModel destination,
   String query,
   LocationModel? userLoc,

@@ -12,6 +12,7 @@ import '../data/repositories/weather_repository.dart';
 import '../data/services/geoapify_service.dart';
 import '../data/repositories/geoapify_repository.dart';
 import '../data/models/weather_model.dart';
+import '../data/models/daily_forecast_model.dart';
 import '../data/models/hotel_model.dart';
 import '../data/services/hotel_service.dart';
 import '../data/repositories/hotel_repository.dart';
@@ -25,6 +26,7 @@ import '../data/models/nearby_result_model.dart';
 import '../data/repositories/popular_repository.dart';
 import '../data/datasources/local/voyara_local_datasource.dart';
 import '../data/repositories/voyara_local_repository.dart';
+import '../data/models/route_model.dart';
 
 // ============================================================
 // OPEN TRIP MAP
@@ -93,6 +95,16 @@ final weatherProvider =
           .getWeather(latitude: location.lat, longitude: location.lon);
     });
 
+final forecastProvider =
+    FutureProvider.family<List<DailyForecastModel>, ({double lat, double lon})>((
+      ref,
+      location,
+    ) {
+      return ref
+          .read(weatherRepositoryProvider)
+          .getForecast(latitude: location.lat, longitude: location.lon);
+    });
+
 // ============================================================
 // GEOAPIFY
 // ============================================================
@@ -104,6 +116,30 @@ final geoapifyServiceProvider = Provider<GeoapifyService>(
 final geoapifyRepositoryProvider = Provider<GeoapifyRepository>(
   (ref) => GeoapifyRepository(ref.read(geoapifyServiceProvider)),
 );
+
+// ============================================================
+// ROUTING
+// ============================================================
+
+typedef RouteQuery = ({
+  double startLat,
+  double startLon,
+  double endLat,
+  double endLon,
+});
+
+final routeFutureProvider =
+    FutureProvider.autoDispose.family<RouteModel?, RouteQuery>((
+  ref,
+  query,
+) async {
+  return ref.read(geoapifyRepositoryProvider).getRoute(
+        startLat: query.startLat,
+        startLon: query.startLon,
+        endLat: query.endLat,
+        endLon: query.endLon,
+      );
+});
 
 // ============================================================
 // HOME REPOSITORY

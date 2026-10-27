@@ -93,16 +93,32 @@ class AuthRepository {
     return _auth.authStateChanges();
   }
 
-  Future<void> updateProfile({required String name}) async {
-    final user = _auth.currentUser!;
+  Future<void> updateProfile({required String name, String? phone}) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User must be logged in to update profile');
+    }
 
     await user.updateDisplayName(name);
 
-    await _firestore.collection('users').doc(user.uid).update({'name': name});
+    final updates = <String, dynamic>{
+      'name': name,
+    };
+    if (phone != null) {
+      updates['phone'] = phone;
+    }
+
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .set(updates, SetOptions(merge: true));
   }
 
   Future<void> uploadProfilePhoto(File image) async {
-    final user = _auth.currentUser!;
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User must be logged in to upload profile photo');
+    }
 
     final ref = _storage.ref().child('profile_photos').child('${user.uid}.jpg');
 
@@ -112,13 +128,16 @@ class AuthRepository {
 
     await user.updatePhotoURL(url);
 
-    await _firestore.collection('users').doc(user.uid).update({
+    await _firestore.collection('users').doc(user.uid).set({
       'photoUrl': url,
-    });
+    }, SetOptions(merge: true));
   }
 
   Future<void> addFavorite(DestinationModel destination) async {
-    final user = _auth.currentUser!;
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User must be logged in to add favorites');
+    }
 
     await _firestore
         .collection('users')
@@ -133,7 +152,10 @@ class AuthRepository {
   }
 
   Future<void> removeFavorite(String destinationId) async {
-    final user = _auth.currentUser!;
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User must be logged in to remove favorites');
+    }
 
     await _firestore
         .collection('users')
@@ -144,7 +166,10 @@ class AuthRepository {
   }
 
   Stream<List<String>> favoriteIds() {
-    final user = _auth.currentUser!;
+    final user = _auth.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
 
     return _firestore
         .collection('users')
@@ -155,7 +180,10 @@ class AuthRepository {
   }
 
   Stream<List<FavoriteModel>> favorites() {
-    final user = _auth.currentUser!;
+    final user = _auth.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
 
     return _firestore
         .collection('users')

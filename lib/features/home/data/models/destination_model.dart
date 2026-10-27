@@ -41,6 +41,7 @@ class DestinationModel {
   final double longitude;
   final double? distance;
   final String wikipedia;
+  final int reviewCount;
 
   const DestinationModel({
     required this.id,
@@ -57,6 +58,7 @@ class DestinationModel {
     required this.longitude,
     this.distance,
     this.wikipedia = '',
+    this.reviewCount = 0,
   });
 
   // ------------------------------------------------------------
@@ -79,6 +81,7 @@ class DestinationModel {
       longitude: (map['longitude'] as num?)?.toDouble() ?? 0,
       distance: (map['distance'] as num?)?.toDouble(),
       wikipedia: map['wikipedia'] ?? '',
+      reviewCount: (map['reviewCount'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -97,6 +100,7 @@ class DestinationModel {
       'longitude': longitude,
       'distance': distance,
       'wikipedia': wikipedia,
+      'reviewCount': reviewCount,
     };
   }
 
@@ -318,6 +322,7 @@ class DestinationModel {
       latitude: (json["latitude"] as num?)?.toDouble() ?? 0,
       longitude: (json["longitude"] as num?)?.toDouble() ?? 0,
       wikipedia: "",
+      reviewCount: (json["review_count"] as num?)?.toInt() ?? 0,
     );
   }
 }

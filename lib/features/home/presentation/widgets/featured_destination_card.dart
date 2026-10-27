@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../../app/theme/app_colors.dart';
 import '../../providers/home_provider.dart';
 import '../../data/models/destination_model.dart';
+import 'favorite_button.dart';
 
 class FeaturedDestinationCard extends ConsumerWidget {
   const FeaturedDestinationCard({super.key, required this.destination});
@@ -13,137 +15,190 @@ class FeaturedDestinationCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final imageQuery = "${destination.title}, ${destination.location}";
     final imagesAsync = ref.watch(destinationImagesProvider(imageQuery));
 
     final errorPlaceholder = Container(
-      color: Colors.grey.shade100,
+      color: isDark ? AppColors.inputDark : AppColors.inputLight,
       alignment: Alignment.center,
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.image_not_supported_outlined,
-            size: 48,
-            color: Colors.grey,
+            Icons.landscape_outlined,
+            size: 40,
+            color: AppColors.textTertiaryLight,
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
           Text(
-            "Image unavailable",
+            "Voyara",
             style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
+              fontSize: 12,
+              color: AppColors.textTertiaryLight,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
       ),
     );
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(24),
-      onTap: () {
-        context.push('/destination', extra: destination);
-      },
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          children: [
-            Hero(
-              tag: 'destination-${destination.id}',
-              child: imagesAsync.when(
-                loading: () => Container(
-                  color: Colors.grey.shade200,
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-
-                error: (_, __) {
-                  if (destination.imageUrl.isEmpty) {
-                    return errorPlaceholder;
-                  }
-
-                  return CachedNetworkImage(
-                    imageUrl: destination.imageUrl,
-                    fit: BoxFit.cover,
-                    errorWidget: (_, __, ___) => errorPlaceholder,
-                  );
-                },
-
-                data: (images) {
-                  final imageUrl = images.isNotEmpty
-                      ? images.first.imageUrl
-                      : destination.imageUrl;
-
-                  if (imageUrl.isEmpty) {
-                    return errorPlaceholder;
-                  }
-
-                  return CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (_, __) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (_, __, ___) => errorPlaceholder,
-                  );
-                },
-              ),
-            ),
-
-            Container(
-              height: 260,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Colors.black.withValues(alpha: 0.75),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
-
-            Positioned(
-              left: 20,
-              right: 20,
-              bottom: 20,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    destination.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  Text(
-                    destination.location,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-
-                  if (destination.categories.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6),
-                      child: Wrap(
-                        spacing: 6,
-                        children: destination.categories
-                            .take(3)
-                            .map(
-                              (category) => Chip(
-                                label: Text(category),
-                                visualDensity: VisualDensity.compact,
-                              ),
-                            )
-                            .toList(),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              context.push('/destination', extra: destination);
+            },
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Hero(
+                  tag: 'destination-${destination.id}',
+                  child: imagesAsync.when(
+                    loading: () => Container(
+                      color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                      child: const Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
                       ),
                     ),
-                ],
-              ),
+                    error: (_, __) {
+                      if (destination.imageUrl.isEmpty) return errorPlaceholder;
+                      return CachedNetworkImage(
+                        imageUrl: destination.imageUrl,
+                        fit: BoxFit.cover,
+                        errorWidget: (_, __, ___) => errorPlaceholder,
+                      );
+                    },
+                    data: (images) {
+                      final imageUrl = images.isNotEmpty
+                          ? images.first.imageUrl
+                          : destination.imageUrl;
+
+                      if (imageUrl.isEmpty) return errorPlaceholder;
+
+                      return CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (_, __) => Container(
+                          color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                          child: const Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (_, __, ___) => errorPlaceholder,
+                      );
+                    },
+                  ),
+                ),
+
+                // Gradient Overlay
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.8),
+                        Colors.black.withValues(alpha: 0.15),
+                        Colors.transparent,
+                      ],
+                      stops: const [0.0, 0.45, 0.7],
+                    ),
+                  ),
+                ),
+
+                // Favorite button top right
+                Positioned(
+                  top: 14,
+                  right: 14,
+                  child: FavoriteButton(destination: destination, size: 36),
+                ),
+
+                // Content bottom
+                Positioned(
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        destination.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on,
+                            color: Colors.white70,
+                            size: 14,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              destination.location,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          if (destination.rating > 0) ...[
+                            const Icon(
+                              Icons.star_rounded,
+                              color: AppColors.star,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              destination.rating.toStringAsFixed(1),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -6,38 +6,87 @@ import '../../data/models/destination_model.dart';
 import '../../../favorites/providers/favorites_provider.dart';
 
 class FavoriteButton extends ConsumerWidget {
-  const FavoriteButton({super.key, required this.destination});
+  const FavoriteButton({
+    super.key,
+    required this.destination,
+    this.size = 38,
+  });
 
   final DestinationModel destination;
+  final double size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesAsync = ref.watch(favoritesProvider);
 
     return favoritesAsync.when(
-      loading: () => const CircleAvatar(
-        backgroundColor: Colors.white,
+      loading: () => Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        alignment: Alignment.center,
         child: SizedBox(
-          width: 18,
-          height: 18,
-          child: CircularProgressIndicator(strokeWidth: 2),
+          width: size * 0.45,
+          height: size * 0.45,
+          child: const CircularProgressIndicator(strokeWidth: 2),
         ),
       ),
 
-      error: (_, __) => const CircleAvatar(
-        backgroundColor: Colors.white,
-        child: Icon(Icons.favorite_border, color: Colors.red),
+      error: (_, __) => Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          iconSize: size * 0.55,
+          icon: const Icon(Icons.favorite_border, color: Color(0xFFEF4444)),
+          onPressed: null,
+        ),
       ),
 
       data: (favorites) {
         final isFavorite = favorites.any((item) => item.id == destination.id);
 
-        return CircleAvatar(
-          backgroundColor: Colors.white,
+        return Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.12),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           child: IconButton(
+            padding: EdgeInsets.zero,
+            iconSize: size * 0.55,
             icon: Icon(
               isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: Colors.red,
+              color: isFavorite ? const Color(0xFFEF4444) : const Color(0xFF6B7A78),
             ),
             onPressed: () async {
               final repo = ref.read(authRepositoryProvider);

@@ -44,4 +44,19 @@ class GeoapifyService {
       '&apiKey=${ApiConstants.geoapifyApiKey}',
     );
   }
-}
+
+  Future<dynamic> getRoute({
+    required double startLat,
+    required double startLon,
+    required double endLat,
+    required double endLon,
+    String mode = 'drive',
+  }) {
+    return apiService.get(
+      'https://api.geoapify.com/v1/routing'
+      '?waypoints=$startLat,$startLon|$endLat,$endLon'
+      '&mode=$mode'
+      '&apiKey=${ApiConstants.geoapifyApiKey}',
+    );
+  }
+}

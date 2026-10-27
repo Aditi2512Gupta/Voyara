@@ -18,4 +18,17 @@ class WeatherService {
       '&units=metric',
     );
   }
+
+  Future<dynamic> getForecast({
+    required double lat,
+    required double lon,
+  }) {
+    return apiService.get(
+      '${ApiConstants.weatherBaseUrl}/forecast'
+      '?lat=$lat'
+      '&lon=$lon'
+      '&appid=${ApiConstants.weatherApiKey}'
+      '&units=metric',
+    );
+  }
 }
