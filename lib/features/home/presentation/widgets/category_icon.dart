@@ -37,7 +37,9 @@ enum VoyaraCategoryType {
       return VoyaraCategoryType.mall;
     }
     // 2. Market (storefront / shop)
-    if (lower.contains('market') || lower.contains('bazaar') || lower.contains('shop')) {
+    if (lower.contains('market') ||
+        lower.contains('bazaar') ||
+        lower.contains('shop')) {
       return VoyaraCategoryType.market;
     }
     // 3. Mausoleum (monument / dome)
@@ -233,12 +235,19 @@ class _CategoryIconPainter extends CustomPainter {
 
   // Curated palette matching Voyara theme
   Color get mint => isSelected ? Colors.white : const Color(0xFF2EC4B6);
-  Color get teal => isSelected ? const Color(0xFFE2F6F4) : const Color(0xFF38B29C);
-  Color get darkTeal => isSelected ? const Color(0xFF092929) : const Color(0xFF143838);
-  Color get orange => isSelected ? const Color(0xFFFFD4C4) : const Color(0xFFF26E42);
-  Color get gold => isSelected ? const Color(0xFFFFE8A3) : const Color(0xFFE5A93C);
-  Color get subtleTeal => isSelected ? const Color(0x80FFFFFF) : const Color(0xFF1B5958);
-  Color get highlight => isSelected ? Colors.white : (isDark ? Colors.white : const Color(0xFF142121));
+  Color get teal =>
+      isSelected ? const Color(0xFFE2F6F4) : const Color(0xFF38B29C);
+  Color get darkTeal =>
+      isSelected ? const Color(0xFF092929) : const Color(0xFF143838);
+  Color get orange =>
+      isSelected ? const Color(0xFFFFD4C4) : const Color(0xFFF26E42);
+  Color get gold =>
+      isSelected ? const Color(0xFFFFE8A3) : const Color(0xFFE5A93C);
+  Color get subtleTeal =>
+      isSelected ? const Color(0x80FFFFFF) : const Color(0xFF1B5958);
+  Color get highlight => isSelected
+      ? Colors.white
+      : (isDark ? Colors.white : const Color(0xFF142121));
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -376,7 +385,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(3.5, 19.0), const Offset(20.5, 19.0), branchPaint);
+    canvas.drawLine(
+      const Offset(3.5, 19.0),
+      const Offset(20.5, 19.0),
+      branchPaint,
+    );
 
     // Tiny branch leaf
     final leafPaint = Paint()
@@ -394,8 +407,16 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(11.5, 16.5), const Offset(11.5, 19.0), legPaint);
-    canvas.drawLine(const Offset(13.5, 16.5), const Offset(13.5, 19.0), legPaint);
+    canvas.drawLine(
+      const Offset(11.5, 16.5),
+      const Offset(11.5, 19.0),
+      legPaint,
+    );
+    canvas.drawLine(
+      const Offset(13.5, 16.5),
+      const Offset(13.5, 19.0),
+      legPaint,
+    );
 
     // Bird main body & tail
     final bodyPath = Path()
@@ -527,7 +548,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..color = darkTeal
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.8;
-    canvas.drawLine(const Offset(8.2, 10.5), const Offset(15.8, 10.5), linePaint);
+    canvas.drawLine(
+      const Offset(8.2, 10.5),
+      const Offset(15.8, 10.5),
+      linePaint,
+    );
     canvas.drawLine(const Offset(9.4, 7.8), const Offset(14.6, 7.8), linePaint);
 
     // Kalasha & finial pot at apex
@@ -541,7 +566,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..color = mint
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
-    canvas.drawLine(const Offset(12.0, 3.8), const Offset(12.0, 2.0), needlePaint);
+    canvas.drawLine(
+      const Offset(12.0, 3.8),
+      const Offset(12.0, 2.0),
+      needlePaint,
+    );
   }
 
   /// 4. Fort: Sandstone fortress with crenelated towers and battlements
@@ -626,8 +655,16 @@ class _CategoryIconPainter extends CustomPainter {
       ..color = mint
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
-    canvas.drawLine(const Offset(5.0, 10.5), const Offset(5.0, 13.0), slitPaint);
-    canvas.drawLine(const Offset(19.0, 10.5), const Offset(19.0, 13.0), slitPaint);
+    canvas.drawLine(
+      const Offset(5.0, 10.5),
+      const Offset(5.0, 13.0),
+      slitPaint,
+    );
+    canvas.drawLine(
+      const Offset(19.0, 10.5),
+      const Offset(19.0, 13.0),
+      slitPaint,
+    );
   }
 
   /// 5. Ghat: Stepped river ghat with radiant sunrise over water ripples
@@ -655,10 +692,26 @@ class _CategoryIconPainter extends CustomPainter {
       ..color = mint
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
-    canvas.drawLine(const Offset(2.5, 9.0), const Offset(5.5, 9.0), stepEdgePaint);
-    canvas.drawLine(const Offset(5.5, 12.0), const Offset(8.5, 12.0), stepEdgePaint);
-    canvas.drawLine(const Offset(8.5, 15.0), const Offset(11.5, 15.0), stepEdgePaint);
-    canvas.drawLine(const Offset(11.5, 18.0), const Offset(14.5, 18.0), stepEdgePaint);
+    canvas.drawLine(
+      const Offset(2.5, 9.0),
+      const Offset(5.5, 9.0),
+      stepEdgePaint,
+    );
+    canvas.drawLine(
+      const Offset(5.5, 12.0),
+      const Offset(8.5, 12.0),
+      stepEdgePaint,
+    );
+    canvas.drawLine(
+      const Offset(8.5, 15.0),
+      const Offset(11.5, 15.0),
+      stepEdgePaint,
+    );
+    canvas.drawLine(
+      const Offset(11.5, 18.0),
+      const Offset(14.5, 18.0),
+      stepEdgePaint,
+    );
 
     // Rising Sun above water
     final sunCenter = const Offset(16.5, 10.5);
@@ -798,8 +851,16 @@ class _CategoryIconPainter extends CustomPainter {
       ..color = darkTeal
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.8;
-    canvas.drawLine(const Offset(12.3, 16.5), const Offset(14.1, 16.0), ringPaint);
-    canvas.drawLine(const Offset(11.3, 12.5), const Offset(13.1, 12.0), ringPaint);
+    canvas.drawLine(
+      const Offset(12.3, 16.5),
+      const Offset(14.1, 16.0),
+      ringPaint,
+    );
+    canvas.drawLine(
+      const Offset(11.3, 12.5),
+      const Offset(13.1, 12.0),
+      ringPaint,
+    );
 
     // Palm fronds
     final frondPaint = Paint()
@@ -958,16 +1019,32 @@ class _CategoryIconPainter extends CustomPainter {
       ..moveTo(12.5, 7.0)
       ..quadraticBezierTo(13.5, 4.0, 16.0, 2.0);
     canvas.drawPath(rightAntler, antlerPaint);
-    canvas.drawLine(const Offset(13.2, 5.0), const Offset(15.2, 4.2), antlerPaint);
-    canvas.drawLine(const Offset(14.5, 3.2), const Offset(17.0, 3.0), antlerPaint);
+    canvas.drawLine(
+      const Offset(13.2, 5.0),
+      const Offset(15.2, 4.2),
+      antlerPaint,
+    );
+    canvas.drawLine(
+      const Offset(14.5, 3.2),
+      const Offset(17.0, 3.0),
+      antlerPaint,
+    );
 
     // Left main antler
     final leftAntler = Path()
       ..moveTo(12.0, 7.0)
       ..quadraticBezierTo(10.5, 4.0, 7.5, 2.2);
     canvas.drawPath(leftAntler, antlerPaint);
-    canvas.drawLine(const Offset(11.2, 5.0), const Offset(9.2, 4.5), antlerPaint);
-    canvas.drawLine(const Offset(9.5, 3.5), const Offset(7.8, 3.8), antlerPaint);
+    canvas.drawLine(
+      const Offset(11.2, 5.0),
+      const Offset(9.2, 4.5),
+      antlerPaint,
+    );
+    canvas.drawLine(
+      const Offset(9.5, 3.5),
+      const Offset(7.8, 3.8),
+      antlerPaint,
+    );
 
     // Eye dot
     final eyePaint = Paint()
@@ -984,7 +1061,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(2.0, 21.0), const Offset(22.0, 17.0), slopePaint);
+    canvas.drawLine(
+      const Offset(2.0, 21.0),
+      const Offset(22.0, 17.0),
+      slopePaint,
+    );
 
     // Trekker cap & head
     final headPaint = Paint()
@@ -1016,7 +1097,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.2
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(12.2, 7.0), const Offset(11.0, 13.0), bodyPaint);
+    canvas.drawLine(
+      const Offset(12.2, 7.0),
+      const Offset(11.0, 13.0),
+      bodyPaint,
+    );
 
     // Legs striding
     final legPaint = Paint()
@@ -1045,7 +1130,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(14.0, 10.0), const Offset(17.8, 18.0), polePaint);
+    canvas.drawLine(
+      const Offset(14.0, 10.0),
+      const Offset(17.8, 18.0),
+      polePaint,
+    );
 
     // Arm
     final armPaint = Paint()
@@ -1053,7 +1142,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(11.5, 8.5), const Offset(14.0, 10.0), armPaint);
+    canvas.drawLine(
+      const Offset(11.5, 8.5),
+      const Offset(14.0, 10.0),
+      armPaint,
+    );
   }
 
   /// 11. Mall: Designer shopping bag with handle and star logo
@@ -1090,7 +1183,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..color = darkTeal.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
-    canvas.drawLine(const Offset(12.0, 9.0), const Offset(12.0, 20.5), creasePaint);
+    canvas.drawLine(
+      const Offset(12.0, 9.0),
+      const Offset(12.0, 20.5),
+      creasePaint,
+    );
 
     // Boutique star on bag
     _drawSparkle(canvas, const Offset(12.0, 14.5), 2.2, orange);
@@ -1217,7 +1314,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(12.0, 3.5), const Offset(12.0, 1.8), needlePaint);
+    canvas.drawLine(
+      const Offset(12.0, 3.5),
+      const Offset(12.0, 1.8),
+      needlePaint,
+    );
 
     // Side minaret spires
     final minaretPaint = Paint()
@@ -1237,7 +1338,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.4
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(2.0, 20.5), const Offset(22.0, 20.5), groundPaint);
+    canvas.drawLine(
+      const Offset(2.0, 20.5),
+      const Offset(22.0, 20.5),
+      groundPaint,
+    );
 
     // Background Pine tree on left
     _drawPineTree(canvas, const Offset(5.5, 16.0), 6.5, subtleTeal);
@@ -1280,7 +1385,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(2.0, 20.5), const Offset(22.0, 20.5), groundPaint);
+    canvas.drawLine(
+      const Offset(2.0, 20.5),
+      const Offset(22.0, 20.5),
+      groundPaint,
+    );
 
     // Shady Tree on right
     final trunkPath = Path()
@@ -1310,9 +1419,17 @@ class _CategoryIconPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // Backrest slat
-    canvas.drawLine(const Offset(4.0, 13.0), const Offset(10.5, 13.0), benchWoodPaint);
+    canvas.drawLine(
+      const Offset(4.0, 13.0),
+      const Offset(10.5, 13.0),
+      benchWoodPaint,
+    );
     // Seat slat
-    canvas.drawLine(const Offset(3.5, 16.0), const Offset(11.0, 16.0), benchWoodPaint);
+    canvas.drawLine(
+      const Offset(3.5, 16.0),
+      const Offset(11.0, 16.0),
+      benchWoodPaint,
+    );
 
     // Bench iron legs
     final legPaint = Paint()
@@ -1321,7 +1438,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..strokeWidth = 1.3
       ..strokeCap = StrokeCap.round;
     canvas.drawLine(const Offset(4.8, 13.0), const Offset(4.2, 20.5), legPaint);
-    canvas.drawLine(const Offset(9.8, 13.0), const Offset(10.2, 20.5), legPaint);
+    canvas.drawLine(
+      const Offset(9.8, 13.0),
+      const Offset(10.2, 20.5),
+      legPaint,
+    );
   }
 
   /// 16. Religious Site: Sacred temple / prayer building with flame
@@ -1390,7 +1511,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..color = mint
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
-    canvas.drawLine(const Offset(12.0, 3.5), const Offset(12.0, 1.8), finialLine);
+    canvas.drawLine(
+      const Offset(12.0, 3.5),
+      const Offset(12.0, 1.8),
+      finialLine,
+    );
   }
 
   /// 17. Stepwell: Stepped well architecture (Baori) with descending terraces & pool
@@ -1475,7 +1600,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..color = Colors.white.withValues(alpha: 0.8)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.8;
-    canvas.drawLine(const Offset(9.5, 19.2), const Offset(14.5, 19.2), ripplePaint);
+    canvas.drawLine(
+      const Offset(9.5, 19.2),
+      const Offset(14.5, 19.2),
+      ripplePaint,
+    );
   }
 
   /// 18. Theme Park: Amusement Ferris wheel with cabins & hub
@@ -1491,7 +1620,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     canvas.drawLine(center, const Offset(6.0, 20.5), supportPaint);
     canvas.drawLine(center, const Offset(18.0, 20.5), supportPaint);
-    canvas.drawLine(const Offset(8.0, 18.0), const Offset(16.0, 18.0), supportPaint);
+    canvas.drawLine(
+      const Offset(8.0, 18.0),
+      const Offset(16.0, 18.0),
+      supportPaint,
+    );
 
     // Outer wheel rim
     final wheelPaint = Paint()
@@ -1542,7 +1675,11 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(2.0, 20.5), const Offset(22.0, 20.5), groundPaint);
+    canvas.drawLine(
+      const Offset(2.0, 20.5),
+      const Offset(22.0, 20.5),
+      groundPaint,
+    );
 
     // Cottage 2 in background on right
     final bgRoof = Path()
@@ -1692,7 +1829,10 @@ class _CategoryIconPainter extends CustomPainter {
     const pillarHeight = 7.5;
     final xs = [5.0, 9.5, 13.0, 17.4];
     for (final x in xs) {
-      canvas.drawRect(Rect.fromLTWH(x, 10.3, pillarWidth, pillarHeight), pillarPaint);
+      canvas.drawRect(
+        Rect.fromLTWH(x, 10.3, pillarWidth, pillarHeight),
+        pillarPaint,
+      );
     }
 
     // Base podium plinth
@@ -1721,10 +1861,26 @@ class _CategoryIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(12.0, 2.5), const Offset(12.0, 4.5), tickPaint);
-    canvas.drawLine(const Offset(12.0, 19.5), const Offset(12.0, 21.5), tickPaint);
-    canvas.drawLine(const Offset(2.5, 12.0), const Offset(4.5, 12.0), tickPaint);
-    canvas.drawLine(const Offset(19.5, 12.0), const Offset(21.5, 12.0), tickPaint);
+    canvas.drawLine(
+      const Offset(12.0, 2.5),
+      const Offset(12.0, 4.5),
+      tickPaint,
+    );
+    canvas.drawLine(
+      const Offset(12.0, 19.5),
+      const Offset(12.0, 21.5),
+      tickPaint,
+    );
+    canvas.drawLine(
+      const Offset(2.5, 12.0),
+      const Offset(4.5, 12.0),
+      tickPaint,
+    );
+    canvas.drawLine(
+      const Offset(19.5, 12.0),
+      const Offset(21.5, 12.0),
+      tickPaint,
+    );
 
     // North needle (orange)
     final northPath = Path()

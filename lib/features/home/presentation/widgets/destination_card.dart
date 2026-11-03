@@ -56,7 +56,7 @@ class DestinationCard extends ConsumerWidget {
         imageUrl: imageUrl,
         fit: BoxFit.cover,
         width: double.infinity,
-        placeholder: (_, __) => Container(
+        placeholder: (_, _) => Container(
           color: isDark ? AppColors.inputDark : AppColors.inputLight,
           child: const Center(
             child: SizedBox(
@@ -66,7 +66,7 @@ class DestinationCard extends ConsumerWidget {
             ),
           ),
         ),
-        errorWidget: (_, __, ___) => errorPlaceholder,
+        errorWidget: (_, _, _) => errorPlaceholder,
       );
     }
 
@@ -76,7 +76,7 @@ class DestinationCard extends ConsumerWidget {
           imageUrl: destination.imageUrl,
           fit: BoxFit.cover,
           width: double.infinity,
-          placeholder: (_, __) => Container(
+          placeholder: (_, _) => Container(
             color: isDark ? AppColors.inputDark : AppColors.inputLight,
             child: const Center(
               child: SizedBox(
@@ -86,8 +86,7 @@ class DestinationCard extends ConsumerWidget {
               ),
             ),
           ),
-          errorWidget: (_, __, ___) {
-            if (imagesAsync == null) return errorPlaceholder;
+          errorWidget: (_, _, _) {
             return imagesAsync.maybeWhen(
               data: (images) => images.isNotEmpty
                   ? buildImage(images.first.imageUrl)
@@ -97,8 +96,6 @@ class DestinationCard extends ConsumerWidget {
           },
         );
       }
-
-      if (imagesAsync == null) return errorPlaceholder;
 
       return imagesAsync.when(
         loading: () => Container(
@@ -111,7 +108,7 @@ class DestinationCard extends ConsumerWidget {
             ),
           ),
         ),
-        error: (_, __) => errorPlaceholder,
+        error: (_, _) => errorPlaceholder,
         data: (images) {
           if (images.isEmpty) return errorPlaceholder;
           return buildImage(images.first.imageUrl);
@@ -152,7 +149,9 @@ class DestinationCard extends ConsumerWidget {
               Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(19)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(19),
+                    ),
                     child: SizedBox(
                       height: 145,
                       width: double.infinity,
@@ -176,7 +175,10 @@ class DestinationCard extends ConsumerWidget {
                       top: 10,
                       left: 10,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.black.withValues(alpha: 0.45),
                           borderRadius: BorderRadius.circular(12),
@@ -202,13 +204,17 @@ class DestinationCard extends ConsumerWidget {
                   children: [
                     // Title
                     Text(
-                      destination.title.isEmpty ? "Destination" : destination.title,
+                      destination.title.isEmpty
+                          ? "Destination"
+                          : destination.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
                       ),
                     ),
 
@@ -219,7 +225,9 @@ class DestinationCard extends ConsumerWidget {
                       children: [
                         Icon(
                           Icons.location_on_outlined,
-                          color: isDark ? AppColors.secondary : AppColors.primary,
+                          color: isDark
+                              ? AppColors.secondary
+                              : AppColors.primary,
                           size: 13,
                         ),
                         const SizedBox(width: 3),
@@ -275,7 +283,10 @@ class DestinationCard extends ConsumerWidget {
 
                         // Price tag
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 7,
+                            vertical: 2.5,
+                          ),
                           decoration: BoxDecoration(
                             color: isFree
                                 ? AppColors.mintLight
@@ -283,7 +294,9 @@ class DestinationCard extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            isFree ? "Free" : "₹${destination.price!.toStringAsFixed(0)}",
+                            isFree
+                                ? "Free"
+                                : "₹${destination.price!.toStringAsFixed(0)}",
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,

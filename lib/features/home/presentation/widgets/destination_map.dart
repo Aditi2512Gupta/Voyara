@@ -89,7 +89,8 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
     }
 
     // Determine route query if user location is valid and showRoute is enabled.
-    final canRoute = widget.showRoute &&
+    final canRoute =
+        widget.showRoute &&
         userPoint != null &&
         (userPoint.latitude != widget.latitude ||
             userPoint.longitude != widget.longitude);
@@ -111,8 +112,10 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
 
     // Listen to route completion to auto-fit camera bounds once loaded.
     if (routeQuery != null) {
-      ref.listen<AsyncValue<RouteModel?>>(routeFutureProvider(routeQuery),
-          (previous, next) {
+      ref.listen<AsyncValue<RouteModel?>>(routeFutureProvider(routeQuery), (
+        previous,
+        next,
+      ) {
         if (next.hasValue &&
             next.value != null &&
             next.value!.points.isNotEmpty) {
@@ -130,11 +133,7 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
         point: destPoint,
         width: 48,
         height: 48,
-        child: const Icon(
-          Icons.location_on,
-          color: Colors.red,
-          size: 40,
-        ),
+        child: const Icon(Icons.location_on, color: Colors.red, size: 40),
       ),
     ];
 
@@ -195,14 +194,13 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
                 initialZoom: 13,
                 initialCameraFit: initialCameraFit,
                 interactionOptions: const InteractionOptions(
-                  flags: InteractiveFlag.pinchZoom |
-                      InteractiveFlag.doubleTapZoom,
+                  flags:
+                      InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom,
                 ),
               ),
               children: [
                 TileLayer(
-                  urlTemplate:
-                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.aditigupta.voyara',
                 ),
 
@@ -357,7 +355,9 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: (isDark ? AppColors.cardDark : Colors.white).withValues(alpha: 0.92),
+          color: (isDark ? AppColors.cardDark : Colors.white).withValues(
+            alpha: 0.92,
+          ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: const [
             BoxShadow(
@@ -381,10 +381,7 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
             SizedBox(width: 8),
             Text(
               "Finding driving route...",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -398,8 +395,9 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: (isDark ? AppColors.cardDark : Colors.white)
-                .withValues(alpha: 0.92),
+            color: (isDark ? AppColors.cardDark : Colors.white).withValues(
+              alpha: 0.92,
+            ),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: AppColors.secondary.withValues(alpha: 0.6),
@@ -440,14 +438,12 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: (isDark ? AppColors.cardDark : Colors.white).withValues(alpha: 0.92),
+        color: (isDark ? AppColors.cardDark : Colors.white).withValues(
+          alpha: 0.92,
+        ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Row(
@@ -456,7 +452,9 @@ class _DestinationMapState extends ConsumerState<DestinationMap> {
           Icon(
             Icons.info_outline,
             size: 14,
-            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondaryLight,
           ),
           const SizedBox(width: 6),
           const Text(

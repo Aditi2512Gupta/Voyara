@@ -60,18 +60,24 @@ class SearchDestinationCard extends StatelessWidget {
                         ? CachedNetworkImage(
                             imageUrl: destination.imageUrl,
                             fit: BoxFit.cover,
-                            placeholder: (_, __) => Container(
-                              color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                            placeholder: (_, _) => Container(
+                              color: isDark
+                                  ? AppColors.inputDark
+                                  : AppColors.inputLight,
                               child: const Center(
                                 child: SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 ),
                               ),
                             ),
-                            errorWidget: (_, __, ___) => Container(
-                              color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                            errorWidget: (_, _, _) => Container(
+                              color: isDark
+                                  ? AppColors.inputDark
+                                  : AppColors.inputLight,
                               child: Icon(
                                 Icons.landscape_outlined,
                                 color: AppColors.textTertiaryLight,
@@ -79,11 +85,15 @@ class SearchDestinationCard extends StatelessWidget {
                             ),
                           )
                         : Container(
-                            color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                            color: isDark
+                                ? AppColors.inputDark
+                                : AppColors.inputLight,
                             child: Icon(
                               Icons.travel_explore,
                               size: 32,
-                              color: isDark ? AppColors.secondary : AppColors.primary,
+                              color: isDark
+                                  ? AppColors.secondary
+                                  : AppColors.primary,
                             ),
                           ),
                   ),
@@ -103,7 +113,9 @@ class SearchDestinationCard extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 15.5,
-                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                          color: isDark
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textPrimaryLight,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -117,7 +129,9 @@ class SearchDestinationCard extends StatelessWidget {
                           Icon(
                             Icons.location_on_outlined,
                             size: 13,
-                            color: isDark ? AppColors.secondary : AppColors.primary,
+                            color: isDark
+                                ? AppColors.secondary
+                                : AppColors.primary,
                           ),
                           const SizedBox(width: 3),
                           Expanded(
@@ -165,7 +179,10 @@ class SearchDestinationCard extends StatelessWidget {
                           ),
                           const Spacer(),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
                             decoration: BoxDecoration(
                               color: isFree
                                   ? AppColors.mintLight

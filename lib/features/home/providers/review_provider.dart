@@ -8,9 +8,9 @@ final reviewRepositoryProvider = Provider(
   (ref) => ReviewRepository(FirebaseFirestore.instance),
 );
 
-final reviewsProvider =
-    StreamProvider.family<List<ReviewModel>, String>((ref, destinationId) {
-  return ref
-      .watch(reviewRepositoryProvider)
-      .getReviews(destinationId);
+final reviewsProvider = StreamProvider.family<List<ReviewModel>, String>((
+  ref,
+  destinationId,
+) {
+  return ref.watch(reviewRepositoryProvider).getReviews(destinationId);
 });

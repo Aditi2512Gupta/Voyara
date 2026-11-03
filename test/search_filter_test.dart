@@ -19,27 +19,32 @@ void main() {
       expect(state.activeFilterCount, 0);
     });
 
-    test('hasActiveFilters and activeFilterCount accurately reflect active criteria', () {
-      final state1 = const SearchFilterState().copyWith(category: () => 'Beach');
-      expect(state1.hasActiveFilters, isTrue);
-      expect(state1.activeFilterCount, 1);
+    test(
+      'hasActiveFilters and activeFilterCount accurately reflect active criteria',
+      () {
+        final state1 = const SearchFilterState().copyWith(
+          category: () => 'Beach',
+        );
+        expect(state1.hasActiveFilters, isTrue);
+        expect(state1.activeFilterCount, 1);
 
-      final state2 = state1.copyWith(maxPrice: () => 150.0);
-      expect(state2.hasActiveFilters, isTrue);
-      expect(state2.activeFilterCount, 2);
+        final state2 = state1.copyWith(maxPrice: () => 150.0);
+        expect(state2.hasActiveFilters, isTrue);
+        expect(state2.activeFilterCount, 2);
 
-      final state3 = state2.copyWith(minRating: () => 4.0);
-      expect(state3.hasActiveFilters, isTrue);
-      expect(state3.activeFilterCount, 3);
+        final state3 = state2.copyWith(minRating: () => 4.0);
+        expect(state3.hasActiveFilters, isTrue);
+        expect(state3.activeFilterCount, 3);
 
-      final state4 = state3.copyWith(sortOption: SortOption.priceLowToHigh);
-      expect(state4.hasActiveFilters, isTrue);
-      expect(state4.activeFilterCount, 4);
+        final state4 = state3.copyWith(sortOption: SortOption.priceLowToHigh);
+        expect(state4.hasActiveFilters, isTrue);
+        expect(state4.activeFilterCount, 4);
 
-      final state5 = const SearchFilterState(category: 'All');
-      expect(state5.hasActiveFilters, isFalse);
-      expect(state5.activeFilterCount, 0);
-    });
+        final state5 = const SearchFilterState(category: 'All');
+        expect(state5.hasActiveFilters, isFalse);
+        expect(state5.activeFilterCount, 0);
+      },
+    );
 
     test('copyWith handles resetting nullable values', () {
       final state = const SearchFilterState(
@@ -107,7 +112,10 @@ void main() {
       expect(container.read(searchFilterProvider).minRating, 4.5);
 
       notifier.setSortOption(SortOption.highestRated);
-      expect(container.read(searchFilterProvider).sortOption, SortOption.highestRated);
+      expect(
+        container.read(searchFilterProvider).sortOption,
+        SortOption.highestRated,
+      );
 
       notifier.clearMaxPrice();
       expect(container.read(searchFilterProvider).maxPrice, isNull);
@@ -116,7 +124,10 @@ void main() {
       expect(container.read(searchFilterProvider).minRating, isNull);
 
       notifier.clearSort();
-      expect(container.read(searchFilterProvider).sortOption, SortOption.relevance);
+      expect(
+        container.read(searchFilterProvider).sortOption,
+        SortOption.relevance,
+      );
     });
 
     test('clearAll resets all filters and clears selectedCategoryProvider', () {
@@ -138,7 +149,10 @@ void main() {
       expect(container.read(searchFilterProvider).category, isNull);
       expect(container.read(searchFilterProvider).maxPrice, isNull);
       expect(container.read(searchFilterProvider).minRating, isNull);
-      expect(container.read(searchFilterProvider).sortOption, SortOption.relevance);
+      expect(
+        container.read(searchFilterProvider).sortOption,
+        SortOption.relevance,
+      );
       expect(container.read(selectedCategoryProvider), isNull);
     });
   });
@@ -199,11 +213,18 @@ void main() {
     });
 
     test('Filters by Maximum Price correctly', () {
-      final under150 = destinations.where((d) => (d.price ?? 0) <= 150.0).toList();
+      final under150 = destinations
+          .where((d) => (d.price ?? 0) <= 150.0)
+          .toList();
       expect(under150.length, 2);
-      expect(under150.map((d) => d.title), containsAll(['Amber Palace', 'Baga Beach']));
+      expect(
+        under150.map((d) => d.title),
+        containsAll(['Amber Palace', 'Baga Beach']),
+      );
 
-      final freeOnly = destinations.where((d) => (d.price ?? 0) <= 0.0).toList();
+      final freeOnly = destinations
+          .where((d) => (d.price ?? 0) <= 0.0)
+          .toList();
       expect(freeOnly.length, 1);
       expect(freeOnly.first.title, 'Baga Beach');
     });
@@ -211,7 +232,10 @@ void main() {
     test('Filters by Minimum Rating correctly', () {
       final rating45Plus = destinations.where((d) => d.rating >= 4.5).toList();
       expect(rating45Plus.length, 2);
-      expect(rating45Plus.map((d) => d.title), containsAll(['Amber Palace', 'Corbett National Park']));
+      expect(
+        rating45Plus.map((d) => d.title),
+        containsAll(['Amber Palace', 'Corbett National Park']),
+      );
     });
 
     test('Sorts by Highest Rated', () {
@@ -243,7 +267,9 @@ void main() {
 
     test('Sorts by Name A-Z', () {
       final list = List<DestinationModel>.from(destinations);
-      list.sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+      list.sort(
+        (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+      );
 
       expect(list[0].title, 'Amber Palace');
       expect(list[1].title, 'Baga Beach');

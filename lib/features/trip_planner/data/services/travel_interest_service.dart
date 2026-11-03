@@ -4,11 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/travel_interest_model.dart';
 
 class TravelInterestService {
-  TravelInterestService({
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
-  })  : _customFirestore = firestore,
-        _customAuth = auth;
+  TravelInterestService({FirebaseFirestore? firestore, FirebaseAuth? auth})
+    : _customFirestore = firestore,
+      _customAuth = auth;
 
   final FirebaseFirestore? _customFirestore;
   final FirebaseAuth? _customAuth;
@@ -46,12 +44,7 @@ class TravelInterestService {
 
         if (snapshot.docs.isNotEmpty) {
           final list = snapshot.docs
-              .map(
-                (doc) => TravelInterestModel.fromMap(
-                  doc.data(),
-                  doc.id,
-                ),
-              )
+              .map((doc) => TravelInterestModel.fromMap(doc.data(), doc.id))
               .where((item) => item.name.trim().isNotEmpty)
               .toList();
 

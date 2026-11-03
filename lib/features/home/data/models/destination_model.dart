@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'review_model.dart';
 import 'geoapify_place_model.dart';
 import 'attraction_model.dart';
 

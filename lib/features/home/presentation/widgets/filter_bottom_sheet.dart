@@ -91,7 +91,10 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
 
               // Header Bar
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -104,8 +107,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                     Text(
                       "Filters",
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                     const Spacer(),
                     TextButton(
@@ -113,7 +116,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                       child: Text(
                         "Clear All",
                         style: TextStyle(
-                          color: isDark ? AppColors.secondary : AppColors.tertiary,
+                          color: isDark
+                              ? AppColors.secondary
+                              : AppColors.tertiary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -128,7 +133,10 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               Expanded(
                 child: ListView(
                   controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                   children: [
                     // 1. CATEGORY
                     Text(
@@ -136,7 +144,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -159,17 +169,19 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                           'Parks',
                           'Adventure',
                           'Wildlife',
-                          ...categories.where((c) => ![
-                                'All',
-                                'Beaches',
-                                'Temples',
-                                'Mountains',
-                                'Waterfalls',
-                                'Museums',
-                                'Parks',
-                                'Adventure',
-                                'Wildlife'
-                              ].contains(c)),
+                          ...categories.where(
+                            (c) => ![
+                              'All',
+                              'Beaches',
+                              'Temples',
+                              'Mountains',
+                              'Waterfalls',
+                              'Museums',
+                              'Parks',
+                              'Adventure',
+                              'Wildlife',
+                            ].contains(c),
+                          ),
                         ];
 
                         return Wrap(
@@ -177,23 +189,34 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                           runSpacing: 8,
                           children: allCategories.map((category) {
                             final isSelected = category == 'All'
-                                ? (_selectedCategory == null || _selectedCategory == 'All')
+                                ? (_selectedCategory == null ||
+                                      _selectedCategory == 'All')
                                 : _selectedCategory == category;
 
                             return ChoiceChip(
                               label: Text(category),
                               selected: isSelected,
-                              selectedColor: isDark ? AppColors.secondary : AppColors.primary,
+                              selectedColor: isDark
+                                  ? AppColors.secondary
+                                  : AppColors.primary,
                               labelStyle: TextStyle(
                                 color: isSelected
-                                    ? (isDark ? AppColors.primaryDark : Colors.white)
-                                    : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight),
-                                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                    ? (isDark
+                                          ? AppColors.primaryDark
+                                          : Colors.white)
+                                    : (isDark
+                                          ? AppColors.textPrimaryDark
+                                          : AppColors.textPrimaryLight),
+                                fontWeight: isSelected
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
                                 fontSize: 13,
                               ),
                               onSelected: (_) {
                                 setState(() {
-                                  _selectedCategory = category == 'All' ? null : category;
+                                  _selectedCategory = category == 'All'
+                                      ? null
+                                      : category;
                                 });
                               },
                             );
@@ -213,17 +236,21 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                            color: isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimaryLight,
                           ),
                         ),
                         Text(
                           _maxPrice == null
                               ? "Any"
                               : (_maxPrice == 0
-                                  ? "Free only"
-                                  : "Up to ₹${_maxPrice!.round()}"),
+                                    ? "Free only"
+                                    : "Up to ₹${_maxPrice!.round()}"),
                           style: TextStyle(
-                            color: isDark ? AppColors.secondary : AppColors.primary,
+                            color: isDark
+                                ? AppColors.secondary
+                                : AppColors.primary,
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
                           ),
@@ -234,18 +261,28 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
 
                     SliderTheme(
                       data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: isDark ? AppColors.secondary : AppColors.primary,
-                        thumbColor: isDark ? AppColors.secondary : AppColors.primary,
-                        inactiveTrackColor: isDark ? AppColors.borderDark : AppColors.borderLight,
+                        activeTrackColor: isDark
+                            ? AppColors.secondary
+                            : AppColors.primary,
+                        thumbColor: isDark
+                            ? AppColors.secondary
+                            : AppColors.primary,
+                        inactiveTrackColor: isDark
+                            ? AppColors.borderDark
+                            : AppColors.borderLight,
                       ),
                       child: Slider(
                         value: (_maxPrice ?? maxLimit).clamp(0.0, maxLimit),
                         min: 0,
                         max: maxLimit,
-                        divisions: maxLimit > 100 ? (maxLimit / 25).round() : 10,
+                        divisions: maxLimit > 100
+                            ? (maxLimit / 25).round()
+                            : 10,
                         label: _maxPrice == null
                             ? "Any"
-                            : (_maxPrice == 0 ? "Free" : "₹${_maxPrice!.round()}"),
+                            : (_maxPrice == 0
+                                  ? "Free"
+                                  : "₹${_maxPrice!.round()}"),
                         onChanged: (val) {
                           setState(() {
                             _maxPrice = val;
@@ -277,7 +314,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                             label: const Text("< ₹50"),
                             selected: _maxPrice == 50.0,
                             onSelected: (selected) {
-                              setState(() => _maxPrice = selected ? 50.0 : null);
+                              setState(
+                                () => _maxPrice = selected ? 50.0 : null,
+                              );
                             },
                           ),
                         if (maxLimit >= 100)
@@ -285,7 +324,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                             label: const Text("< ₹100"),
                             selected: _maxPrice == 100.0,
                             onSelected: (selected) {
-                              setState(() => _maxPrice = selected ? 100.0 : null);
+                              setState(
+                                () => _maxPrice = selected ? 100.0 : null,
+                              );
                             },
                           ),
                         if (maxLimit >= 250)
@@ -293,7 +334,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                             label: const Text("< ₹250"),
                             selected: _maxPrice == 250.0,
                             onSelected: (selected) {
-                              setState(() => _maxPrice = selected ? 250.0 : null);
+                              setState(
+                                () => _maxPrice = selected ? 250.0 : null,
+                              );
                             },
                           ),
                       ],
@@ -307,7 +350,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -323,7 +368,11 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                           },
                         ),
                         ChoiceChip(
-                          avatar: const Icon(Icons.star_rounded, size: 16, color: AppColors.star),
+                          avatar: const Icon(
+                            Icons.star_rounded,
+                            size: 16,
+                            color: AppColors.star,
+                          ),
                           label: const Text("3.0+"),
                           selected: _minRating == 3.0,
                           onSelected: (selected) {
@@ -331,7 +380,11 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                           },
                         ),
                         ChoiceChip(
-                          avatar: const Icon(Icons.star_rounded, size: 16, color: AppColors.star),
+                          avatar: const Icon(
+                            Icons.star_rounded,
+                            size: 16,
+                            color: AppColors.star,
+                          ),
                           label: const Text("4.0+"),
                           selected: _minRating == 4.0,
                           onSelected: (selected) {
@@ -339,7 +392,11 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                           },
                         ),
                         ChoiceChip(
-                          avatar: const Icon(Icons.star_rounded, size: 16, color: AppColors.star),
+                          avatar: const Icon(
+                            Icons.star_rounded,
+                            size: 16,
+                            color: AppColors.star,
+                          ),
                           label: const Text("4.5+"),
                           selected: _minRating == 4.5,
                           onSelected: (selected) {
@@ -357,7 +414,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -369,12 +428,20 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                         return ChoiceChip(
                           label: Text(option.label),
                           selected: isSelected,
-                          selectedColor: isDark ? AppColors.secondary : AppColors.primary,
+                          selectedColor: isDark
+                              ? AppColors.secondary
+                              : AppColors.primary,
                           labelStyle: TextStyle(
                             color: isSelected
-                                ? (isDark ? AppColors.primaryDark : Colors.white)
-                                : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight),
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                ? (isDark
+                                      ? AppColors.primaryDark
+                                      : Colors.white)
+                                : (isDark
+                                      ? AppColors.textPrimaryDark
+                                      : AppColors.textPrimaryLight),
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
                             fontSize: 13,
                           ),
                           onSelected: (selected) {
@@ -398,7 +465,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                   color: isDark ? AppColors.surfaceDark : Colors.white,
                   border: Border(
                     top: BorderSide(
-                      color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                      color: isDark
+                          ? AppColors.borderDark
+                          : AppColors.borderLight,
                       width: 1,
                     ),
                   ),
@@ -409,8 +478,12 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                   child: FilledButton(
                     onPressed: _apply,
                     style: FilledButton.styleFrom(
-                      backgroundColor: isDark ? AppColors.secondary : AppColors.primary,
-                      foregroundColor: isDark ? AppColors.primaryDark : Colors.white,
+                      backgroundColor: isDark
+                          ? AppColors.secondary
+                          : AppColors.primary,
+                      foregroundColor: isDark
+                          ? AppColors.primaryDark
+                          : Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(26),
                       ),

@@ -63,8 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '308035912254',
     projectId: 'voyara-38487',
     storageBucket: 'voyara-38487.firebasestorage.app',
-    androidClientId: '308035912254-fedu35vkd1pv0b2f6fa235srfqpn1sv8.apps.googleusercontent.com',
-    iosClientId: '308035912254-3j263i9388o278qu0n7dlnob3i2gst56.apps.googleusercontent.com',
+    androidClientId:
+        '308035912254-fedu35vkd1pv0b2f6fa235srfqpn1sv8.apps.googleusercontent.com',
+    iosClientId:
+        '308035912254-3j263i9388o278qu0n7dlnob3i2gst56.apps.googleusercontent.com',
     iosBundleId: 'com.example.voyara',
   );
 
@@ -74,8 +76,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '308035912254',
     projectId: 'voyara-38487',
     storageBucket: 'voyara-38487.firebasestorage.app',
-    androidClientId: '308035912254-fedu35vkd1pv0b2f6fa235srfqpn1sv8.apps.googleusercontent.com',
-    iosClientId: '308035912254-3j263i9388o278qu0n7dlnob3i2gst56.apps.googleusercontent.com',
+    androidClientId:
+        '308035912254-fedu35vkd1pv0b2f6fa235srfqpn1sv8.apps.googleusercontent.com',
+    iosClientId:
+        '308035912254-3j263i9388o278qu0n7dlnob3i2gst56.apps.googleusercontent.com',
     iosBundleId: 'com.example.voyara',
   );
 

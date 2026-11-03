@@ -1,5 +1,1 @@
-enum TripStatus {
-  upcoming,
-  completed,
-  cancelled,
-}
+enum TripStatus { upcoming, completed, cancelled }

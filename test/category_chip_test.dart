@@ -33,8 +33,9 @@ void main() {
     ];
 
     for (final cat in categories) {
-      testWidgets('Renders $cat category chip without errors in dark mode',
-          (WidgetTester tester) async {
+      testWidgets('Renders $cat category chip without errors in dark mode', (
+        WidgetTester tester,
+      ) async {
         bool tapped = false;
 
         await tester.pumpWidget(
@@ -58,17 +59,14 @@ void main() {
         expect(tapped, isTrue);
       });
 
-      testWidgets('Renders $cat category chip when selected in light mode',
-          (WidgetTester tester) async {
+      testWidgets('Renders $cat category chip when selected in light mode', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             theme: ThemeData.light(),
             home: Scaffold(
-              body: CategoryChip(
-                label: cat,
-                selected: true,
-                onTap: () {},
-              ),
+              body: CategoryChip(label: cat, selected: true, onTap: () {}),
             ),
           ),
         );
@@ -80,25 +78,67 @@ void main() {
 
     test('VoyaraCategoryType resolves distinct categories accurately', () {
       expect(VoyaraCategoryType.fromString('Mall'), VoyaraCategoryType.mall);
-      expect(VoyaraCategoryType.fromString('Market'), VoyaraCategoryType.market);
-      expect(VoyaraCategoryType.fromString('Mausoleum'), VoyaraCategoryType.mausoleum);
-      expect(VoyaraCategoryType.fromString('National Park'), VoyaraCategoryType.nationalPark);
+      expect(
+        VoyaraCategoryType.fromString('Market'),
+        VoyaraCategoryType.market,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Mausoleum'),
+        VoyaraCategoryType.mausoleum,
+      );
+      expect(
+        VoyaraCategoryType.fromString('National Park'),
+        VoyaraCategoryType.nationalPark,
+      );
       expect(VoyaraCategoryType.fromString('Park'), VoyaraCategoryType.park);
-      expect(VoyaraCategoryType.fromString('Religious Site'), VoyaraCategoryType.religiousSite);
-      expect(VoyaraCategoryType.fromString('Stepwell'), VoyaraCategoryType.stepwell);
-      expect(VoyaraCategoryType.fromString('Theme Park'), VoyaraCategoryType.themePark);
-      expect(VoyaraCategoryType.fromString('Village'), VoyaraCategoryType.village);
-      expect(VoyaraCategoryType.fromString('War Memorial'), VoyaraCategoryType.warMemorial);
-      expect(VoyaraCategoryType.fromString('Attraction'), VoyaraCategoryType.attraction);
-      expect(VoyaraCategoryType.fromString('Bird Sanctuary'), VoyaraCategoryType.birdSanctuary);
-      expect(VoyaraCategoryType.fromString('Cultural'), VoyaraCategoryType.cultural);
+      expect(
+        VoyaraCategoryType.fromString('Religious Site'),
+        VoyaraCategoryType.religiousSite,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Stepwell'),
+        VoyaraCategoryType.stepwell,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Theme Park'),
+        VoyaraCategoryType.themePark,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Village'),
+        VoyaraCategoryType.village,
+      );
+      expect(
+        VoyaraCategoryType.fromString('War Memorial'),
+        VoyaraCategoryType.warMemorial,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Attraction'),
+        VoyaraCategoryType.attraction,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Bird Sanctuary'),
+        VoyaraCategoryType.birdSanctuary,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Cultural'),
+        VoyaraCategoryType.cultural,
+      );
       expect(VoyaraCategoryType.fromString('Fort'), VoyaraCategoryType.fort);
       expect(VoyaraCategoryType.fromString('Ghat'), VoyaraCategoryType.ghat);
       expect(VoyaraCategoryType.fromString('Lake'), VoyaraCategoryType.lake);
       expect(VoyaraCategoryType.fromString('Beach'), VoyaraCategoryType.beach);
-      expect(VoyaraCategoryType.fromString('Hill Station'), VoyaraCategoryType.hillStation);
-      expect(VoyaraCategoryType.fromString('Wildlife'), VoyaraCategoryType.wildlife);
-      expect(VoyaraCategoryType.fromString('Adventure'), VoyaraCategoryType.adventure);
+      expect(
+        VoyaraCategoryType.fromString('Hill Station'),
+        VoyaraCategoryType.hillStation,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Wildlife'),
+        VoyaraCategoryType.wildlife,
+      );
+      expect(
+        VoyaraCategoryType.fromString('Adventure'),
+        VoyaraCategoryType.adventure,
+      );
       expect(VoyaraCategoryType.fromString('All'), VoyaraCategoryType.all);
     });
 
@@ -117,10 +157,18 @@ void main() {
       for (final c in categories) {
         final type = VoyaraCategoryType.fromString(c);
         // None of the destination categories should fall back to compass icon (all/other)
-        expect(type, isNot(VoyaraCategoryType.all),
-            reason: 'Category "$c" should have a dedicated icon rather than "All" compass');
-        expect(type, isNot(VoyaraCategoryType.other),
-            reason: 'Category "$c" should have a dedicated icon rather than "Other" compass');
+        expect(
+          type,
+          isNot(VoyaraCategoryType.all),
+          reason:
+              'Category "$c" should have a dedicated icon rather than "All" compass',
+        );
+        expect(
+          type,
+          isNot(VoyaraCategoryType.other),
+          reason:
+              'Category "$c" should have a dedicated icon rather than "Other" compass',
+        );
       }
     });
   });

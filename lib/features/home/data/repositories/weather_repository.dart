@@ -6,10 +6,7 @@ class CachedWeatherEntry<T> {
   final T data;
   final DateTime timestamp;
 
-  CachedWeatherEntry({
-    required this.data,
-    required this.timestamp,
-  });
+  CachedWeatherEntry({required this.data, required this.timestamp});
 
   bool isExpired({required Duration ttl, required DateTime now}) {
     return now.difference(timestamp) >= ttl;
@@ -17,10 +14,8 @@ class CachedWeatherEntry<T> {
 }
 
 class WeatherRepository {
-  WeatherRepository(
-    this._service, {
-    DateTime Function()? clock,
-  }) : _clock = clock ?? DateTime.now;
+  WeatherRepository(this._service, {DateTime Function()? clock})
+    : _clock = clock ?? DateTime.now;
 
   final WeatherService _service;
   final DateTime Function() _clock;
@@ -28,8 +23,8 @@ class WeatherRepository {
   static const Duration cacheTtl = Duration(minutes: 30);
 
   final Map<String, CachedWeatherEntry<WeatherModel>> _weatherCache = {};
-  final Map<String, CachedWeatherEntry<List<DailyForecastModel>>> _forecastCache =
-      {};
+  final Map<String, CachedWeatherEntry<List<DailyForecastModel>>>
+  _forecastCache = {};
 
   String _cacheKey(double lat, double lon) =>
       "${lat.toStringAsFixed(2)}_${lon.toStringAsFixed(2)}";
@@ -49,10 +44,7 @@ class WeatherRepository {
     }
 
     try {
-      final json = await _service.getWeather(
-        lat: latitude,
-        lon: longitude,
-      );
+      final json = await _service.getWeather(lat: latitude, lon: longitude);
 
       final weather = WeatherModel.fromJson(json);
 
@@ -82,10 +74,7 @@ class WeatherRepository {
     }
 
     try {
-      final json = await _service.getForecast(
-        lat: latitude,
-        lon: longitude,
-      );
+      final json = await _service.getForecast(lat: latitude, lon: longitude);
 
       final forecast = DailyForecastModel.parseForecastList(
         json as Map<String, dynamic>,
@@ -120,4 +109,4 @@ class WeatherRepository {
     if (entry == null) return false;
     return !entry.isExpired(ttl: cacheTtl, now: _clock());
   }
-}
+}

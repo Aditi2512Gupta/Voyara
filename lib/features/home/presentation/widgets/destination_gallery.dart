@@ -28,7 +28,7 @@ class DestinationGallery extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: validImages.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            separatorBuilder: (_, _) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(16),
@@ -38,14 +38,14 @@ class DestinationGallery extends StatelessWidget {
                   height: 110,
                   fit: BoxFit.cover,
 
-                  placeholder: (_, __) => Container(
+                  placeholder: (_, _) => Container(
                     width: 140,
                     height: 110,
                     color: Colors.grey.shade200,
                     child: const Center(child: CircularProgressIndicator()),
                   ),
 
-                  errorWidget: (_, __, ___) => Container(
+                  errorWidget: (_, _, _) => Container(
                     width: 140,
                     height: 110,
                     color: Colors.grey.shade300,

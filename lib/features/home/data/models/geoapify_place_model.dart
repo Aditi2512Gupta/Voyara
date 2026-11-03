@@ -46,13 +46,15 @@ class GeoapifyPlaceModel {
       category:
           json['categories'] is List && (json['categories'] as List).isNotEmpty
           ? json['categories'].first
-                 .toString()
-                 .split('.')
-                 .last
-                 .replaceAll('_', ' ')
+                .toString()
+                .split('.')
+                .last
+                .replaceAll('_', ' ')
           : 'Attraction',
       distance: (json['distance'] as num?)?.toDouble(),
-      imageUrl: json['wiki_and_media']?['image']?.toString() ?? json['image']?.toString(),
+      imageUrl:
+          json['wiki_and_media']?['image']?.toString() ??
+          json['image']?.toString(),
       wikipedia: json['wiki_and_media']?['wikipedia']?.toString() ?? '',
       rawCategories: json['categories'] is List
           ? List<String>.from(json['categories'])

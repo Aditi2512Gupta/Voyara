@@ -101,9 +101,7 @@ class AuthRepository {
 
     await user.updateDisplayName(name);
 
-    final updates = <String, dynamic>{
-      'name': name,
-    };
+    final updates = <String, dynamic>{'name': name};
     if (phone != null) {
       updates['phone'] = phone;
     }

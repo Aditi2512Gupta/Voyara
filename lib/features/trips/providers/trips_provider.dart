@@ -24,10 +24,14 @@ final tripsProvider = Provider<AsyncValue<List<BookingModel>>>((ref) {
             .toList();
 
       case TripFilter.completed:
-        return sortedTrips.where((e) => e.status == TripStatus.completed).toList();
+        return sortedTrips
+            .where((e) => e.status == TripStatus.completed)
+            .toList();
 
       case TripFilter.cancelled:
-        return sortedTrips.where((e) => e.status == TripStatus.cancelled).toList();
+        return sortedTrips
+            .where((e) => e.status == TripStatus.cancelled)
+            .toList();
     }
   });
 });

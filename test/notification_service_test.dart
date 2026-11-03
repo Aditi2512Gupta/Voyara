@@ -36,60 +36,69 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  test('NotificationService defaults to enabled and can toggle ON/OFF', () async {
-    final service = NotificationService.instance;
+  test(
+    'NotificationService defaults to enabled and can toggle ON/OFF',
+    () async {
+      final service = NotificationService.instance;
 
-    await service.setNotificationsEnabled(true);
-    expect(service.areNotificationsEnabled, isTrue);
+      await service.setNotificationsEnabled(true);
+      expect(service.areNotificationsEnabled, isTrue);
 
-    // Verify it persists in SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getBool('voyara_notifications_enabled'), isTrue);
+      // Verify it persists in SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool('voyara_notifications_enabled'), isTrue);
 
-    // Disable notifications
-    await service.setNotificationsEnabled(false);
-    expect(service.areNotificationsEnabled, isFalse);
-    expect(prefs.getBool('voyara_notifications_enabled'), isFalse);
+      // Disable notifications
+      await service.setNotificationsEnabled(false);
+      expect(service.areNotificationsEnabled, isFalse);
+      expect(prefs.getBool('voyara_notifications_enabled'), isFalse);
 
-    // Restore to true
-    await service.setNotificationsEnabled(true);
-    expect(service.areNotificationsEnabled, isTrue);
-  });
+      // Restore to true
+      await service.setNotificationsEnabled(true);
+      expect(service.areNotificationsEnabled, isTrue);
+    },
+  );
 
-  test('NotificationService respects disabled state when showing or scheduling notifications', () async {
-    final service = NotificationService.instance;
+  test(
+    'NotificationService respects disabled state when showing or scheduling notifications',
+    () async {
+      final service = NotificationService.instance;
 
-    // Turn OFF notifications
-    await service.setNotificationsEnabled(false);
+      // Turn OFF notifications
+      await service.setNotificationsEnabled(false);
 
-    // These should return early without errors when notifications are disabled
-    await service.showBookingSuccess(destination: 'Paris');
-    await service.showTripReminder(destination: 'Tokyo');
-    await service.scheduleTripReminder(
-      destination: 'Bali',
-      travelDate: DateTime.now().add(const Duration(days: 5)),
-    );
-    await service.scheduleDailyNotification();
+      // These should return early without errors when notifications are disabled
+      await service.showBookingSuccess(destination: 'Paris');
+      await service.showTripReminder(destination: 'Tokyo');
+      await service.scheduleTripReminder(
+        destination: 'Bali',
+        travelDate: DateTime.now().add(const Duration(days: 5)),
+      );
+      await service.scheduleDailyNotification();
 
-    expect(service.areNotificationsEnabled, isFalse);
+      expect(service.areNotificationsEnabled, isFalse);
 
-    // Re-enable
-    await service.setNotificationsEnabled(true);
-    expect(service.areNotificationsEnabled, isTrue);
-  });
+      // Re-enable
+      await service.setNotificationsEnabled(true);
+      expect(service.areNotificationsEnabled, isTrue);
+    },
+  );
 
-  test('scheduleDailyNotification can be called repeatedly without errors or duplicate alarms', () async {
-    final service = NotificationService.instance;
-    await service.setNotificationsEnabled(true);
+  test(
+    'scheduleDailyNotification can be called repeatedly without errors or duplicate alarms',
+    () async {
+      final service = NotificationService.instance;
+      await service.setNotificationsEnabled(true);
 
-    // Calling multiple times (e.g. at app init, on login, on settings toggle)
-    await service.scheduleDailyNotification(hour: 9, minute: 0);
-    await service.scheduleDailyNotification(hour: 9, minute: 0);
-    await service.scheduleDailyNotification(hour: 9, minute: 0);
+      // Calling multiple times (e.g. at app init, on login, on settings toggle)
+      await service.scheduleDailyNotification(hour: 9, minute: 0);
+      await service.scheduleDailyNotification(hour: 9, minute: 0);
+      await service.scheduleDailyNotification(hour: 9, minute: 0);
 
-    expect(service.areNotificationsEnabled, isTrue);
-    await service.cancelDailyNotification();
-  });
+      expect(service.areNotificationsEnabled, isTrue);
+      await service.cancelDailyNotification();
+    },
+  );
 
   test('scheduleTripReminder skips dates in the past safely', () async {
     final service = NotificationService.instance;
@@ -109,44 +118,50 @@ void main() {
     await service.cancelDailyNotification();
   });
 
-  test('SavedTripRepository schedules reminder on save/update and cancels on delete', () async {
-    final fakeService = FakeSavedTripService();
-    final repo = SavedTripRepository(service: fakeService);
+  test(
+    'SavedTripRepository schedules reminder on save/update and cancels on delete',
+    () async {
+      final fakeService = FakeSavedTripService();
+      final repo = SavedTripRepository(service: fakeService);
 
-    final futureDate = DateTime.now().add(const Duration(days: 7));
-    final trip = SavedTripModel(
-      id: 'trip_swiss_1',
-      destination: 'Switzerland',
-      latitude: 46.8182,
-      longitude: 8.2275,
-      budget: 150000,
-      days: 5,
-      travelers: 2,
-      startDate: futureDate,
-      interests: ['Nature', 'Mountains'],
-      overview: 'Swiss Alps tour',
-      budgetSummary: '₹150,000 for 2',
-      dailyItinerary: [],
-      packingChecklist: [],
-      safetyTips: [],
-      localTips: [],
-      createdAt: DateTime.now(),
-    );
+      final futureDate = DateTime.now().add(const Duration(days: 7));
+      final trip = SavedTripModel(
+        id: 'trip_swiss_1',
+        destination: 'Switzerland',
+        latitude: 46.8182,
+        longitude: 8.2275,
+        budget: 150000,
+        days: 5,
+        travelers: 2,
+        startDate: futureDate,
+        interests: ['Nature', 'Mountains'],
+        overview: 'Swiss Alps tour',
+        budgetSummary: '₹150,000 for 2',
+        dailyItinerary: [],
+        packingChecklist: [],
+        safetyTips: [],
+        localTips: [],
+        createdAt: DateTime.now(),
+      );
 
-    // 1. Save trip should persist to service and schedule reminder
-    await repo.saveTrip(trip);
-    expect(fakeService.trips.containsKey('trip_swiss_1'), isTrue);
+      // 1. Save trip should persist to service and schedule reminder
+      await repo.saveTrip(trip);
+      expect(fakeService.trips.containsKey('trip_swiss_1'), isTrue);
 
-    // 2. Update trip should update service and replace scheduled reminder
-    final updatedTrip = trip.copyWith(
-      destination: 'Zurich & Lucerne',
-      startDate: futureDate.add(const Duration(days: 2)),
-    );
-    await repo.updateTrip(updatedTrip);
-    expect(fakeService.trips['trip_swiss_1']?.destination, 'Zurich & Lucerne');
+      // 2. Update trip should update service and replace scheduled reminder
+      final updatedTrip = trip.copyWith(
+        destination: 'Zurich & Lucerne',
+        startDate: futureDate.add(const Duration(days: 2)),
+      );
+      await repo.updateTrip(updatedTrip);
+      expect(
+        fakeService.trips['trip_swiss_1']?.destination,
+        'Zurich & Lucerne',
+      );
 
-    // 3. Delete trip should remove from service and cancel reminder
-    await repo.deleteTrip('trip_swiss_1');
-    expect(fakeService.trips.containsKey('trip_swiss_1'), isFalse);
-  });
+      // 3. Delete trip should remove from service and cancel reminder
+      await repo.deleteTrip('trip_swiss_1');
+      expect(fakeService.trips.containsKey('trip_swiss_1'), isFalse);
+    },
+  );
 }

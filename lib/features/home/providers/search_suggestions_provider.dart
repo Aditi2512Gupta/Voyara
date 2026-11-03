@@ -5,9 +5,9 @@ import 'discover_provider.dart';
 
 final destinationSuggestionsProvider =
     FutureProvider.family<List<DestinationModel>, String>((ref, query) async {
-  if (query.trim().isEmpty) {
-    return [];
-  }
+      if (query.trim().isEmpty) {
+        return [];
+      }
 
-  return ref.read(discoverSearchProvider(query).future);
-});
+      return ref.read(discoverSearchProvider(query).future);
+    });

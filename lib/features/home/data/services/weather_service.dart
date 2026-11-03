@@ -6,10 +6,7 @@ class WeatherService {
 
   final ApiService apiService;
 
-  Future<dynamic> getWeather({
-    required double lat,
-    required double lon,
-  }) {
+  Future<dynamic> getWeather({required double lat, required double lon}) {
     return apiService.get(
       '${ApiConstants.weatherBaseUrl}/weather'
       '?lat=$lat'
@@ -19,10 +16,7 @@ class WeatherService {
     );
   }
 
-  Future<dynamic> getForecast({
-    required double lat,
-    required double lon,
-  }) {
+  Future<dynamic> getForecast({required double lat, required double lon}) {
     return apiService.get(
       '${ApiConstants.weatherBaseUrl}/forecast'
       '?lat=$lat'

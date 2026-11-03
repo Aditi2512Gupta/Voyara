@@ -7,7 +7,6 @@ final locationServiceProvider = Provider<LocationService>(
   (ref) => LocationService(),
 );
 
-final currentLocationProvider =
-    FutureProvider<Position>((ref) async {
+final currentLocationProvider = FutureProvider<Position>((ref) async {
   return ref.read(locationServiceProvider).getCurrentLocation();
 });

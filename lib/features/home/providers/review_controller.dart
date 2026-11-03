@@ -18,7 +18,9 @@ class ReviewController {
     required String comment,
     required double rating,
   }) async {
-    await ref.read(reviewRepositoryProvider).addReview(
+    await ref
+        .read(reviewRepositoryProvider)
+        .addReview(
           destinationId: destinationId,
           review: ReviewModel(
             userId: userId,
@@ -37,7 +39,9 @@ class ReviewController {
     required double rating,
     required String comment,
   }) async {
-    await ref.read(reviewRepositoryProvider).updateReview(
+    await ref
+        .read(reviewRepositoryProvider)
+        .updateReview(
           destinationId: destinationId,
           reviewId: reviewId,
           rating: rating,
@@ -49,9 +53,8 @@ class ReviewController {
     required String destinationId,
     required String reviewId,
   }) async {
-    await ref.read(reviewRepositoryProvider).deleteReview(
-          destinationId: destinationId,
-          reviewId: reviewId,
-        );
+    await ref
+        .read(reviewRepositoryProvider)
+        .deleteReview(destinationId: destinationId, reviewId: reviewId);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/empty_state_widget.dart';
 import '../../providers/favorites_provider.dart';
 import '../widgets/favorite_destination_card.dart';
@@ -20,9 +21,18 @@ class _FavoritesPageState extends ConsumerState<FavoritesPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final favoritesAsync = ref.watch(favoritesProvider);
+    final columns = Responsive.gridCrossAxisCount(
+      context,
+      compact: 1,
+      mobile: 2,
+      tablet: 3,
+      desktop: 4,
+    );
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.scaffoldDark : AppColors.scaffoldLight,
+      backgroundColor: isDark
+          ? AppColors.scaffoldDark
+          : AppColors.scaffoldLight,
       appBar: AppBar(
         centerTitle: false,
         title: const Text(
@@ -31,72 +41,75 @@ class _FavoritesPageState extends ConsumerState<FavoritesPage> {
         ),
       ),
       body: favoritesAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(strokeWidth: 2.5),
-        ),
+        loading: () =>
+            const Center(child: CircularProgressIndicator(strokeWidth: 2.5)),
         error: (error, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Text(
               error.toString(),
-              style: TextStyle(color: AppColors.error),
+              style: const TextStyle(color: AppColors.error),
             ),
           ),
         ),
         data: (favorites) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Mockup Tabs: Destinations (count), Attractions
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  children: [
-                    _FilterPill(
-                      label: "Destinations (${favorites.length})",
-                      isSelected: _selectedFilterIndex == 0,
-                      onTap: () => setState(() => _selectedFilterIndex = 0),
-                      isDark: isDark,
-                    ),
-                    const SizedBox(width: 8),
-                    _FilterPill(
-                      label: "Attractions",
-                      isSelected: _selectedFilterIndex == 1,
-                      onTap: () => setState(() => _selectedFilterIndex = 1),
-                      isDark: isDark,
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              if (favorites.isEmpty)
-                const Expanded(
-                  child: EmptyStateWidget(
-                    message: "You haven't added any favorites yet.",
+          return ResponsiveContentWrapper(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Tabs: Destinations (count), Attractions
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
                   ),
-                )
-              else
-                Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 14,
-                      mainAxisSpacing: 14,
-                      childAspectRatio: 0.76,
-                    ),
-                    itemCount: favorites.length,
-                    itemBuilder: (context, index) {
-                      return FavoriteDestinationCard(
-                        destination: favorites[index],
-                      );
-                    },
+                  child: Row(
+                    children: [
+                      _FilterPill(
+                        label: "Destinations (${favorites.length})",
+                        isSelected: _selectedFilterIndex == 0,
+                        onTap: () => setState(() => _selectedFilterIndex = 0),
+                        isDark: isDark,
+                      ),
+                      const SizedBox(width: 8),
+                      _FilterPill(
+                        label: "Attractions",
+                        isSelected: _selectedFilterIndex == 1,
+                        onTap: () => setState(() => _selectedFilterIndex = 1),
+                        isDark: isDark,
+                      ),
+                    ],
                   ),
                 ),
-            ],
+
+                const SizedBox(height: 8),
+
+                if (favorites.isEmpty)
+                  const Expanded(
+                    child: EmptyStateWidget(
+                      message: "You haven't added any favorites yet.",
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: columns,
+                        crossAxisSpacing: 14,
+                        mainAxisSpacing: 14,
+                        childAspectRatio: 0.76,
+                      ),
+                      itemCount: favorites.length,
+                      itemBuilder: (context, index) {
+                        return FavoriteDestinationCard(
+                          destination: favorites[index],
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
           );
         },
       ),
@@ -145,8 +158,8 @@ class _FilterPill extends StatelessWidget {
               color: isSelected
                   ? Colors.white
                   : (isDark
-                      ? AppColors.textSecondaryDark
-                      : AppColors.textSecondaryLight),
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight),
             ),
           ),
         ),

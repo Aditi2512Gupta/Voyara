@@ -13,8 +13,7 @@ class DestinationRepository {
     final destinations = await localDatasetService.loadDestinations();
 
     return destinations.where((destination) {
-      final name =
-          (destination["name"] ?? "").toString().toLowerCase();
+      final name = (destination["name"] ?? "").toString().toLowerCase();
 
       return name.contains(place.toLowerCase());
     }).toList();

@@ -1,6 +1,1 @@
-enum TripFilter {
-  all,
-  upcoming,
-  completed,
-  cancelled,
-}
+enum TripFilter { all, upcoming, completed, cancelled }

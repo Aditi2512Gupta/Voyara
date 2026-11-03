@@ -30,8 +30,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     super.initState();
     _selectedIndex =
         (widget.initialIndex >= 0 && widget.initialIndex < _pages.length)
-            ? widget.initialIndex
-            : 0;
+        ? widget.initialIndex
+        : 0;
   }
 
   @override
@@ -72,7 +72,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           selectedIndex: _selectedIndex,
-          indicatorColor: isDark ? const Color(0xFF1B3835) : AppColors.secondaryLight,
+          indicatorColor: isDark
+              ? const Color(0xFF1B3835)
+              : AppColors.secondaryLight,
           onDestinationSelected: (index) {
             setState(() {
               _selectedIndex = index;

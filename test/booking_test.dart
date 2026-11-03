@@ -221,56 +221,58 @@ void main() {
     test('TripStats correctly calculates status counts', () async {
       final container = ProviderContainer(
         overrides: [
-          bookingsProvider.overrideWith((ref) => Stream.value([
-                BookingModel(
-                  id: '1',
-                  destinationId: 'd1',
-                  destinationName: 'A',
-                  destinationLocation: 'Loc A',
-                  destinationImageUrl: '',
-                  destinationLatitude: 0,
-                  destinationLongitude: 0,
-                  userId: 'u1',
-                  travelDate: DateTime(2026, 11, 1),
-                  travelers: 1,
-                  status: TripStatus.upcoming,
-                  bookingDate: DateTime(2026, 10, 1),
-                ),
-                BookingModel(
-                  id: '2',
-                  destinationId: 'd2',
-                  destinationName: 'B',
-                  destinationLocation: 'Loc B',
-                  destinationImageUrl: '',
-                  destinationLatitude: 0,
-                  destinationLongitude: 0,
-                  userId: 'u1',
-                  travelDate: DateTime(2026, 9, 1),
-                  travelers: 2,
-                  status: TripStatus.completed,
-                  bookingDate: DateTime(2026, 8, 1),
-                ),
-                BookingModel(
-                  id: '3',
-                  destinationId: 'd3',
-                  destinationName: 'C',
-                  destinationLocation: 'Loc C',
-                  destinationImageUrl: '',
-                  destinationLatitude: 0,
-                  destinationLongitude: 0,
-                  userId: 'u1',
-                  travelDate: DateTime(2026, 8, 1),
-                  travelers: 4,
-                  status: TripStatus.cancelled,
-                  bookingDate: DateTime(2026, 7, 1),
-                ),
-              ])),
+          bookingsProvider.overrideWith(
+            (ref) => Stream.value([
+              BookingModel(
+                id: '1',
+                destinationId: 'd1',
+                destinationName: 'A',
+                destinationLocation: 'Loc A',
+                destinationImageUrl: '',
+                destinationLatitude: 0,
+                destinationLongitude: 0,
+                userId: 'u1',
+                travelDate: DateTime(2026, 11, 1),
+                travelers: 1,
+                status: TripStatus.upcoming,
+                bookingDate: DateTime(2026, 10, 1),
+              ),
+              BookingModel(
+                id: '2',
+                destinationId: 'd2',
+                destinationName: 'B',
+                destinationLocation: 'Loc B',
+                destinationImageUrl: '',
+                destinationLatitude: 0,
+                destinationLongitude: 0,
+                userId: 'u1',
+                travelDate: DateTime(2026, 9, 1),
+                travelers: 2,
+                status: TripStatus.completed,
+                bookingDate: DateTime(2026, 8, 1),
+              ),
+              BookingModel(
+                id: '3',
+                destinationId: 'd3',
+                destinationName: 'C',
+                destinationLocation: 'Loc C',
+                destinationImageUrl: '',
+                destinationLatitude: 0,
+                destinationLongitude: 0,
+                userId: 'u1',
+                travelDate: DateTime(2026, 8, 1),
+                travelers: 4,
+                status: TripStatus.cancelled,
+                bookingDate: DateTime(2026, 7, 1),
+              ),
+            ]),
+          ),
         ],
       );
 
       // Listen to ensure stream emits
-      container.listen(tripStatsProvider, (_, __) {});
-      container.listen(tripsProvider, (_, __) {});
+      container.listen(tripStatsProvider, (_, _) {});
+      container.listen(tripsProvider, (_, _) {});
       await container.read(bookingsProvider.future);
       await pumpEventQueue();
 
@@ -300,275 +302,300 @@ void main() {
   });
 
   group('BookingService Guard Tests', () {
-    test('BookingService throws clear exception on unauthenticated booking', () async {
-      final service = BookingService();
-      final dummyBooking = BookingModel(
-        id: '1',
-        destinationId: 'd1',
-        destinationName: 'Test',
-        destinationLocation: 'Test Loc',
-        destinationImageUrl: '',
-        destinationLatitude: 0,
-        destinationLongitude: 0,
-        userId: 'u1',
-        travelDate: DateTime.now(),
-        travelers: 1,
-        status: TripStatus.upcoming,
-        bookingDate: DateTime.now(),
-      );
+    test(
+      'BookingService throws clear exception on unauthenticated booking',
+      () async {
+        final service = BookingService();
+        final dummyBooking = BookingModel(
+          id: '1',
+          destinationId: 'd1',
+          destinationName: 'Test',
+          destinationLocation: 'Test Loc',
+          destinationImageUrl: '',
+          destinationLatitude: 0,
+          destinationLongitude: 0,
+          userId: 'u1',
+          travelDate: DateTime.now(),
+          travelers: 1,
+          status: TripStatus.upcoming,
+          bookingDate: DateTime.now(),
+        );
 
-      expect(
-        () => service.createBooking(dummyBooking),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('User must be logged in to create a booking'),
-        )),
-      );
+        expect(
+          () => service.createBooking(dummyBooking),
+          throwsA(
+            isA<Exception>().having(
+              (e) => e.toString(),
+              'message',
+              contains('User must be logged in to create a booking'),
+            ),
+          ),
+        );
 
-      expect(
-        () => service.cancelBooking('1'),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('User must be logged in to cancel a booking'),
-        )),
-      );
+        expect(
+          () => service.cancelBooking('1'),
+          throwsA(
+            isA<Exception>().having(
+              (e) => e.toString(),
+              'message',
+              contains('User must be logged in to cancel a booking'),
+            ),
+          ),
+        );
 
-      final stream = service.bookings();
-      final list = await stream.first;
-      expect(list, isEmpty);
+        final stream = service.bookings();
+        final list = await stream.first;
+        expect(list, isEmpty);
 
-      // updateCompletedTrips does not throw
-      await expectLater(service.updateCompletedTrips(), completes);
-    });
+        // updateCompletedTrips does not throw
+        await expectLater(service.updateCompletedTrips(), completes);
+      },
+    );
   });
 
   group('BookingPage Widget Tests', () {
-    testWidgets('Unauthenticated user attempting to book triggers login SnackBar without crashing',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1600);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
+    testWidgets(
+      'Unauthenticated user attempting to book triggers login SnackBar without crashing',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1600);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
 
-      final mockRepo = MockBookingRepository();
+        final mockRepo = MockBookingRepository();
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            currentUserProvider.overrideWithValue(null),
-            bookingRepositoryProvider.overrideWithValue(mockRepo),
-            bookingControllerProvider.overrideWithValue(
-              BookingController(repository: mockRepo),
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              currentUserProvider.overrideWithValue(null),
+              bookingRepositoryProvider.overrideWithValue(mockRepo),
+              bookingControllerProvider.overrideWithValue(
+                BookingController(repository: mockRepo),
+              ),
+            ],
+            child: MaterialApp(
+              home: BookingPage(destination: sampleDestination),
+            ),
+          ),
+        );
+
+        final element = tester.element(find.byType(BookingPage));
+        final container = ProviderScope.containerOf(element);
+
+        // Set travel date to enable the Save Trip button
+        container.read(travelDateProvider.notifier).state = DateTime.now().add(
+          const Duration(days: 5),
+        );
+        await tester.pump();
+
+        final saveButton = find.widgetWithText(FilledButton, 'Save Trip');
+        expect(saveButton, findsOneWidget);
+
+        await tester.tap(saveButton);
+        await tester.pump();
+
+        // Check login message
+        expect(find.text('Please log in to save your trip'), findsOneWidget);
+        expect(find.text('Log In'), findsOneWidget);
+
+        // Verify no booking was created
+        expect(mockRepo.lastCreatedBooking, isNull);
+        expect(container.read(bookingLoadingProvider), isFalse);
+      },
+    );
+
+    testWidgets(
+      'Successful booking creates booking, resets form, and loading state finishes',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1600);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
+
+        final mockRepo = MockBookingRepository();
+        final fakeUser = FakeUser(uid: 'user_success_999');
+
+        final router = GoRouter(
+          initialLocation: '/booking',
+          routes: [
+            GoRoute(
+              path: '/booking',
+              builder: (_, _) => BookingPage(destination: sampleDestination),
+            ),
+            GoRoute(
+              path: '/booking-success',
+              builder: (_, _) => const Scaffold(body: Text('Success Screen')),
             ),
           ],
-          child: MaterialApp(
-            home: BookingPage(destination: sampleDestination),
+        );
+
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              currentUserProvider.overrideWithValue(fakeUser),
+              bookingRepositoryProvider.overrideWithValue(mockRepo),
+              bookingControllerProvider.overrideWithValue(
+                BookingController(repository: mockRepo),
+              ),
+            ],
+            child: MaterialApp.router(routerConfig: router),
           ),
-        ),
-      );
+        );
 
-      final element = tester.element(find.byType(BookingPage));
-      final container = ProviderScope.containerOf(element);
+        final element = tester.element(find.byType(BookingPage));
+        final container = ProviderScope.containerOf(element);
 
-      // Set travel date to enable the Save Trip button
-      container.read(travelDateProvider.notifier).state =
-          DateTime.now().add(const Duration(days: 5));
-      await tester.pump();
+        final chosenDate = DateTime.now().add(const Duration(days: 7));
+        container.read(travelDateProvider.notifier).state = chosenDate;
+        container.read(travelersProvider.notifier).state = 3;
+        await tester.pump();
 
-      final saveButton = find.widgetWithText(FilledButton, 'Save Trip');
-      expect(saveButton, findsOneWidget);
+        final saveButton = find.widgetWithText(FilledButton, 'Save Trip');
+        await tester.tap(saveButton);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
 
-      await tester.tap(saveButton);
-      await tester.pump();
+        // Verified booking created
+        expect(mockRepo.lastCreatedBooking, isNotNull);
+        expect(
+          mockRepo.lastCreatedBooking?.destinationId,
+          sampleDestination.id,
+        );
+        expect(mockRepo.lastCreatedBooking?.userId, 'user_success_999');
+        expect(mockRepo.lastCreatedBooking?.travelers, 3);
+        expect(mockRepo.lastCreatedBooking?.travelDate, chosenDate);
+        expect(mockRepo.lastCreatedBooking?.status, TripStatus.upcoming);
 
-      // Check login message
-      expect(find.text('Please log in to save your trip'), findsOneWidget);
-      expect(find.text('Log In'), findsOneWidget);
+        // Verify form was reset
+        expect(container.read(travelDateProvider), isNull);
+        expect(container.read(travelersProvider), 1);
+        expect(container.read(bookingLoadingProvider), isFalse);
 
-      // Verify no booking was created
-      expect(mockRepo.lastCreatedBooking, isNull);
-      expect(container.read(bookingLoadingProvider), isFalse);
-    });
+        // Verify navigated to success screen
+        expect(find.text('Success Screen'), findsOneWidget);
+      },
+    );
 
-    testWidgets('Successful booking creates booking, resets form, and loading state finishes',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1600);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
+    testWidgets(
+      'Booking creation failure shows error SnackBar and resets loading state',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1600);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
 
-      final mockRepo = MockBookingRepository();
-      final fakeUser = FakeUser(uid: 'user_success_999');
+        final mockRepo = MockBookingRepository()..shouldThrowOnCreate = true;
+        final fakeUser = FakeUser(uid: 'user_fail_111');
 
-      final router = GoRouter(
-        initialLocation: '/booking',
-        routes: [
-          GoRoute(
-            path: '/booking',
-            builder: (_, __) => BookingPage(destination: sampleDestination),
-          ),
-          GoRoute(
-            path: '/booking-success',
-            builder: (_, __) => const Scaffold(body: Text('Success Screen')),
-          ),
-        ],
-      );
-
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            currentUserProvider.overrideWithValue(fakeUser),
-            bookingRepositoryProvider.overrideWithValue(mockRepo),
-            bookingControllerProvider.overrideWithValue(
-              BookingController(repository: mockRepo),
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              currentUserProvider.overrideWithValue(fakeUser),
+              bookingRepositoryProvider.overrideWithValue(mockRepo),
+              bookingControllerProvider.overrideWithValue(
+                BookingController(repository: mockRepo),
+              ),
+            ],
+            child: MaterialApp(
+              home: BookingPage(destination: sampleDestination),
             ),
-          ],
-          child: MaterialApp.router(
-            routerConfig: router,
           ),
-        ),
-      );
+        );
 
-      final element = tester.element(find.byType(BookingPage));
-      final container = ProviderScope.containerOf(element);
+        final element = tester.element(find.byType(BookingPage));
+        final container = ProviderScope.containerOf(element);
 
-      final chosenDate = DateTime.now().add(const Duration(days: 7));
-      container.read(travelDateProvider.notifier).state = chosenDate;
-      container.read(travelersProvider.notifier).state = 3;
-      await tester.pump();
+        final chosenDate = DateTime.now().add(const Duration(days: 3));
+        container.read(travelDateProvider.notifier).state = chosenDate;
+        container.read(travelersProvider.notifier).state = 2;
+        await tester.pump();
 
-      final saveButton = find.widgetWithText(FilledButton, 'Save Trip');
-      await tester.tap(saveButton);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
+        final saveButton = find.widgetWithText(FilledButton, 'Save Trip');
+        await tester.tap(saveButton);
+        await tester.pump(const Duration(milliseconds: 300));
 
-      // Verified booking created
-      expect(mockRepo.lastCreatedBooking, isNotNull);
-      expect(mockRepo.lastCreatedBooking?.destinationId, sampleDestination.id);
-      expect(mockRepo.lastCreatedBooking?.userId, 'user_success_999');
-      expect(mockRepo.lastCreatedBooking?.travelers, 3);
-      expect(mockRepo.lastCreatedBooking?.travelDate, chosenDate);
-      expect(mockRepo.lastCreatedBooking?.status, TripStatus.upcoming);
-
-      // Verify form was reset
-      expect(container.read(travelDateProvider), isNull);
-      expect(container.read(travelersProvider), 1);
-      expect(container.read(bookingLoadingProvider), isFalse);
-
-      // Verify navigated to success screen
-      expect(find.text('Success Screen'), findsOneWidget);
-    });
-
-    testWidgets('Booking creation failure shows error SnackBar and resets loading state',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1600);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-
-      final mockRepo = MockBookingRepository()..shouldThrowOnCreate = true;
-      final fakeUser = FakeUser(uid: 'user_fail_111');
-
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            currentUserProvider.overrideWithValue(fakeUser),
-            bookingRepositoryProvider.overrideWithValue(mockRepo),
-            bookingControllerProvider.overrideWithValue(
-              BookingController(repository: mockRepo),
-            ),
-          ],
-          child: MaterialApp(
-            home: BookingPage(destination: sampleDestination),
+        // Error SnackBar displayed
+        expect(
+          find.textContaining(
+            'Failed to save trip: Network connection timed out',
           ),
-        ),
-      );
+          findsOneWidget,
+        );
 
-      final element = tester.element(find.byType(BookingPage));
-      final container = ProviderScope.containerOf(element);
+        // Button is NOT stuck in loading
+        expect(container.read(bookingLoadingProvider), isFalse);
 
-      final chosenDate = DateTime.now().add(const Duration(days: 3));
-      container.read(travelDateProvider.notifier).state = chosenDate;
-      container.read(travelersProvider.notifier).state = 2;
-      await tester.pump();
-
-      final saveButton = find.widgetWithText(FilledButton, 'Save Trip');
-      await tester.tap(saveButton);
-      await tester.pump(const Duration(milliseconds: 300));
-
-      // Error SnackBar displayed
-      expect(find.textContaining('Failed to save trip: Network connection timed out'),
-          findsOneWidget);
-
-      // Button is NOT stuck in loading
-      expect(container.read(bookingLoadingProvider), isFalse);
-
-      // Form values are preserved for retry
-      expect(container.read(travelDateProvider), chosenDate);
-      expect(container.read(travelersProvider), 2);
-    });
+        // Form values are preserved for retry
+        expect(container.read(travelDateProvider), chosenDate);
+        expect(container.read(travelersProvider), 2);
+      },
+    );
   });
 
   group('BookingDetailsPage Cancellation Tests', () {
-    testWidgets('Cancel booking flow asks for confirmation, cancels on server, and shows feedback',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1600);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
+    testWidgets(
+      'Cancel booking flow asks for confirmation, cancels on server, and shows feedback',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1600);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
 
-      final mockRepo = MockBookingRepository();
-      final upcomingBooking = BookingModel(
-        id: 'book_cancel_test',
-        destinationId: sampleDestination.id,
-        destinationName: sampleDestination.title,
-        destinationLocation: sampleDestination.location,
-        destinationImageUrl: '',
-        destinationLatitude: sampleDestination.latitude,
-        destinationLongitude: sampleDestination.longitude,
-        userId: 'user_123',
-        travelDate: DateTime.now().add(const Duration(days: 10)),
-        travelers: 2,
-        status: TripStatus.upcoming,
-        bookingDate: DateTime.now(),
-      );
-      mockRepo.currentBookings = [upcomingBooking];
+        final mockRepo = MockBookingRepository();
+        final upcomingBooking = BookingModel(
+          id: 'book_cancel_test',
+          destinationId: sampleDestination.id,
+          destinationName: sampleDestination.title,
+          destinationLocation: sampleDestination.location,
+          destinationImageUrl: '',
+          destinationLatitude: sampleDestination.latitude,
+          destinationLongitude: sampleDestination.longitude,
+          userId: 'user_123',
+          travelDate: DateTime.now().add(const Duration(days: 10)),
+          travelers: 2,
+          status: TripStatus.upcoming,
+          bookingDate: DateTime.now(),
+        );
+        mockRepo.currentBookings = [upcomingBooking];
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            bookingRepositoryProvider.overrideWithValue(mockRepo),
-            bookingControllerProvider.overrideWithValue(
-              BookingController(repository: mockRepo),
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              bookingRepositoryProvider.overrideWithValue(mockRepo),
+              bookingControllerProvider.overrideWithValue(
+                BookingController(repository: mockRepo),
+              ),
+            ],
+            child: MaterialApp(
+              home: BookingDetailsPage(booking: upcomingBooking),
             ),
-          ],
-          child: MaterialApp(
-            home: BookingDetailsPage(booking: upcomingBooking),
           ),
-        ),
-      );
-      await tester.pump(const Duration(milliseconds: 200));
+        );
+        await tester.pump(const Duration(milliseconds: 200));
 
-      // Cancel button should be visible for upcoming booking
-      final cancelButton = find.widgetWithText(FilledButton, 'Cancel Trip');
-      expect(cancelButton, findsOneWidget);
+        // Cancel button should be visible for upcoming booking
+        final cancelButton = find.widgetWithText(FilledButton, 'Cancel Trip');
+        expect(cancelButton, findsOneWidget);
 
-      await tester.tap(cancelButton, warnIfMissed: false);
-      await tester.pump(const Duration(milliseconds: 200));
+        await tester.tap(cancelButton, warnIfMissed: false);
+        await tester.pump(const Duration(milliseconds: 200));
 
-      // Dialog appears
-      expect(find.text('Are you sure you want to cancel this trip?'), findsOneWidget);
+        // Dialog appears
+        expect(
+          find.text('Are you sure you want to cancel this trip?'),
+          findsOneWidget,
+        );
 
-      // Confirm cancellation
-      final yesButton = find.widgetWithText(FilledButton, 'Yes');
-      await tester.tap(yesButton);
-      await tester.pump(const Duration(milliseconds: 200));
+        // Confirm cancellation
+        final yesButton = find.widgetWithText(FilledButton, 'Yes');
+        await tester.tap(yesButton);
+        await tester.pump(const Duration(milliseconds: 200));
 
-      // Cancellation triggered
-      expect(mockRepo.lastCancelledBookingId, 'book_cancel_test');
-      expect(find.text('Trip cancelled successfully'), findsOneWidget);
-    });
+        // Cancellation triggered
+        expect(mockRepo.lastCancelledBookingId, 'book_cancel_test');
+        expect(find.text('Trip cancelled successfully'), findsOneWidget);
+      },
+    );
 
-    testWidgets('Cancellation failure shows error feedback without crashing',
-        (tester) async {
+    testWidgets('Cancellation failure shows error feedback without crashing', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(800, 1600);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -612,78 +639,85 @@ void main() {
       await tester.tap(yesButton);
       await tester.pump(const Duration(milliseconds: 200));
 
-      expect(find.textContaining('Failed to cancel trip: Server cancellation failed'),
-          findsOneWidget);
+      expect(
+        find.textContaining(
+          'Failed to cancel trip: Server cancellation failed',
+        ),
+        findsOneWidget,
+      );
     });
   });
 
   group('Navigation & BookingSuccessPage Tests', () {
-    testWidgets('BookingSuccessPage navigates to /home?tab=1 on View My Trips and /home on Back to Home',
-        (tester) async {
-      String? lastNavigatedRoute;
+    testWidgets(
+      'BookingSuccessPage navigates to /home?tab=1 on View My Trips and /home on Back to Home',
+      (tester) async {
+        String? lastNavigatedRoute;
 
-      final testRouter = GoRouter(
-        initialLocation: '/booking-success',
-        routes: [
-          GoRoute(
-            path: '/booking-success',
-            builder: (_, __) => const BookingSuccessPage(),
-          ),
-          GoRoute(
-            path: '/home',
-            builder: (_, state) {
-              lastNavigatedRoute = state.uri.toString();
-              final tabIndex = state.uri.queryParameters['tab'] == '1' ? 1 : 0;
-              return Scaffold(body: Text('Home Screen (tab: $tabIndex)'));
-            },
-          ),
-        ],
-      );
-
-      await tester.pumpWidget(
-        MaterialApp.router(
-          routerConfig: testRouter,
-        ),
-      );
-
-      expect(find.text('Trip Saved Successfully!'), findsOneWidget);
-
-      // Tap View My Trips
-      final viewTripsButton = find.widgetWithText(FilledButton, 'View My Trips');
-      expect(viewTripsButton, findsOneWidget);
-
-      await tester.tap(viewTripsButton);
-      await tester.pumpAndSettle();
-
-      expect(lastNavigatedRoute, '/home?tab=1');
-      expect(find.text('Home Screen (tab: 1)'), findsOneWidget);
-    });
-
-    testWidgets('MainNavigationPage honors initialIndex for direct tab routing',
-        (tester) async {
-      final mockRepo = MockBookingRepository();
-
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            bookingRepositoryProvider.overrideWithValue(mockRepo),
-            bookingControllerProvider.overrideWithValue(
-              BookingController(repository: mockRepo),
+        final testRouter = GoRouter(
+          initialLocation: '/booking-success',
+          routes: [
+            GoRoute(
+              path: '/booking-success',
+              builder: (_, _) => const BookingSuccessPage(),
             ),
-            bookingsProvider.overrideWith((ref) => Stream.value([])),
+            GoRoute(
+              path: '/home',
+              builder: (_, state) {
+                lastNavigatedRoute = state.uri.toString();
+                final tabIndex = state.uri.queryParameters['tab'] == '1'
+                    ? 1
+                    : 0;
+                return Scaffold(body: Text('Home Screen (tab: $tabIndex)'));
+              },
+            ),
           ],
-          child: const MaterialApp(
-            home: MainNavigationPage(initialIndex: 1),
+        );
+
+        await tester.pumpWidget(MaterialApp.router(routerConfig: testRouter));
+
+        expect(find.text('Trip Saved Successfully!'), findsOneWidget);
+
+        // Tap View My Trips
+        final viewTripsButton = find.widgetWithText(
+          FilledButton,
+          'View My Trips',
+        );
+        expect(viewTripsButton, findsOneWidget);
+
+        await tester.tap(viewTripsButton);
+        await tester.pumpAndSettle();
+
+        expect(lastNavigatedRoute, '/home?tab=1');
+        expect(find.text('Home Screen (tab: 1)'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'MainNavigationPage honors initialIndex for direct tab routing',
+      (tester) async {
+        final mockRepo = MockBookingRepository();
+
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              bookingRepositoryProvider.overrideWithValue(mockRepo),
+              bookingControllerProvider.overrideWithValue(
+                BookingController(repository: mockRepo),
+              ),
+              bookingsProvider.overrideWith((ref) => Stream.value([])),
+            ],
+            child: const MaterialApp(home: MainNavigationPage(initialIndex: 1)),
           ),
-        ),
-      );
-      await tester.pump(const Duration(milliseconds: 200));
+        );
+        await tester.pump(const Duration(milliseconds: 200));
 
-      // Trips page header should be visible
-      expect(find.text('My Trips'), findsOneWidget);
+        // Trips page header should be visible
+        expect(find.text('My Trips'), findsOneWidget);
 
-      final navBar = tester.widget<NavigationBar>(find.byType(NavigationBar));
-      expect(navBar.selectedIndex, 1);
-    });
+        final navBar = tester.widget<NavigationBar>(find.byType(NavigationBar));
+        expect(navBar.selectedIndex, 1);
+      },
+    );
   });
 }

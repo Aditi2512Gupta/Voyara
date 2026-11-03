@@ -35,18 +35,22 @@ class DailyForecastModel {
       final dt = (item['dt'] as num?)?.toInt();
       if (dt == null) continue;
 
-      final utcTime =
-          DateTime.fromMillisecondsSinceEpoch(dt * 1000, isUtc: true);
+      final utcTime = DateTime.fromMillisecondsSinceEpoch(
+        dt * 1000,
+        isUtc: true,
+      );
       final localTime = utcTime.add(timezoneOffset);
       final dayKey = DateTime(localTime.year, localTime.month, localTime.day);
 
       groupedByDay.putIfAbsent(dayKey, () => []).add({
         'localHour': localTime.hour,
         'temp': (item['main']?['temp'] as num?)?.toDouble() ?? 0.0,
-        'tempMin': (item['main']?['temp_min'] as num?)?.toDouble() ??
+        'tempMin':
+            (item['main']?['temp_min'] as num?)?.toDouble() ??
             (item['main']?['temp'] as num?)?.toDouble() ??
             0.0,
-        'tempMax': (item['main']?['temp_max'] as num?)?.toDouble() ??
+        'tempMax':
+            (item['main']?['temp_max'] as num?)?.toDouble() ??
             (item['main']?['temp'] as num?)?.toDouble() ??
             0.0,
         'condition': (item['weather'] as List?)?.isNotEmpty == true
@@ -91,13 +95,15 @@ class DailyForecastModel {
         }
       }
 
-      result.add(DailyForecastModel(
-        date: day,
-        minTemp: minTemp,
-        maxTemp: maxTemp,
-        condition: representative['condition'] as String,
-        icon: representative['icon'] as String,
-      ));
+      result.add(
+        DailyForecastModel(
+          date: day,
+          minTemp: minTemp,
+          maxTemp: maxTemp,
+          condition: representative['condition'] as String,
+          icon: representative['icon'] as String,
+        ),
+      );
     }
 
     return result;

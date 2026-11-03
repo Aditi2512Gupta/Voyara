@@ -54,7 +54,9 @@ final appRouter = GoRouter(
             initialIndex = 1;
           } else if (tabParam == 'favorites' || tabParam == '2') {
             initialIndex = 2;
-          } else if (tabParam == 'profile' || tabParam == '3' || tabParam == '4') {
+          } else if (tabParam == 'profile' ||
+              tabParam == '3' ||
+              tabParam == '4') {
             initialIndex = 3;
           } else {
             final parsed = int.tryParse(tabParam);
@@ -74,14 +76,8 @@ final appRouter = GoRouter(
         return MainNavigationPage(initialIndex: initialIndex);
       },
     ),
-    GoRoute(
-      path: '/trips',
-      redirect: (context, state) => '/home?tab=1',
-    ),
-    GoRoute(
-      path: '/favorites',
-      redirect: (context, state) => '/home?tab=2',
-    ),
+    GoRoute(path: '/trips', redirect: (context, state) => '/home?tab=1'),
+    GoRoute(path: '/favorites', redirect: (context, state) => '/home?tab=2'),
 
     GoRoute(
       path: '/destination',
@@ -145,7 +141,15 @@ final appRouter = GoRouter(
 
     GoRoute(
       path: '/saved-trips',
-      builder: (context, state) => const SavedTripsPage(),
+      builder: (context, state) {
+        final title = state.uri.queryParameters['title'] ?? 'My Trips';
+        return SavedTripsPage(title: title);
+      },
+    ),
+
+    GoRoute(
+      path: '/my-trips',
+      builder: (context, state) => const SavedTripsPage(title: 'My Trips'),
     ),
 
     GoRoute(

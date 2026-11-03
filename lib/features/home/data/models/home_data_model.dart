@@ -18,9 +18,9 @@ class HomeDataModel {
   });
 
   List<DestinationModel> get destinations => [
-        ...nearby,
-        ...weekendGetaways,
-        ...exploreBeyond,
-        ...popular,
-      ];
+    ...nearby,
+    ...weekendGetaways,
+    ...exploreBeyond,
+    ...popular,
+  ];
 }

@@ -18,7 +18,8 @@ class TripFilterChips extends ConsumerWidget {
       child: Row(
         children: TripFilter.values.map((filter) {
           final isSelected = selected == filter;
-          final label = "${filter.name[0].toUpperCase()}${filter.name.substring(1)}";
+          final label =
+              "${filter.name[0].toUpperCase()}${filter.name.substring(1)}";
 
           return Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -38,7 +39,9 @@ class TripFilterChips extends ConsumerWidget {
               labelStyle: TextStyle(
                 color: isSelected
                     ? (isDark ? AppColors.primaryDark : Colors.white)
-                    : (isDark ? AppColors.textSecondaryDark : AppColors.textPrimaryLight),
+                    : (isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textPrimaryLight),
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 fontSize: 13,
               ),

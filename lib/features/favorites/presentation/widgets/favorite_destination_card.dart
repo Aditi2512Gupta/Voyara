@@ -82,13 +82,16 @@ class FavoriteDestinationCard extends ConsumerWidget {
                               child: SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               ),
                             ),
                           ),
-                          error: (_, __) => _buildFallbackImage(isDark),
+                          error: (_, _) => _buildFallbackImage(isDark),
                           data: (images) {
-                            final validUrl = (images.isNotEmpty &&
+                            final validUrl =
+                                (images.isNotEmpty &&
                                     images.first.imageUrl.trim().isNotEmpty)
                                 ? images.first.imageUrl
                                 : destination.imageUrl;
@@ -100,7 +103,7 @@ class FavoriteDestinationCard extends ConsumerWidget {
                             return CachedNetworkImage(
                               imageUrl: validUrl,
                               fit: BoxFit.cover,
-                              placeholder: (_, __) => Container(
+                              placeholder: (_, _) => Container(
                                 color: isDark
                                     ? AppColors.inputDark
                                     : AppColors.inputLight,
@@ -108,11 +111,13 @@ class FavoriteDestinationCard extends ConsumerWidget {
                                   child: SizedBox(
                                     width: 20,
                                     height: 20,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
                                   ),
                                 ),
                               ),
-                              errorWidget: (_, __, ___) =>
+                              errorWidget: (_, _, _) =>
                                   _buildFallbackImage(isDark),
                             );
                           },
@@ -223,7 +228,7 @@ class FavoriteDestinationCard extends ConsumerWidget {
       return CachedNetworkImage(
         imageUrl: destination.imageUrl,
         fit: BoxFit.cover,
-        errorWidget: (_, __, ___) => _defaultPlaceholder(isDark),
+        errorWidget: (_, _, _) => _defaultPlaceholder(isDark),
       );
     }
     return _defaultPlaceholder(isDark);

@@ -13,9 +13,7 @@ class DestinationLocalDataSource {
   final Isar _isar;
   final CacheManager _cacheManager;
 
-  Future<void> saveDestinations(
-    List<DestinationCache> destinations,
-  ) async {
+  Future<void> saveDestinations(List<DestinationCache> destinations) async {
     await _cacheManager.save(() async {
       await _isar.destinationCaches.clear();
       await _isar.destinationCaches.putAll(destinations);

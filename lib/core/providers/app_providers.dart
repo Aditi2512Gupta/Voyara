@@ -9,7 +9,6 @@ final apiServiceProvider = Provider<ApiService>((ref) {
   return ApiService();
 });
 
-final localDatasetProvider =
-    Provider<LocalDatasetService>((ref) {
+final localDatasetProvider = Provider<LocalDatasetService>((ref) {
   return LocalDatasetService();
 });

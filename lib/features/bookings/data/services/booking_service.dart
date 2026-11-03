@@ -10,9 +10,9 @@ class BookingService {
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
     NotificationRepository? notificationRepository,
-  })  : _customFirestore = firestore,
-        _customAuth = auth,
-        _customNotificationRepository = notificationRepository;
+  }) : _customFirestore = firestore,
+       _customAuth = auth,
+       _customNotificationRepository = notificationRepository;
 
   final FirebaseFirestore? _customFirestore;
   final FirebaseAuth? _customAuth;

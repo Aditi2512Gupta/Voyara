@@ -16,8 +16,18 @@ class ReviewCard extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
@@ -28,9 +38,7 @@ class ReviewCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -40,12 +48,16 @@ class ReviewCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 18,
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                  backgroundImage: review.userPhotoUrl != null &&
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer,
+                  backgroundImage:
+                      review.userPhotoUrl != null &&
                           review.userPhotoUrl!.isNotEmpty
                       ? NetworkImage(review.userPhotoUrl!)
                       : null,
-                  child: review.userPhotoUrl == null ||
+                  child:
+                      review.userPhotoUrl == null ||
                           review.userPhotoUrl!.isEmpty
                       ? Text(
                           review.userName.isNotEmpty
@@ -53,7 +65,9 @@ class ReviewCard extends StatelessWidget {
                               : '?',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
                           ),
                         )
                       : null,
@@ -64,7 +78,9 @@ class ReviewCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        review.userName.isNotEmpty ? review.userName : 'Anonymous',
+                        review.userName.isNotEmpty
+                            ? review.userName
+                            : 'Anonymous',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
@@ -109,7 +125,10 @@ class ReviewCard extends StatelessWidget {
                             children: [
                               Icon(Icons.delete, size: 18, color: Colors.red),
                               SizedBox(width: 8),
-                              Text('Delete', style: TextStyle(color: Colors.red)),
+                              Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.red),
+                              ),
                             ],
                           ),
                         ),
@@ -122,19 +141,28 @@ class ReviewCard extends StatelessWidget {
 
             Row(
               children: [
-                ...List.generate(
-                  5,
-                  (index) {
-                    final starIndex = index + 1;
-                    if (review.rating >= starIndex) {
-                      return const Icon(Icons.star, color: Colors.amber, size: 18);
-                    } else if (review.rating >= starIndex - 0.5) {
-                      return const Icon(Icons.star_half, color: Colors.amber, size: 18);
-                    } else {
-                      return const Icon(Icons.star_border, color: Colors.amber, size: 18);
-                    }
-                  },
-                ),
+                ...List.generate(5, (index) {
+                  final starIndex = index + 1;
+                  if (review.rating >= starIndex) {
+                    return const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                      size: 18,
+                    );
+                  } else if (review.rating >= starIndex - 0.5) {
+                    return const Icon(
+                      Icons.star_half,
+                      color: Colors.amber,
+                      size: 18,
+                    );
+                  } else {
+                    return const Icon(
+                      Icons.star_border,
+                      color: Colors.amber,
+                      size: 18,
+                    );
+                  }
+                }),
                 const SizedBox(width: 8),
                 Text(
                   review.rating.toStringAsFixed(1),
@@ -148,13 +176,10 @@ class ReviewCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            Text(
-              review.comment,
-              style: const TextStyle(height: 1.4),
-            ),
+            Text(review.comment, style: const TextStyle(height: 1.4)),
           ],
         ),
       ),
     );
   }
-}
+}

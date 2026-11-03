@@ -158,7 +158,6 @@
 //   return score;
 // }
 
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/models/destination_model.dart';
@@ -167,17 +166,16 @@ import 'home_provider.dart';
 import 'nearby_destinations_provider.dart';
 import 'popular_provider.dart';
 
-final discoverDestinationsProvider =
-    FutureProvider<List<DestinationModel>>((ref) async {
+final discoverDestinationsProvider = FutureProvider<List<DestinationModel>>((
+  ref,
+) async {
   final destinations = await ref
       .read(voyaraLocalDataSourceProvider)
       .getDestinations();
 
-  final nearbyResult =
-      ref.watch(nearbyDestinationsProvider).valueOrNull;
+  final nearbyResult = ref.watch(nearbyDestinationsProvider).valueOrNull;
 
-  final excludedIds =
-      nearbyResult?.destinations.map((e) => e.id).toSet() ?? {};
+  final excludedIds = nearbyResult?.destinations.map((e) => e.id).toSet() ?? {};
 
   final available = destinations.where((destination) {
     return !excludedIds.contains(destination.id) &&
@@ -187,89 +185,79 @@ final discoverDestinationsProvider =
   }).toList();
 
   // Show highly rated destinations first.
-  available.sort(
-    (a, b) => b.rating.compareTo(a.rating),
-  );
+  available.sort((a, b) => b.rating.compareTo(a.rating));
 
   return available.take(8).toList();
 });
 
-final discoverSearchProvider =
-    FutureProvider.autoDispose.family<List<DestinationModel>, String>(
-  (ref, query) async {
-    final q = query.trim().toLowerCase();
+final discoverSearchProvider = FutureProvider.autoDispose
+    .family<List<DestinationModel>, String>((ref, query) async {
+      final q = query.trim().toLowerCase();
 
-    if (q.isEmpty) {
-      return [];
-    }
+      if (q.isEmpty) {
+        return [];
+      }
 
-    // Keep the existing 300 ms debounce.
-    var isDisposed = false;
+      // Keep the existing 300 ms debounce.
+      var isDisposed = false;
 
-    ref.onDispose(() {
-      isDisposed = true;
+      ref.onDispose(() {
+        isDisposed = true;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      if (isDisposed) {
+        return [];
+      }
+
+      // Read ALL destinations from our curated dataset.
+      final destinations = await ref
+          .read(voyaraLocalDataSourceProvider)
+          .getDestinations();
+
+      // Filter locally instead of calling Geoapify.
+      final filtered = destinations.where((destination) {
+        final titleMatch = destination.title.toLowerCase().contains(q);
+
+        final locationMatch = destination.location.toLowerCase().contains(q);
+
+        final descriptionMatch = destination.description.toLowerCase().contains(
+          q,
+        );
+
+        final categoryMatch = destination.categories.any(
+          (category) => category.toString().toLowerCase().contains(q),
+        );
+
+        final activityMatch =
+            destination
+                .toMap()['activities']
+                ?.toString()
+                .toLowerCase()
+                .contains(q) ??
+            false;
+
+        return titleMatch ||
+            locationMatch ||
+            descriptionMatch ||
+            categoryMatch ||
+            activityMatch;
+      }).toList();
+
+      // Get user's location for ranking.
+      final userLoc = ref.read(popularCountryProvider).valueOrNull;
+
+      filtered.sort((a, b) {
+        final scoreA = calculateSearchScore(a, q, userLoc);
+
+        final scoreB = calculateSearchScore(b, q, userLoc);
+
+        return scoreB.compareTo(scoreA);
+      });
+
+      return filtered;
     });
-
-    await Future.delayed(
-      const Duration(milliseconds: 300),
-    );
-
-    if (isDisposed) {
-      return [];
-    }
-
-    // Read ALL destinations from our curated dataset.
-    final destinations = await ref
-        .read(voyaraLocalDataSourceProvider)
-        .getDestinations();
-
-    // Filter locally instead of calling Geoapify.
-    final filtered = destinations.where((destination) {
-      final titleMatch =
-          destination.title.toLowerCase().contains(q);
-
-      final locationMatch =
-          destination.location.toLowerCase().contains(q);
-
-      final descriptionMatch =
-          destination.description.toLowerCase().contains(q);
-
-      final categoryMatch = destination.categories.any(
-        (category) =>
-            category.toString().toLowerCase().contains(q),
-      );
-
-      final activityMatch =
-          destination.toMap()['activities']
-                  ?.toString()
-                  .toLowerCase()
-                  .contains(q) ??
-              false;
-
-      return titleMatch ||
-          locationMatch ||
-          descriptionMatch ||
-          categoryMatch ||
-          activityMatch;
-    }).toList();
-
-    // Get user's location for ranking.
-    final userLoc =
-        ref.read(popularCountryProvider).valueOrNull;
-
-    filtered.sort((a, b) {
-      final scoreA =
-          calculateSearchScore(a, q, userLoc);
-
-      final scoreB =
-          calculateSearchScore(b, q, userLoc);
-
-      return scoreB.compareTo(scoreA);
-    });
-
-    return filtered;
-  },
-);
 
 int calculateSearchScore(
   DestinationModel destination,
@@ -278,11 +266,9 @@ int calculateSearchScore(
 ) {
   int score = 0;
 
-  final title =
-      destination.title.toLowerCase();
+  final title = destination.title.toLowerCase();
 
-  final location =
-      destination.location.toLowerCase();
+  final location = destination.location.toLowerCase();
 
   // Exact title match.
   if (title == query) {
@@ -310,56 +296,45 @@ int calculateSearchScore(
   }
 
   // Tourism importance.
-  final categories =
-      destination.categories.join(" ").toLowerCase();
+  final categories = destination.categories.join(" ").toLowerCase();
 
-  if (categories.contains('unesco') ||
-      title.contains('unesco')) {
+  if (categories.contains('unesco') || title.contains('unesco')) {
     score += 5000;
   }
 
-  if (categories.contains('castle') ||
-      title.contains('castle')) {
+  if (categories.contains('castle') || title.contains('castle')) {
     score += 4000;
   }
 
-  if (categories.contains('fort') ||
-      title.contains('fort')) {
+  if (categories.contains('fort') || title.contains('fort')) {
     score += 4000;
   }
 
-  if (categories.contains('palace') ||
-      title.contains('palace')) {
+  if (categories.contains('palace') || title.contains('palace')) {
     score += 3500;
   }
 
-  if (categories.contains('monument') ||
-      title.contains('monument')) {
+  if (categories.contains('monument') || title.contains('monument')) {
     score += 3000;
   }
 
-  if (categories.contains('museum') ||
-      title.contains('museum')) {
+  if (categories.contains('museum') || title.contains('museum')) {
     score += 2500;
   }
 
-  if (categories.contains('temple') ||
-      title.contains('temple')) {
+  if (categories.contains('temple') || title.contains('temple')) {
     score += 2000;
   }
 
-  if (categories.contains('church') ||
-      title.contains('church')) {
+  if (categories.contains('church') || title.contains('church')) {
     score += 2000;
   }
 
-  if (categories.contains('mosque') ||
-      title.contains('mosque')) {
+  if (categories.contains('mosque') || title.contains('mosque')) {
     score += 2000;
   }
 
-  if (categories.contains('heritage') ||
-      title.contains('heritage')) {
+  if (categories.contains('heritage') || title.contains('heritage')) {
     score += 1500;
   }
 

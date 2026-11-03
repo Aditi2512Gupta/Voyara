@@ -69,7 +69,9 @@ class FeaturedDestinationCard extends ConsumerWidget {
                   tag: 'destination-${destination.id}',
                   child: imagesAsync.when(
                     loading: () => Container(
-                      color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                      color: isDark
+                          ? AppColors.inputDark
+                          : AppColors.inputLight,
                       child: const Center(
                         child: SizedBox(
                           width: 24,
@@ -78,12 +80,12 @@ class FeaturedDestinationCard extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    error: (_, __) {
+                    error: (_, _) {
                       if (destination.imageUrl.isEmpty) return errorPlaceholder;
                       return CachedNetworkImage(
                         imageUrl: destination.imageUrl,
                         fit: BoxFit.cover,
-                        errorWidget: (_, __, ___) => errorPlaceholder,
+                        errorWidget: (_, _, _) => errorPlaceholder,
                       );
                     },
                     data: (images) {
@@ -96,8 +98,10 @@ class FeaturedDestinationCard extends ConsumerWidget {
                       return CachedNetworkImage(
                         imageUrl: imageUrl,
                         fit: BoxFit.cover,
-                        placeholder: (_, __) => Container(
-                          color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                        placeholder: (_, _) => Container(
+                          color: isDark
+                              ? AppColors.inputDark
+                              : AppColors.inputLight,
                           child: const Center(
                             child: SizedBox(
                               width: 24,
@@ -106,7 +110,7 @@ class FeaturedDestinationCard extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        errorWidget: (_, __, ___) => errorPlaceholder,
+                        errorWidget: (_, _, _) => errorPlaceholder,
                       );
                     },
                   ),

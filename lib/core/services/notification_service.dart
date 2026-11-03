@@ -113,8 +113,8 @@ class NotificationService {
       }
 
       // 4. Handle launch payload if the app was opened via notification from terminated state
-      final launchDetails =
-          await _localNotifications.getNotificationAppLaunchDetails();
+      final launchDetails = await _localNotifications
+          .getNotificationAppLaunchDetails();
       if (launchDetails?.didNotificationLaunchApp == true) {
         final payload = launchDetails?.notificationResponse?.payload;
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -346,10 +346,7 @@ class NotificationService {
     }
   }
 
-  Future<void> scheduleDailyNotification({
-    int hour = 9,
-    int minute = 0,
-  }) async {
+  Future<void> scheduleDailyNotification({int hour = 9, int minute = 0}) async {
     if (!_notificationsEnabled) return;
 
     final location = _safeLocalLocation();

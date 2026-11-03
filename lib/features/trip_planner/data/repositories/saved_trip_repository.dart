@@ -3,15 +3,12 @@ import '../models/saved_trip_model.dart';
 import '../services/saved_trip_service.dart';
 
 class SavedTripRepository {
-  const SavedTripRepository({
-    required SavedTripService service,
-  }) : _service = service;
+  const SavedTripRepository({required SavedTripService service})
+    : _service = service;
 
   final SavedTripService _service;
 
-  Future<void> saveTrip(
-    SavedTripModel trip,
-  ) async {
+  Future<void> saveTrip(SavedTripModel trip) async {
     await _service.saveTrip(trip);
 
     try {
@@ -23,9 +20,7 @@ class SavedTripRepository {
     } catch (_) {}
   }
 
-  Future<void> updateTrip(
-    SavedTripModel trip,
-  ) async {
+  Future<void> updateTrip(SavedTripModel trip) async {
     await _service.updateTrip(trip);
 
     try {
@@ -41,9 +36,7 @@ class SavedTripRepository {
     return _service.getTrips();
   }
 
-  Future<void> deleteTrip(
-    String id,
-  ) async {
+  Future<void> deleteTrip(String id) async {
     await _service.deleteTrip(id);
 
     try {

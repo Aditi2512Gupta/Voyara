@@ -10,6 +10,7 @@ import 'edit_trip_page.dart';
 import '../../../../core/utils/map_launcher.dart';
 import '../../../../core/providers/location_provider.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/utils/responsive.dart';
 import '../../../home/presentation/widgets/destination_map.dart';
 import '../../providers/trip_weather_provider.dart';
 
@@ -190,10 +191,7 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Trip Weather",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text("Trip Weather", style: Theme.of(context).textTheme.titleLarge),
             IconButton(
               icon: const Icon(Icons.refresh, size: 20),
               tooltip: "Refresh weather",
@@ -244,7 +242,11 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Column(
                         children: [
-                          const Icon(Icons.cloud_off, size: 36, color: Colors.grey),
+                          const Icon(
+                            Icons.cloud_off,
+                            size: 36,
+                            color: Colors.grey,
+                          ),
                           const SizedBox(height: 8),
                           Text(
                             state.message.isNotEmpty
@@ -279,10 +281,12 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
                               : Icons.thermostat_outlined,
                           size: 20,
                           color: state.mode == TripWeatherMode.forecast
-                              ? (isDark ? AppColors.secondary : AppColors.primary)
+                              ? (isDark
+                                    ? AppColors.secondary
+                                    : AppColors.primary)
                               : (isDark
-                                  ? Colors.amber.shade300
-                                  : Colors.amber.shade800),
+                                    ? Colors.amber.shade300
+                                    : Colors.amber.shade800),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -317,7 +321,7 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
                               'Thu',
                               'Fri',
                               'Sat',
-                              'Sun'
+                              'Sun',
                             ];
                             final dayLabel = weekdays[f.date.weekday - 1];
                             final dateLabel = "${f.date.day}/${f.date.month}";
@@ -340,7 +344,8 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
                                 ),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Text(
                                     dayLabel,
@@ -397,10 +402,8 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
                               'https://openweathermap.org/img/wn/${state.currentWeather!.icon}@2x.png',
                               width: 50,
                               height: 50,
-                              errorBuilder: (_, _, _) => const Icon(
-                                Icons.wb_sunny_outlined,
-                                size: 40,
-                              ),
+                              errorBuilder: (_, _, _) =>
+                                  const Icon(Icons.wb_sunny_outlined, size: 40),
                             ),
                           const SizedBox(width: 14),
                           Column(
@@ -493,7 +496,10 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<List<SavedTripModel>>>(savedTripsProvider, (previous, next) {
+    ref.listen<AsyncValue<List<SavedTripModel>>>(savedTripsProvider, (
+      previous,
+      next,
+    ) {
       next.whenData((trips) {
         final match = trips.where((t) => t.id == _trip.id).firstOrNull;
         if (match != null && mounted) {
@@ -516,9 +522,7 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
             onPressed: () async {
               final updated = await Navigator.push<SavedTripModel>(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => EditTripPage(trip: trip),
-                ),
+                MaterialPageRoute(builder: (_) => EditTripPage(trip: trip)),
               );
 
               if (updated != null && mounted) {
@@ -550,237 +554,243 @@ class _SavedTripDetailsPageState extends ConsumerState<SavedTripDetailsPage> {
         ],
       ),
 
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Text(
-            trip.destination,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
-
-          const SizedBox(height: 20),
-
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.calendar_today),
-                    title: const Text("Start Date"),
-                    trailing: Text(_formatDate(trip.startDate)),
-                  ),
-
-                  ListTile(
-                    leading: const Icon(Icons.timelapse),
-                    title: const Text("Duration"),
-                    trailing: Text(
-                      "${trip.days} day${trip.days == 1 ? '' : 's'}",
-                    ),
-                  ),
-
-                  ListTile(
-                    leading: const Icon(Icons.people),
-                    title: const Text("Travelers"),
-                    trailing: Text("${trip.travelers}"),
-                  ),
-
-                  ListTile(
-                    leading: const Icon(Icons.currency_rupee),
-                    title: const Text("Budget"),
-                    trailing: Text("₹${trip.budget.toStringAsFixed(0)}"),
-                  ),
-                ],
-              ),
+      body: ResponsiveContentWrapper(
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            Text(
+              trip.destination,
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
-          ),
 
-          if (trip.interests.isNotEmpty) ...[
             const SizedBox(height: 20),
 
-            Text("Interests", style: Theme.of(context).textTheme.titleLarge),
-
-            const SizedBox(height: 10),
-
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: trip.interests
-                  .map((interest) => Chip(label: Text(interest)))
-                  .toList(),
-            ),
-          ],
-
-          const SizedBox(height: 24),
-
-          Text("Overview", style: Theme.of(context).textTheme.titleLarge),
-
-          const SizedBox(height: 12),
-
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                trip.overview,
-                style: const TextStyle(height: 1.6, fontSize: 16),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          Text("Budget Summary", style: Theme.of(context).textTheme.titleLarge),
-
-          const SizedBox(height: 12),
-
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                trip.budgetSummary,
-                style: const TextStyle(height: 1.6, fontSize: 16),
-              ),
-            ),
-          ),
-
-          if (trip.latitude != 0 && trip.longitude != 0) ...[
-            const SizedBox(height: 24),
-
-            Text(
-              "Location & Map",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-
-            const SizedBox(height: 12),
-
-            DestinationMap(
-              latitude: trip.latitude,
-              longitude: trip.longitude,
-              destinationTitle: trip.destination,
-            ),
-
-            const SizedBox(height: 12),
-
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () {
-                  final currentPos =
-                      ref.read(currentLocationProvider).valueOrNull;
-                  MapLauncher.openDirections(
-                    destinationLatitude: trip.latitude,
-                    destinationLongitude: trip.longitude,
-                    originLatitude: currentPos?.latitude,
-                    originLongitude: currentPos?.longitude,
-                  );
-                },
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   children: [
-                    Icon(Icons.directions),
-                    SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Get Directions in Google Maps',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Turn-by-turn navigation • Live traffic',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
+                    ListTile(
+                      leading: const Icon(Icons.calendar_today),
+                      title: const Text("Start Date"),
+                      trailing: Text(_formatDate(trip.startDate)),
+                    ),
+
+                    ListTile(
+                      leading: const Icon(Icons.timelapse),
+                      title: const Text("Duration"),
+                      trailing: Text(
+                        "${trip.days} day${trip.days == 1 ? '' : 's'}",
+                      ),
+                    ),
+
+                    ListTile(
+                      leading: const Icon(Icons.people),
+                      title: const Text("Travelers"),
+                      trailing: Text("${trip.travelers}"),
+                    ),
+
+                    ListTile(
+                      leading: const Icon(Icons.currency_rupee),
+                      title: const Text("Budget"),
+                      trailing: Text("₹${trip.budget.toStringAsFixed(0)}"),
                     ),
                   ],
                 ),
               ),
             ),
-          ],
 
-          const SizedBox(height: 20),
+            if (trip.interests.isNotEmpty) ...[
+              const SizedBox(height: 20),
 
-          FilledButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => ExpensePage(
-                    tripId: trip.id,
-                    budget: trip.budget,
-                    plannedCost: trip.dailyItinerary.fold<double>(
-                      0,
-                      (sum, day) => sum + day.estimatedCostValue,
+              Text("Interests", style: Theme.of(context).textTheme.titleLarge),
+
+              const SizedBox(height: 10),
+
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: trip.interests
+                    .map((interest) => Chip(label: Text(interest)))
+                    .toList(),
+              ),
+            ],
+
+            const SizedBox(height: 24),
+
+            Text("Overview", style: Theme.of(context).textTheme.titleLarge),
+
+            const SizedBox(height: 12),
+
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  trip.overview,
+                  style: const TextStyle(height: 1.6, fontSize: 16),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Text(
+              "Budget Summary",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+
+            const SizedBox(height: 12),
+
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  trip.budgetSummary,
+                  style: const TextStyle(height: 1.6, fontSize: 16),
+                ),
+              ),
+            ),
+
+            if (trip.latitude != 0 && trip.longitude != 0) ...[
+              const SizedBox(height: 24),
+
+              Text(
+                "Location & Map",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+
+              const SizedBox(height: 12),
+
+              DestinationMap(
+                latitude: trip.latitude,
+                longitude: trip.longitude,
+                destinationTitle: trip.destination,
+              ),
+
+              const SizedBox(height: 12),
+
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () {
+                    final currentPos = ref
+                        .read(currentLocationProvider)
+                        .valueOrNull;
+                    MapLauncher.openDirections(
+                      destinationLatitude: trip.latitude,
+                      destinationLongitude: trip.longitude,
+                      originLatitude: currentPos?.latitude,
+                      originLongitude: currentPos?.longitude,
+                    );
+                  },
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
                     ),
                   ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.directions),
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Get Directions in Google Maps',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Turn-by-turn navigation • Live traffic',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            },
-            icon: const Icon(Icons.account_balance_wallet),
-            label: const Text("Track Trip Expenses"),
-          ),
-
-          if (trip.latitude != 0 && trip.longitude != 0) ...[
-            const SizedBox(height: 24),
-            _weatherSection(context, trip),
-          ],
-
-          const SizedBox(height: 24),
-
-          Text(
-            "Daily Itinerary",
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-
-          const SizedBox(height: 12),
-
-          if (trip.dailyItinerary.isEmpty)
-            const Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text("No daily itinerary available."),
               ),
-            )
-          else
-            ...trip.dailyItinerary.map((day) => _dayCard(context, day)),
+            ],
 
-          _bulletSection(
-            title: "Packing Checklist",
-            items: trip.packingChecklist,
-            icon: Icons.luggage,
-          ),
+            const SizedBox(height: 20),
 
-          _bulletSection(
-            title: "Safety Tips",
-            items: trip.safetyTips,
-            icon: Icons.health_and_safety,
-          ),
+            FilledButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ExpensePage(
+                      tripId: trip.id,
+                      budget: trip.budget,
+                      plannedCost: trip.dailyItinerary.fold<double>(
+                        0,
+                        (sum, day) => sum + day.estimatedCostValue,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.account_balance_wallet),
+              label: const Text("Track Trip Expenses"),
+            ),
 
-          _bulletSection(
-            title: "Useful Local Tips",
-            items: trip.localTips,
-            icon: Icons.tips_and_updates,
-          ),
-        ],
+            if (trip.latitude != 0 && trip.longitude != 0) ...[
+              const SizedBox(height: 24),
+              _weatherSection(context, trip),
+            ],
+
+            const SizedBox(height: 24),
+
+            Text(
+              "Daily Itinerary",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+
+            const SizedBox(height: 12),
+
+            if (trip.dailyItinerary.isEmpty)
+              const Card(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text("No daily itinerary available."),
+                ),
+              )
+            else
+              ...trip.dailyItinerary.map((day) => _dayCard(context, day)),
+
+            _bulletSection(
+              title: "Packing Checklist",
+              items: trip.packingChecklist,
+              icon: Icons.luggage,
+            ),
+
+            _bulletSection(
+              title: "Safety Tips",
+              items: trip.safetyTips,
+              icon: Icons.health_and_safety,
+            ),
+
+            _bulletSection(
+              title: "Useful Local Tips",
+              items: trip.localTips,
+              icon: Icons.tips_and_updates,
+            ),
+          ],
+        ),
       ),
     );
   }

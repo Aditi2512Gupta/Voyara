@@ -19,9 +19,7 @@ class RecentlyViewedSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionTitle(
-          title: "Recently Viewed",
-        ),
+        const SectionTitle(title: "Recently Viewed"),
 
         const SizedBox(height: 16),
 
@@ -31,12 +29,9 @@ class RecentlyViewedSection extends ConsumerWidget {
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,
             itemCount: destinations.length,
-            separatorBuilder: (_, __) =>
-                const SizedBox(width: 16),
+            separatorBuilder: (_, _) => const SizedBox(width: 16),
             itemBuilder: (_, index) {
-              return DestinationCard(
-                destination: destinations[index],
-              );
+              return DestinationCard(destination: destinations[index]);
             },
           ),
         ),

@@ -20,7 +20,13 @@ class SimilarRepository {
     return places
         .where((p) => p.id != destination.id)
         .where((p) => used.add(p.id))
-        .map((p) => DestinationModel.fromGeoapify(p, destination.latitude, destination.longitude))
+        .map(
+          (p) => DestinationModel.fromGeoapify(
+            p,
+            destination.latitude,
+            destination.longitude,
+          ),
+        )
         .take(8)
         .toList();
   }

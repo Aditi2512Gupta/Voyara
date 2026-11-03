@@ -24,19 +24,14 @@ class NotificationModel {
     };
   }
 
-  factory NotificationModel.fromMap(
-    Map<String, dynamic> map,
-    String id,
-  ) {
+  factory NotificationModel.fromMap(Map<String, dynamic> map, String id) {
     final timestamp = map['createdAt'];
 
     return NotificationModel(
       id: id,
       title: map['title']?.toString() ?? '',
       body: map['body']?.toString() ?? '',
-      createdAt: timestamp is Timestamp
-          ? timestamp.toDate()
-          : DateTime.now(),
+      createdAt: timestamp is Timestamp ? timestamp.toDate() : DateTime.now(),
       read: map['read'] == true,
     );
   }

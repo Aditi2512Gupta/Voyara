@@ -1,4 +1,3 @@
-
 class DestinationDetailsController {
   const DestinationDetailsController();
 }

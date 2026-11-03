@@ -9,10 +9,7 @@ class AIPage extends StatelessWidget {
       body: Center(
         child: Text(
           "AI Planner",
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
       ),
     );

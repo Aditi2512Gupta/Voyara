@@ -2,8 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/models/recent_search_model.dart';
 
-class RecentSearchNotifier
-    extends StateNotifier<List<RecentSearchModel>> {
+class RecentSearchNotifier extends StateNotifier<List<RecentSearchModel>> {
   RecentSearchNotifier() : super([]);
 
   void addSearch(String query) {
@@ -14,11 +13,7 @@ class RecentSearchNotifier
     state = [
       RecentSearchModel(query: text),
 
-      ...state.where(
-        (item) =>
-            item.query.toLowerCase() !=
-            text.toLowerCase(),
-      ),
+      ...state.where((item) => item.query.toLowerCase() != text.toLowerCase()),
     ];
 
     if (state.length > 8) {
@@ -31,8 +26,7 @@ class RecentSearchNotifier
   }
 }
 
-final recentSearchProvider = StateNotifierProvider<
-    RecentSearchNotifier,
-    List<RecentSearchModel>>(
-  (ref) => RecentSearchNotifier(),
-);
+final recentSearchProvider =
+    StateNotifierProvider<RecentSearchNotifier, List<RecentSearchModel>>(
+      (ref) => RecentSearchNotifier(),
+    );

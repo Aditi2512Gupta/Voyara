@@ -4,7 +4,5 @@ import '../database/isar_service.dart';
 import '../cache/cache_manager.dart';
 
 final cacheManagerProvider = Provider(
-  (ref) => CacheManager(
-    IsarService.instance.isar,
-  ),
+  (ref) => CacheManager(IsarService.instance.isar),
 );

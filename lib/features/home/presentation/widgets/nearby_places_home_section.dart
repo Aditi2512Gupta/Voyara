@@ -13,9 +13,7 @@ class NearbyPlacesHomeSection extends ConsumerWidget {
     final homeData = ref.watch(homeDataProvider);
 
     return homeData.when(
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => const SizedBox(),
       data: (data) {
         final weekend = data.weekendGetaways;
@@ -29,9 +27,7 @@ class NearbyPlacesHomeSection extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (weekend.isNotEmpty) ...[
-              const SectionTitle(
-                title: "🚗 Weekend Getaways",
-              ),
+              const SectionTitle(title: "🚗 Weekend Getaways"),
               const SizedBox(height: 14),
               SizedBox(
                 height: 255,
@@ -39,7 +35,7 @@ class NearbyPlacesHomeSection extends ConsumerWidget {
                   scrollDirection: Axis.horizontal,
                   clipBehavior: Clip.none,
                   itemCount: weekend.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 16),
+                  separatorBuilder: (_, _) => const SizedBox(width: 16),
                   itemBuilder: (_, index) {
                     return DestinationCard(destination: weekend[index]);
                   },
@@ -48,9 +44,7 @@ class NearbyPlacesHomeSection extends ConsumerWidget {
               const SizedBox(height: 28),
             ],
             if (beyond.isNotEmpty) ...[
-              const SectionTitle(
-                title: "✈️ Explore Beyond",
-              ),
+              const SectionTitle(title: "✈️ Explore Beyond"),
               const SizedBox(height: 14),
               SizedBox(
                 height: 255,
@@ -58,7 +52,7 @@ class NearbyPlacesHomeSection extends ConsumerWidget {
                   scrollDirection: Axis.horizontal,
                   clipBehavior: Clip.none,
                   itemCount: beyond.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 16),
+                  separatorBuilder: (_, _) => const SizedBox(width: 16),
                   itemBuilder: (_, index) {
                     return DestinationCard(destination: beyond[index]);
                   },

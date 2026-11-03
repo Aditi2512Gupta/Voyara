@@ -52,7 +52,8 @@ final profileProvider = FutureProvider<UserProfileModel?>((ref) async {
       phone: (data['phone'] as String?)?.isNotEmpty == true
           ? data['phone'] as String
           : (user.phoneNumber ?? ''),
-      joinedOn: (data['createdAt'] as Timestamp?)?.toDate() ??
+      joinedOn:
+          (data['createdAt'] as Timestamp?)?.toDate() ??
           _safeCreationTime(user),
     );
   } catch (_) {

@@ -8,14 +8,9 @@ class IsarService {
 
   late final Isar isar;
 
-  Future<void> init({
-    required List<CollectionSchema<dynamic>> schemas,
-  }) async {
+  Future<void> init({required List<CollectionSchema<dynamic>> schemas}) async {
     final dir = await getApplicationDocumentsDirectory();
 
-    isar = await Isar.open(
-      schemas,
-      directory: dir.path,
-    );
+    isar = await Isar.open(schemas, directory: dir.path);
   }
 }

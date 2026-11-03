@@ -23,11 +23,7 @@ class NetworkImagePlaceholder extends StatelessWidget {
       fit: fit,
       height: height,
       width: width,
-      loadingBuilder: (
-        context,
-        child,
-        loadingProgress,
-      ) {
+      loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) {
           return child;
         }
@@ -35,33 +31,22 @@ class NetworkImagePlaceholder extends StatelessWidget {
         return SizedBox(
           height: height,
           width: width,
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
+          child: const Center(child: CircularProgressIndicator()),
         );
       },
-      errorBuilder: (
-        context,
-        error,
-        stackTrace,
-      ) {
+      errorBuilder: (context, error, stackTrace) {
         return Container(
           height: height,
           width: width,
           color: Colors.grey.shade300,
           alignment: Alignment.center,
-          child: const Icon(
-            Icons.broken_image,
-          ),
+          child: const Icon(Icons.broken_image),
         );
       },
     );
 
     if (borderRadius != null) {
-      image = ClipRRect(
-        borderRadius: borderRadius!,
-        child: image,
-      );
+      image = ClipRRect(borderRadius: borderRadius!, child: image);
     }
 
     return image;

@@ -7,9 +7,7 @@ class LoadingDestinations extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SizedBox(
       height: 280,
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/utils/responsive.dart';
 import '../../../../core/data/models/notification_model.dart';
 import '../../../../core/providers/notification_provider.dart';
 
@@ -16,7 +17,9 @@ class NotificationsPage extends ConsumerWidget {
     final notificationsAsync = ref.watch(notificationsProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
           'Notifications',
@@ -87,93 +90,99 @@ class NotificationsPage extends ConsumerWidget {
           ),
         ],
       ),
-      body: notificationsAsync.when(
-        loading: () => _buildLoadingState(isDark),
-        error: (error, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(
-              error.toString(),
-              style: TextStyle(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+      body: ResponsiveContentWrapper(
+        child: notificationsAsync.when(
+          loading: () => _buildLoadingState(isDark),
+          error: (error, _) => Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(
+                error.toString(),
+                style: TextStyle(
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
-        ),
-        data: (notifications) {
-          if (notifications.isEmpty) {
-            return _buildEmptyState(context, isDark);
-          }
+          data: (notifications) {
+            if (notifications.isEmpty) {
+              return _buildEmptyState(context, isDark);
+            }
 
-          final grouped = _groupNotifications(notifications);
+            final grouped = _groupNotifications(notifications);
 
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-            itemCount: grouped.keys.length,
-            itemBuilder: (context, groupIndex) {
-              final groupTitle = grouped.keys.elementAt(groupIndex);
-              final items = grouped[groupTitle]!;
+            return ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+              itemCount: grouped.keys.length,
+              itemBuilder: (context, groupIndex) {
+                final groupTitle = grouped.keys.elementAt(groupIndex);
+                final items = grouped[groupTitle]!;
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Date Group Header
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
-                    child: Row(
-                      children: [
-                        Text(
-                          groupTitle,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.2,
-                            color: isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondaryLight,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 7,
-                            vertical: 1.5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? AppColors.chipDark
-                                : AppColors.chipLight,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            '${items.length}',
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Date Group Header
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            groupTitle,
                             style: TextStyle(
-                              fontSize: 10.5,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.2,
                               color: isDark
-                                  ? AppColors.textTertiaryDark
-                                  : AppColors.textTertiaryLight,
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.textSecondaryLight,
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 7,
+                              vertical: 1.5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.chipDark
+                                  : AppColors.chipLight,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '${items.length}',
+                              style: TextStyle(
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.w600,
+                                color: isDark
+                                    ? AppColors.textTertiaryDark
+                                    : AppColors.textTertiaryLight,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  // Notification Cards in Group
-                  ...items.map((notification) => _buildNotificationCard(
+                    // Notification Cards in Group
+                    ...items.map(
+                      (notification) => _buildNotificationCard(
                         context: context,
                         ref: ref,
                         notification: notification,
                         isDark: isDark,
-                      )),
-                ],
-              );
-            },
-          );
-        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -195,16 +204,18 @@ class NotificationsPage extends ConsumerWidget {
           decoration: BoxDecoration(
             color: AppColors.error.withValues(alpha: 0.16),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.error.withValues(alpha: 0.35),
-            ),
+            border: Border.all(color: AppColors.error.withValues(alpha: 0.35)),
           ),
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: const [
-              Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+              Icon(
+                Icons.delete_outline_rounded,
+                color: AppColors.error,
+                size: 20,
+              ),
               SizedBox(width: 6),
               Text(
                 'Delete',
@@ -239,20 +250,16 @@ class NotificationsPage extends ConsumerWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: unread
-                      ? (isDark
-                          ? AppColors.surfaceDark
-                          : Colors.white)
-                      : (isDark
-                          ? AppColors.cardDark
-                          : AppColors.cardLight),
+                      ? (isDark ? AppColors.surfaceDark : Colors.white)
+                      : (isDark ? AppColors.cardDark : AppColors.cardLight),
                   border: Border.all(
                     color: unread
                         ? (isDark
-                            ? AppColors.secondary.withValues(alpha: 0.45)
-                            : AppColors.secondary.withValues(alpha: 0.6))
+                              ? AppColors.secondary.withValues(alpha: 0.45)
+                              : AppColors.secondary.withValues(alpha: 0.6))
                         : (isDark
-                            ? AppColors.borderDark
-                            : AppColors.borderLight),
+                              ? AppColors.borderDark
+                              : AppColors.borderLight),
                     width: unread ? 1.4 : 1.0,
                   ),
                   boxShadow: unread && !isDark
@@ -291,26 +298,29 @@ class NotificationsPage extends ConsumerWidget {
                               color: unread
                                   ? AppColors.secondary.withValues(alpha: 0.14)
                                   : (isDark
-                                      ? AppColors.inputDark
-                                      : AppColors.inputLight),
+                                        ? AppColors.inputDark
+                                        : AppColors.inputLight),
                               border: Border.all(
                                 color: unread
                                     ? AppColors.secondary.withValues(alpha: 0.3)
                                     : (isDark
-                                        ? AppColors.borderDark
-                                        : AppColors.borderLight),
+                                          ? AppColors.borderDark
+                                          : AppColors.borderLight),
                                 width: 1,
                               ),
                             ),
                             alignment: Alignment.center,
                             child: Icon(
-                              _getNotificationIcon(notification.title, notification.body),
+                              _getNotificationIcon(
+                                notification.title,
+                                notification.body,
+                              ),
                               size: 20,
                               color: unread
                                   ? AppColors.secondary
                                   : (isDark
-                                      ? AppColors.textTertiaryDark
-                                      : AppColors.textTertiaryLight),
+                                        ? AppColors.textTertiaryDark
+                                        : AppColors.textTertiaryLight),
                             ),
                           ),
 
@@ -335,8 +345,9 @@ class NotificationsPage extends ConsumerWidget {
                                               : FontWeight.w500,
                                           color: isDark
                                               ? (unread
-                                                  ? AppColors.textPrimaryDark
-                                                  : AppColors.textSecondaryDark)
+                                                    ? AppColors.textPrimaryDark
+                                                    : AppColors
+                                                          .textSecondaryDark)
                                               : AppColors.textPrimaryLight,
                                         ),
                                       ),
@@ -352,8 +363,9 @@ class NotificationsPage extends ConsumerWidget {
                                         color: unread
                                             ? AppColors.secondary
                                             : (isDark
-                                                ? AppColors.textTertiaryDark
-                                                : AppColors.textTertiaryLight),
+                                                  ? AppColors.textTertiaryDark
+                                                  : AppColors
+                                                        .textTertiaryLight),
                                       ),
                                     ),
                                     if (unread) ...[
@@ -380,11 +392,11 @@ class NotificationsPage extends ConsumerWidget {
                                     height: 1.35,
                                     color: isDark
                                         ? (unread
-                                            ? AppColors.textSecondaryDark
-                                            : AppColors.textTertiaryDark)
+                                              ? AppColors.textSecondaryDark
+                                              : AppColors.textTertiaryDark)
                                         : (unread
-                                            ? AppColors.textPrimaryLight
-                                            : AppColors.textSecondaryLight),
+                                              ? AppColors.textPrimaryLight
+                                              : AppColors.textSecondaryLight),
                                   ),
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
@@ -461,7 +473,10 @@ class NotificationsPage extends ConsumerWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -509,7 +524,9 @@ class NotificationsPage extends ConsumerWidget {
                         height: 14,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6),
-                          color: isDark ? AppColors.chipDark : AppColors.chipLight,
+                          color: isDark
+                              ? AppColors.chipDark
+                              : AppColors.chipLight,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -518,7 +535,9 @@ class NotificationsPage extends ConsumerWidget {
                         height: 12,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6),
-                          color: isDark ? AppColors.chipDark : AppColors.chipLight,
+                          color: isDark
+                              ? AppColors.chipDark
+                              : AppColors.chipLight,
                         ),
                       ),
                     ],
@@ -533,7 +552,8 @@ class NotificationsPage extends ConsumerWidget {
   }
 
   Map<String, List<NotificationModel>> _groupNotifications(
-      List<NotificationModel> notifications) {
+    List<NotificationModel> notifications,
+  ) {
     final sorted = List<NotificationModel>.from(notifications)
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
@@ -582,16 +602,24 @@ class NotificationsPage extends ConsumerWidget {
         text.contains('ticket')) {
       return Icons.airplane_ticket_outlined;
     }
-    if (text.contains('trip') || text.contains('travel') || text.contains('itinerary')) {
+    if (text.contains('trip') ||
+        text.contains('travel') ||
+        text.contains('itinerary')) {
       return Icons.luggage_outlined;
     }
-    if (text.contains('offer') || text.contains('discount') || text.contains('sale')) {
+    if (text.contains('offer') ||
+        text.contains('discount') ||
+        text.contains('sale')) {
       return Icons.local_offer_outlined;
     }
-    if (text.contains('review') || text.contains('rate') || text.contains('star')) {
+    if (text.contains('review') ||
+        text.contains('rate') ||
+        text.contains('star')) {
       return Icons.star_outline_rounded;
     }
-    if (text.contains('reminder') || text.contains('alarm') || text.contains('time')) {
+    if (text.contains('reminder') ||
+        text.contains('alarm') ||
+        text.contains('time')) {
       return Icons.alarm_outlined;
     }
     return Icons.notifications_none_rounded;

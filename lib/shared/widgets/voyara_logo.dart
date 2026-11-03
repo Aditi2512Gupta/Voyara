@@ -166,11 +166,7 @@ class VoyaraLogo extends StatelessWidget {
         const SizedBox(
           width: 0,
           height: 0,
-          child: OverflowBox(
-            maxWidth: 0,
-            maxHeight: 0,
-            child: Text('Voyara'),
-          ),
+          child: OverflowBox(maxWidth: 0, maxHeight: 0, child: Text('Voyara')),
         ),
       ],
     );

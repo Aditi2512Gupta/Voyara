@@ -13,10 +13,7 @@ class PdfService {
         build: (_) => [
           pw.Header(
             level: 0,
-            child: pw.Text(
-              destination,
-              style: pw.TextStyle(fontSize: 24),
-            ),
+            child: pw.Text(destination, style: pw.TextStyle(fontSize: 24)),
           ),
 
           pw.SizedBox(height: 20),
@@ -26,8 +23,6 @@ class PdfService {
       ),
     );
 
-    await Printing.layoutPdf(
-      onLayout: (format) async => pdf.save(),
-    );
+    await Printing.layoutPdf(onLayout: (format) async => pdf.save());
   }
 }

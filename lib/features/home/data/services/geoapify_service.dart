@@ -15,10 +15,7 @@ class GeoapifyService {
     );
   }
 
-  Future<dynamic> reverseGeocode({
-    required double lat,
-    required double lon,
-  }) {
+  Future<dynamic> reverseGeocode({required double lat, required double lon}) {
     return apiService.get(
       'https://api.geoapify.com/v1/geocode/reverse'
       '?lat=$lat'
@@ -27,10 +24,7 @@ class GeoapifyService {
     );
   }
 
-  Future<dynamic> touristPlaces({
-    required String filter,
-    int limit = 30,
-  }) {
+  Future<dynamic> touristPlaces({required String filter, int limit = 30}) {
     return apiService.get(
       '${ApiConstants.geoapifyBaseUrl}/places'
       '?categories='
@@ -59,4 +53,4 @@ class GeoapifyService {
       '&apiKey=${ApiConstants.geoapifyApiKey}',
     );
   }
-}
+}

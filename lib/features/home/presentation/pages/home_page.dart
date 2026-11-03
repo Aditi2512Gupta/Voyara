@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/utils/responsive.dart';
 import '../../providers/search_controller_provider.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/search_bar_widget.dart';
 import '../widgets/popular_destinations_section.dart';
+import '../widgets/recommended_section.dart';
 import '../widgets/recently_viewed_section.dart';
 import '../widgets/category_list.dart';
+import '../widgets/home_action_cards.dart';
 import '../widgets/nearby_places_home_section.dart';
 import '../widgets/nearby_destinations_section.dart';
-import '../widgets/plan_with_ai_floating_button.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -18,45 +20,65 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final hPadding = Responsive.horizontalPadding(context);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          children: [
-            const HomeAppBar(),
+        child: ResponsiveContentWrapper(
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 16),
+            children: [
+              // 1. App bar with compact scenic greeting banner
+              const HomeAppBar(),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
-            SearchBarWidget(controller: ref.watch(searchControllerProvider)),
+              // 2. Search bar below greeting
+              SearchBarWidget(controller: ref.watch(searchControllerProvider)),
 
-            const SizedBox(height: 22),
+              const SizedBox(height: 20),
 
-            const CategoryList(),
+              // 3. Categories in horizontally scrollable row
+              const CategoryList(),
 
-            const SizedBox(height: 26),
+              const SizedBox(height: 22),
 
-            const PopularDestinationsSection(),
+              // 4. Two equally sized cards side by side: Plan a Trip with AI & My Trips
+              const HomeActionCards(),
 
-            const SizedBox(height: 26),
+              const SizedBox(height: 26),
 
-            const NearbyDestinationsSection(),
+              // 5. Popular in India section
+              const PopularDestinationsSection(),
 
-            const SizedBox(height: 26),
+              const SizedBox(height: 26),
 
-            const RecentlyViewedSection(),
+              // 6. Recommended for You section
+              const RecommendedSection(),
 
-            const SizedBox(height: 26),
+              const SizedBox(height: 26),
 
-            const NearbyPlacesHomeSection(),
+              // 7. Nearby Destinations
+              const NearbyDestinationsSection(),
 
-            const SizedBox(height: 84),
-          ],
+              const SizedBox(height: 26),
+
+              // 8. Recently Viewed
+              const RecentlyViewedSection(),
+
+              const SizedBox(height: 26),
+
+              // 9. Nearby Places
+              const NearbyPlacesHomeSection(),
+
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: const PlanWithAiFloatingButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

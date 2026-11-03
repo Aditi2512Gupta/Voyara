@@ -54,10 +54,9 @@ class ReviewsSection extends ConsumerWidget {
         ),
       );
 
-      await ref.read(reviewControllerProvider).deleteReview(
-            destinationId: destinationId,
-            reviewId: review.id,
-          );
+      await ref
+          .read(reviewControllerProvider)
+          .deleteReview(destinationId: destinationId, reviewId: review.id);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
@@ -89,9 +88,9 @@ class ReviewsSection extends ConsumerWidget {
         children: [
           Text(
             "Reviews (0)",
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
@@ -102,8 +101,8 @@ class ReviewsSection extends ConsumerWidget {
       );
     }
 
-    final double avgRating = reviews.fold<double>(0.0, (s, r) => s + r.rating) /
-        reviews.length;
+    final double avgRating =
+        reviews.fold<double>(0.0, (s, r) => s + r.rating) / reviews.length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,49 +111,45 @@ class ReviewsSection extends ConsumerWidget {
           children: [
             Text(
               "Reviews (${reviews.length})",
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const Spacer(),
             const Icon(Icons.star, color: Colors.amber, size: 20),
             const SizedBox(width: 4),
             Text(
               avgRating.toStringAsFixed(1),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
         ),
 
         const SizedBox(height: 16),
 
-        ...reviews.map(
-          (review) {
-            final isOwner = currentUserId != null &&
-                currentUserId!.isNotEmpty &&
-                review.userId == currentUserId;
+        ...reviews.map((review) {
+          final isOwner =
+              currentUserId != null &&
+              currentUserId!.isNotEmpty &&
+              review.userId == currentUserId;
 
-            return ReviewCard(
-              review: review,
-              onEdit: isOwner
-                  ? () => showDialog(
-                        context: context,
-                        builder: (_) => AddReviewDialog(
-                          destinationId: destinationId,
-                          existingReview: review,
-                        ),
-                      )
-                  : null,
-              onDelete: isOwner
-                  ? () => _handleDelete(context, ref, review)
-                  : null,
-            );
-          },
-        ),
+          return ReviewCard(
+            review: review,
+            onEdit: isOwner
+                ? () => showDialog(
+                    context: context,
+                    builder: (_) => AddReviewDialog(
+                      destinationId: destinationId,
+                      existingReview: review,
+                    ),
+                  )
+                : null,
+            onDelete: isOwner
+                ? () => _handleDelete(context, ref, review)
+                : null,
+          );
+        }),
       ],
     );
   }
-}
+}

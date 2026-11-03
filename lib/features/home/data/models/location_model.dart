@@ -12,8 +12,5 @@ class LocationModel {
   });
 
   String get fullAddress =>
-      [city, state, country]
-          .where((e) => e.isNotEmpty)
-          .join(", ");
+      [city, state, country].where((e) => e.isNotEmpty).join(", ");
 }
-

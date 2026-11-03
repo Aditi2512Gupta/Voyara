@@ -18,19 +18,16 @@ class NearbyHotelsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Nearby Hotels",
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        Text("Nearby Hotels", style: Theme.of(context).textTheme.titleLarge),
 
         const SizedBox(height: 16),
 
-        ...hotels.take(5).map(
-          (hotel) => HotelCard(
-            hotel: hotel,
-            onTap: () => onHotelTap(hotel),
-          ),
-        ),
+        ...hotels
+            .take(5)
+            .map(
+              (hotel) =>
+                  HotelCard(hotel: hotel, onTap: () => onHotelTap(hotel)),
+            ),
       ],
     );
   }

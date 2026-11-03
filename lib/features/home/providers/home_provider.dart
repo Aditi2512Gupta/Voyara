@@ -96,14 +96,13 @@ final weatherProvider =
     });
 
 final forecastProvider =
-    FutureProvider.family<List<DailyForecastModel>, ({double lat, double lon})>((
-      ref,
-      location,
-    ) {
-      return ref
-          .read(weatherRepositoryProvider)
-          .getForecast(latitude: location.lat, longitude: location.lon);
-    });
+    FutureProvider.family<List<DailyForecastModel>, ({double lat, double lon})>(
+      (ref, location) {
+        return ref
+            .read(weatherRepositoryProvider)
+            .getForecast(latitude: location.lat, longitude: location.lon);
+      },
+    );
 
 // ============================================================
 // GEOAPIFY
@@ -128,18 +127,17 @@ typedef RouteQuery = ({
   double endLon,
 });
 
-final routeFutureProvider =
-    FutureProvider.autoDispose.family<RouteModel?, RouteQuery>((
-  ref,
-  query,
-) async {
-  return ref.read(geoapifyRepositoryProvider).getRoute(
-        startLat: query.startLat,
-        startLon: query.startLon,
-        endLat: query.endLat,
-        endLon: query.endLon,
-      );
-});
+final routeFutureProvider = FutureProvider.autoDispose
+    .family<RouteModel?, RouteQuery>((ref, query) async {
+      return ref
+          .read(geoapifyRepositoryProvider)
+          .getRoute(
+            startLat: query.startLat,
+            startLon: query.startLon,
+            endLat: query.endLat,
+            endLon: query.endLon,
+          );
+    });
 
 // ============================================================
 // HOME REPOSITORY

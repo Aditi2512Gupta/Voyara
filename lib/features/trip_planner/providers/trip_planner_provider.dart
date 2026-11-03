@@ -11,20 +11,16 @@ final tripPlannerServiceProvider = Provider(
 );
 
 final tripPlannerRepositoryProvider = Provider<TripPlannerRepository>(
-  (ref) => TripPlannerRepositoryImpl(
-    service: ref.read(tripPlannerServiceProvider),
-  ),
+  (ref) =>
+      TripPlannerRepositoryImpl(service: ref.read(tripPlannerServiceProvider)),
 );
 
 class TripPlanNotifier extends StateNotifier<AsyncValue<TripPlanModel?>> {
-  TripPlanNotifier(this._repository)
-      : super(const AsyncData(null));
+  TripPlanNotifier(this._repository) : super(const AsyncData(null));
 
   final TripPlannerRepository _repository;
 
-  Future<void> generatePlan(
-    TripPlanRequest request,
-  ) async {
+  Future<void> generatePlan(TripPlanRequest request) async {
     state = const AsyncLoading();
 
     try {
@@ -38,10 +34,6 @@ class TripPlanNotifier extends StateNotifier<AsyncValue<TripPlanModel?>> {
 }
 
 final tripPlanProvider =
-    StateNotifierProvider<
-        TripPlanNotifier,
-        AsyncValue<TripPlanModel?>>(
-  (ref) => TripPlanNotifier(
-    ref.read(tripPlannerRepositoryProvider),
-  ),
-);
+    StateNotifierProvider<TripPlanNotifier, AsyncValue<TripPlanModel?>>(
+      (ref) => TripPlanNotifier(ref.read(tripPlannerRepositoryProvider)),
+    );

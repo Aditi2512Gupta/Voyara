@@ -10,10 +10,7 @@ import '../../../../shared/widgets/voyara_logo.dart';
 import '../../startup_controller.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({
-    super.key,
-    this.controller = const StartupController(),
-  });
+  const SplashPage({super.key, this.controller = const StartupController()});
 
   final StartupController controller;
 
@@ -21,9 +18,7 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
-    with TickerProviderStateMixin {
-
+class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   /// Controller for scene and logo entrance (fade and soft scale)
   late final AnimationController _entryController;
   late final Animation<double> _bgFadeAnimation;
@@ -133,7 +128,8 @@ class _SplashPageState extends State<SplashPage>
 
           // Responsive sizing for logo: balanced across compact, standard, and tall phones
           final logoWidth = math.min(size.width * 0.72, 300.0);
-          final logoHeight = logoWidth * (207.0 / 386.0); // Exact aspect ratio of logo asset
+          final logoHeight =
+              logoWidth * (207.0 / 386.0); // Exact aspect ratio of logo asset
 
           // Logo sits comfortably in the upper-middle sky with spacious clearance above mountains
           final logoTop = size.height * 0.27;
@@ -164,11 +160,21 @@ class _SplashPageState extends State<SplashPage>
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            const Color(0xFFFDFBF4), // 100% solid cream at top to blend into sky
-                            const Color(0xFFFDFBF4).withValues(alpha: 0.82), // Soft fade into upper sky
-                            const Color(0xFFFDFBF4).withValues(alpha: 0.38), // Softens mountains & warm peach sunrise
-                            const Color(0xFFFDFBF4).withValues(alpha: 0.30), // Keeps serene lake water reflections luminous
-                            const Color(0xFFFDFBF4).withValues(alpha: 0.36), // Lifts dark shadows of bottom foliage!
+                            const Color(
+                              0xFFFDFBF4,
+                            ), // 100% solid cream at top to blend into sky
+                            const Color(0xFFFDFBF4).withValues(
+                              alpha: 0.82,
+                            ), // Soft fade into upper sky
+                            const Color(0xFFFDFBF4).withValues(
+                              alpha: 0.38,
+                            ), // Softens mountains & warm peach sunrise
+                            const Color(0xFFFDFBF4).withValues(
+                              alpha: 0.30,
+                            ), // Keeps serene lake water reflections luminous
+                            const Color(0xFFFDFBF4).withValues(
+                              alpha: 0.36,
+                            ), // Lifts dark shadows of bottom foliage!
                           ],
                           stops: const [0.0, 0.42, 0.65, 0.82, 1.0],
                         ),
@@ -281,7 +287,8 @@ class _SplashPageState extends State<SplashPage>
     // When the airplane has finished flying away and faded, avoid rendering
     if (opacity <= 0.0) return const SizedBox.shrink();
 
-    final planeBaseWidth = logoW * 0.145; // Matches exact size in the logo artwork
+    final planeBaseWidth =
+        logoW * 0.145; // Matches exact size in the logo artwork
 
     return Stack(
       clipBehavior: Clip.none,
@@ -337,8 +344,10 @@ class _SplashPageState extends State<SplashPage>
       final p1 = Offset(w * 0.525, h * 0.280); // Contrail arc midpoint
       final p2 = Offset(w * 0.622, h * 0.193); // End of printed contrail
 
-      final x = (1 - u) * (1 - u) * p0.dx + 2 * (1 - u) * u * p1.dx + u * u * p2.dx;
-      final y = (1 - u) * (1 - u) * p0.dy + 2 * (1 - u) * u * p1.dy + u * u * p2.dy;
+      final x =
+          (1 - u) * (1 - u) * p0.dx + 2 * (1 - u) * u * p1.dx + u * u * p2.dx;
+      final y =
+          (1 - u) * (1 - u) * p0.dy + 2 * (1 - u) * u * p1.dy + u * u * p2.dy;
       return Offset(x, y);
     } else {
       // Phase 2: soaring away into the distance
@@ -347,8 +356,14 @@ class _SplashPageState extends State<SplashPage>
       final control = Offset(w * 1.08, h * -0.22);
       final pFar = Offset(w * 1.82, h * -0.78);
 
-      final x = (1 - u) * (1 - u) * p2.dx + 2 * (1 - u) * u * control.dx + u * u * pFar.dx;
-      final y = (1 - u) * (1 - u) * p2.dy + 2 * (1 - u) * u * control.dy + u * u * pFar.dy;
+      final x =
+          (1 - u) * (1 - u) * p2.dx +
+          2 * (1 - u) * u * control.dx +
+          u * u * pFar.dx;
+      final y =
+          (1 - u) * (1 - u) * p2.dy +
+          2 * (1 - u) * u * control.dy +
+          u * u * pFar.dy;
       return Offset(x, y);
     }
   }

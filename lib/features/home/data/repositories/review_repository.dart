@@ -59,10 +59,10 @@ class ReviewRepository {
         .collection('reviews')
         .doc(reviewId)
         .update({
-      'rating': rating,
-      'comment': comment,
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
+          'rating': rating,
+          'comment': comment,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
 
     await _recalculateDestinationRating(destinationId);
   }
@@ -96,7 +96,8 @@ class ReviewRepository {
       if (count > 0) {
         final double totalSum = docs.fold<double>(
           0.0,
-          (sum, doc) => sum + ((doc.data()['rating'] as num?)?.toDouble() ?? 0.0),
+          (total, doc) =>
+              total + ((doc.data()['rating'] as num?)?.toDouble() ?? 0.0),
         );
         averageRating = double.parse((totalSum / count).toStringAsFixed(1));
       }
@@ -116,4 +117,4 @@ class ReviewRepository {
       // Ignore secondary sync errors so that successful review operation is not failed.
     }
   }
-}
+}

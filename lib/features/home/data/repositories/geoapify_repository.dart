@@ -35,7 +35,12 @@ class GeoapifyRepository {
       final features = data['features'] as List;
 
       if (features.isEmpty) {
-        return const LocationModel(city: "", state: "", country: "", countryCode: "");
+        return const LocationModel(
+          city: "",
+          state: "",
+          country: "",
+          countryCode: "",
+        );
       }
 
       final p = features.first['properties'];
@@ -47,7 +52,12 @@ class GeoapifyRepository {
         countryCode: (p['country_code'] ?? "").toString(),
       );
     } catch (_) {
-      return const LocationModel(city: "", state: "", country: "", countryCode: "");
+      return const LocationModel(
+        city: "",
+        state: "",
+        country: "",
+        countryCode: "",
+      );
     }
   }
 
@@ -87,14 +97,21 @@ class GeoapifyRepository {
             "${place.latitude.toStringAsFixed(4)}_${place.longitude.toStringAsFixed(4)}";
         final isUnique = coordinateSet.add(key) && uniqueIds.add(place.id);
         if (!isUnique) {
-          debugPrint("Place [${place.name}] rejected: Duplicate coordinates or ID");
+          debugPrint(
+            "Place [${place.name}] rejected: Duplicate coordinates or ID",
+          );
         }
         return isUnique;
       }).toList();
 
       // 3. Sort by priority score (descending)
-      places.sort((a, b) => calculateAttractionScore(b, lat, lon)
-          .compareTo(calculateAttractionScore(a, lat, lon)));
+      places.sort(
+        (a, b) => calculateAttractionScore(
+          b,
+          lat,
+          lon,
+        ).compareTo(calculateAttractionScore(a, lat, lon)),
+      );
 
       // Never cache empty, failed, or invalid API responses
       if (places.isNotEmpty) {
@@ -115,7 +132,9 @@ class GeoapifyRepository {
 
       final searchResults = await searchPlaces(countryName);
       if (searchResults.isEmpty) {
-        debugPrint("countryTouristPlaces: Geocoding failed to find place ID for [$countryName]");
+        debugPrint(
+          "countryTouristPlaces: Geocoding failed to find place ID for [$countryName]",
+        );
         return [];
       }
 
@@ -137,7 +156,6 @@ class GeoapifyRepository {
   }
 
   bool isGenuineAttraction(GeoapifyPlaceModel place) {
-    final categoryLower = place.category.toLowerCase().trim();
     final nameLower = place.name.toLowerCase().trim();
     final rawCats = place.rawCategories;
 
@@ -145,46 +163,112 @@ class GeoapifyRepository {
     final isAllowedCategory = rawCats.any((cat) {
       final c = cat.toLowerCase();
       return c.startsWith('tourism.attraction') ||
-             c.startsWith('tourism.sights') ||
-             c.startsWith('heritage') ||
-             c.startsWith('natural') ||
-             c.startsWith('national_park') ||
-             c.startsWith('leisure.park') ||
-             c.startsWith('entertainment.zoo') ||
-             c.startsWith('entertainment.theme_park') ||
-             c.startsWith('entertainment.aquarium') ||
-             c.startsWith('culture.museum');
+          c.startsWith('tourism.sights') ||
+          c.startsWith('heritage') ||
+          c.startsWith('natural') ||
+          c.startsWith('national_park') ||
+          c.startsWith('leisure.park') ||
+          c.startsWith('entertainment.zoo') ||
+          c.startsWith('entertainment.theme_park') ||
+          c.startsWith('entertainment.aquarium') ||
+          c.startsWith('culture.museum');
     });
 
     if (!isAllowedCategory) {
-      debugPrint("Place [${place.name}] rejected: Invalid category. Raw categories: $rawCats");
+      debugPrint(
+        "Place [${place.name}] rejected: Invalid category. Raw categories: $rawCats",
+      );
       return false;
     }
 
     // 2. Secondary Keyword checks (blocklist safeguards)
     const blockedNames = [
-      'road', 'sector', 'chowk', 'street', 'block', 'parking', 'residential', 
-      'commercial', 'administrative', 'highway', 'lane', 'avenue', 'path', 
-      'housing', 'colony', 'society', 'nagar', 'gali', 'flyover', 'bridge', 
-      'junction', 'crossing', 'cross', 'toll', 'station', 'stop', 'terminal', 
-      'airport', 'taxi', 'stand', 'gate', 'office', 'hospital', 'clinic', 
-      'school', 'college', 'university', 'bank', 'atm', 'shop', 'store', 
-      'mall', 'market', 'supermarket', 'grocery', 'restaurant', 'cafe', 
-      'hotel', 'motel', 'hostel', 'resort', 'stay', 'apartment', 'villa', 
-      'plaza', 'building', 'industrial', 'factory', 'warehouse', 'village',
-      'colony', 'housing complex', 'residential area', 'residential complex',
-      'bus stand', 'railway station', 'metro station', 'police station',
-      'marg', 'path', 'gully', 'bypass', 'expressway'
+      'road',
+      'sector',
+      'chowk',
+      'street',
+      'block',
+      'parking',
+      'residential',
+      'commercial',
+      'administrative',
+      'highway',
+      'lane',
+      'avenue',
+      'path',
+      'housing',
+      'colony',
+      'society',
+      'nagar',
+      'gali',
+      'flyover',
+      'bridge',
+      'junction',
+      'crossing',
+      'cross',
+      'toll',
+      'station',
+      'stop',
+      'terminal',
+      'airport',
+      'taxi',
+      'stand',
+      'gate',
+      'office',
+      'hospital',
+      'clinic',
+      'school',
+      'college',
+      'university',
+      'bank',
+      'atm',
+      'shop',
+      'store',
+      'mall',
+      'market',
+      'supermarket',
+      'grocery',
+      'restaurant',
+      'cafe',
+      'hotel',
+      'motel',
+      'hostel',
+      'resort',
+      'stay',
+      'apartment',
+      'villa',
+      'plaza',
+      'building',
+      'industrial',
+      'factory',
+      'warehouse',
+      'village',
+      'colony',
+      'housing complex',
+      'residential area',
+      'residential complex',
+      'bus stand',
+      'railway station',
+      'metro station',
+      'police station',
+      'marg',
+      'path',
+      'gully',
+      'bypass',
+      'expressway',
     ];
     for (final term in blockedNames) {
       if (nameLower.contains(term)) {
-        debugPrint("Place [${place.name}] rejected: Name contains blocked keyword ($term)");
+        debugPrint(
+          "Place [${place.name}] rejected: Name contains blocked keyword ($term)",
+        );
         return false;
       }
     }
 
     // 3. Name, location completeness and coordinates
-    if (place.name.trim().length < 4 || place.name.trim().toLowerCase() == 'unknown place') {
+    if (place.name.trim().length < 4 ||
+        place.name.trim().toLowerCase() == 'unknown place') {
       debugPrint("Place [${place.name}] rejected: Invalid or too short name");
       return false;
     }
@@ -200,7 +284,11 @@ class GeoapifyRepository {
     return true;
   }
 
-  double calculateAttractionScore(GeoapifyPlaceModel place, [double? lat, double? lon]) {
+  double calculateAttractionScore(
+    GeoapifyPlaceModel place, [
+    double? lat,
+    double? lon,
+  ]) {
     double score = 0.0;
     final nameLower = place.name.toLowerCase();
     final rawCats = place.rawCategories;
@@ -229,7 +317,9 @@ class GeoapifyRepository {
 
     for (final entry in priorityWeights.entries) {
       final matchesName = nameLower.contains(entry.key);
-      final matchesCategory = rawCats.any((c) => c.toLowerCase().contains(entry.key));
+      final matchesCategory = rawCats.any(
+        (c) => c.toLowerCase().contains(entry.key),
+      );
       if (matchesName || matchesCategory) {
         score += entry.value;
       }
@@ -274,11 +364,20 @@ class GeoapifyRepository {
     String mode = 'drive',
   }) async {
     // 1. Guard against invalid or uninitialized coordinates
-    if (startLat.isNaN || startLon.isNaN || endLat.isNaN || endLon.isNaN) return null;
+    if (startLat.isNaN || startLon.isNaN || endLat.isNaN || endLon.isNaN) {
+      return null;
+    }
     if (startLat == 0.0 && startLon == 0.0) return null;
     if (endLat == 0.0 && endLon == 0.0) return null;
-    if (startLat < -90.0 || startLat > 90.0 || endLat < -90.0 || endLat > 90.0) return null;
-    if (startLon < -180.0 || startLon > 180.0 || endLon < -180.0 || endLon > 180.0) return null;
+    if (startLat < -90.0 || startLat > 90.0 || endLat < -90.0 || endLat > 90.0) {
+      return null;
+    }
+    if (startLon < -180.0 ||
+        startLon > 180.0 ||
+        endLon < -180.0 ||
+        endLon > 180.0) {
+      return null;
+    }
 
     try {
       final data = await service.getRoute(
@@ -290,8 +389,11 @@ class GeoapifyRepository {
       );
       if (data is Map<String, dynamic>) {
         // If API returned an error payload
-        if (data.containsKey('error') || (data.containsKey('statusCode') && data['statusCode'] != 200)) {
-          debugPrint("Geoapify getRoute error payload: ${data['message'] ?? data['error']}");
+        if (data.containsKey('error') ||
+            (data.containsKey('statusCode') && data['statusCode'] != 200)) {
+          debugPrint(
+            "Geoapify getRoute error payload: ${data['message'] ?? data['error']}",
+          );
           return null;
         }
         final route = RouteModel.fromGeoapify(data);

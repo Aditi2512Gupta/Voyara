@@ -64,18 +64,22 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
       final userName = user.displayName?.trim().isNotEmpty == true
           ? user.displayName!.trim()
           : (user.email != null && user.email!.contains('@')
-              ? user.email!.split('@').first
-              : 'Traveler');
+                ? user.email!.split('@').first
+                : 'Traveler');
 
       if (_isEditing) {
-        await ref.read(reviewControllerProvider).updateReview(
+        await ref
+            .read(reviewControllerProvider)
+            .updateReview(
               destinationId: widget.destinationId,
               reviewId: widget.existingReview!.id,
               rating: _rating,
               comment: _commentController.text.trim(),
             );
       } else {
-        await ref.read(reviewControllerProvider).addReview(
+        await ref
+            .read(reviewControllerProvider)
+            .addReview(
               destinationId: widget.destinationId,
               userId: user.uid,
               userName: userName,
@@ -120,9 +124,7 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
     if (user == null) {
       return AlertDialog(
         title: const Text("Sign In Required"),
-        content: const Text(
-          "You must be signed in to write or edit a review.",
-        ),
+        content: const Text("You must be signed in to write or edit a review."),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -142,8 +144,8 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
     final displayName = user.displayName?.trim().isNotEmpty == true
         ? user.displayName!.trim()
         : (user.email != null && user.email!.contains('@')
-            ? user.email!.split('@').first
-            : 'Traveler');
+              ? user.email!.split('@').first
+              : 'Traveler');
 
     return AlertDialog(
       title: Text(_isEditing ? "Edit Review" : "Write Review"),
@@ -165,8 +167,8 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
                   children: [
                     CircleAvatar(
                       radius: 18,
-                      backgroundImage: user.photoURL != null &&
-                              user.photoURL!.isNotEmpty
+                      backgroundImage:
+                          user.photoURL != null && user.photoURL!.isNotEmpty
                           ? NetworkImage(user.photoURL!)
                           : null,
                       child: user.photoURL == null || user.photoURL!.isEmpty
@@ -174,7 +176,9 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
                               displayName.isNotEmpty
                                   ? displayName[0].toUpperCase()
                                   : 'U',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             )
                           : null,
                     ),
@@ -306,4 +310,4 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
       ],
     );
   }
-}
+}

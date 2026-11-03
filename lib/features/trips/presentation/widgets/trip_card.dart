@@ -118,13 +118,16 @@ class TripCard extends ConsumerWidget {
                       imageUrl: trip.destinationImageUrl.trim().isNotEmpty
                           ? trip.destinationImageUrl
                           : imagesAsync.maybeWhen(
-                              data: (images) =>
-                                  images.isNotEmpty ? images.first.imageUrl : '',
+                              data: (images) => images.isNotEmpty
+                                  ? images.first.imageUrl
+                                  : '',
                               orElse: () => '',
                             ),
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
-                        color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                      placeholder: (_, _) => Container(
+                        color: isDark
+                            ? AppColors.inputDark
+                            : AppColors.inputLight,
                         child: const Center(
                           child: SizedBox(
                             width: 20,
@@ -133,11 +136,15 @@ class TripCard extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      errorWidget: (_, __, ___) => Container(
-                        color: isDark ? AppColors.inputDark : AppColors.inputLight,
+                      errorWidget: (_, _, _) => Container(
+                        color: isDark
+                            ? AppColors.inputDark
+                            : AppColors.inputLight,
                         child: Icon(
                           Icons.travel_explore,
-                          color: isDark ? AppColors.secondary : AppColors.primary,
+                          color: isDark
+                              ? AppColors.secondary
+                              : AppColors.primary,
                         ),
                       ),
                     ),
@@ -161,20 +168,26 @@ class TripCard extends ConsumerWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
-                                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                                color: isDark
+                                    ? AppColors.textPrimaryDark
+                                    : AppColors.textPrimaryLight,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
                             decoration: BoxDecoration(
                               color: statusBgColor,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              trip.status.name[0].toUpperCase() + trip.status.name.substring(1),
+                              trip.status.name[0].toUpperCase() +
+                                  trip.status.name.substring(1),
                               style: TextStyle(
                                 color: statusColor,
                                 fontWeight: FontWeight.w700,
@@ -193,7 +206,9 @@ class TripCard extends ConsumerWidget {
                           Icon(
                             Icons.location_on_outlined,
                             size: 13,
-                            color: isDark ? AppColors.secondary : AppColors.primary,
+                            color: isDark
+                                ? AppColors.secondary
+                                : AppColors.primary,
                           ),
                           const SizedBox(width: 3),
                           Expanded(

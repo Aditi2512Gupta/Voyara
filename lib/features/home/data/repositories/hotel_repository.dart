@@ -18,13 +18,7 @@ class HotelRepository {
 
       final features = data['features'] as List;
 
-      return features
-          .map(
-            (e) => HotelModel.fromJson(
-              e['properties'],
-            ),
-          )
-          .toList();
+      return features.map((e) => HotelModel.fromJson(e['properties'])).toList();
     } catch (_) {
       return [];
     }

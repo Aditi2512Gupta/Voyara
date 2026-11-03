@@ -4,9 +4,7 @@ import '../models/destination_model.dart';
 class DestinationMapper {
   const DestinationMapper._();
 
-  static DestinationModel fromAttraction(
-    AttractionModel attraction,
-  ) {
+  static DestinationModel fromAttraction(AttractionModel attraction) {
     return DestinationModel(
       id: attraction.xid,
       title: attraction.name,

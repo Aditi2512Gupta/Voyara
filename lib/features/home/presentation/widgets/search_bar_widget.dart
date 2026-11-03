@@ -71,7 +71,9 @@ class SearchBarWidget extends ConsumerWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1B3B38) : const Color(0xFFD6F3EB),
+                color: isDark
+                    ? const Color(0xFF1B3B38)
+                    : const Color(0xFFD6F3EB),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(

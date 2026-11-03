@@ -52,15 +52,21 @@ class VoyaraAppBar extends ConsumerWidget implements PreferredSizeWidget {
               // 1. Back button (if enabled)
               if (showBackButton)
                 IconButton(
-                  onPressed: onBackPressed ?? () => Navigator.of(context).maybePop(),
+                  onPressed:
+                      onBackPressed ?? () => Navigator.of(context).maybePop(),
                   icon: Icon(
                     Icons.arrow_back_rounded,
-                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F2F33),
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : const Color(0xFF0F2F33),
                     size: 24,
                   ),
                   tooltip: 'Back',
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                  constraints: const BoxConstraints(
+                    minWidth: 40,
+                    minHeight: 40,
+                  ),
                 ),
 
               // 2. Header Logo
@@ -82,7 +88,9 @@ class VoyaraAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     unreadCount: 0,
                   ),
                   data: (notifications) {
-                    final unreadCount = notifications.where((n) => !n.read).length;
+                    final unreadCount = notifications
+                        .where((n) => !n.read)
+                        .length;
                     return _buildNotificationBell(
                       context: context,
                       isDark: isDark,
@@ -117,7 +125,8 @@ class VoyaraAppBar extends ConsumerWidget implements PreferredSizeWidget {
                           ? Image.network(
                               photoUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => _buildDefaultAvatar(initial),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  _buildDefaultAvatar(initial),
                             )
                           : _buildDefaultAvatar(initial),
                     ),
@@ -168,7 +177,9 @@ class VoyaraAppBar extends ConsumerWidget implements PreferredSizeWidget {
               child: Icon(
                 Icons.notifications_none_rounded,
                 size: 20,
-                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF334155),
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : const Color(0xFF334155),
               ),
             ),
           ),
@@ -182,12 +193,11 @@ class VoyaraAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 horizontal: unreadCount > 9 ? 5 : 4,
                 vertical: 2,
               ),
-              constraints: const BoxConstraints(
-                minWidth: 16,
-                minHeight: 16,
-              ),
+              constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
               decoration: BoxDecoration(
-                color: const Color(0xFFDC2626), // Crisp coral/red matching mockup
+                color: const Color(
+                  0xFFDC2626,
+                ), // Crisp coral/red matching mockup
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: isDark ? AppColors.backgroundDark : Colors.white,
@@ -212,7 +222,9 @@ class VoyaraAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   Widget _buildDefaultAvatar(String initial) {
     return Container(
-      color: const Color(0xFFB81D58), // Distinctive berry/magenta from reference
+      color: const Color(
+        0xFFB81D58,
+      ), // Distinctive berry/magenta from reference
       alignment: Alignment.center,
       child: Text(
         initial,

@@ -6,11 +6,7 @@ import '../../data/models/destination_model.dart';
 import '../../../favorites/providers/favorites_provider.dart';
 
 class FavoriteButton extends ConsumerWidget {
-  const FavoriteButton({
-    super.key,
-    required this.destination,
-    this.size = 38,
-  });
+  const FavoriteButton({super.key, required this.destination, this.size = 38});
 
   final DestinationModel destination;
   final double size;
@@ -42,7 +38,7 @@ class FavoriteButton extends ConsumerWidget {
         ),
       ),
 
-      error: (_, __) => Container(
+      error: (_, _) => Container(
         width: size,
         height: size,
         decoration: BoxDecoration(
@@ -86,7 +82,9 @@ class FavoriteButton extends ConsumerWidget {
             iconSize: size * 0.55,
             icon: Icon(
               isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? const Color(0xFFEF4444) : const Color(0xFF6B7A78),
+              color: isFavorite
+                  ? const Color(0xFFEF4444)
+                  : const Color(0xFF6B7A78),
             ),
             onPressed: () async {
               final repo = ref.read(authRepositoryProvider);

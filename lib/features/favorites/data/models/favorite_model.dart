@@ -15,10 +15,7 @@ class FavoriteModel {
   final double latitude;
   final double longitude;
 
-  factory FavoriteModel.fromMap(
-    Map<String, dynamic> map,
-    String id,
-  ) {
+  factory FavoriteModel.fromMap(Map<String, dynamic> map, String id) {
     return FavoriteModel(
       id: id,
       title: map['title'] ?? '',

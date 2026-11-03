@@ -10,9 +10,7 @@ final categoriesProvider = Provider<List<String>>((ref) {
     data: (data) {
       return ref
           .read(categoryRepositoryProvider)
-          .categoriesFromDestinations(
-            data.destinations,
-          );
+          .categoriesFromDestinations(data.destinations);
     },
     orElse: () => [],
   );

@@ -7,8 +7,7 @@ import 'home_provider.dart';
 final currentCityProvider = FutureProvider<LocationModel>((ref) async {
   final position = await ref.watch(currentLocationProvider.future);
 
-  return ref.read(geoapifyRepositoryProvider).reverseGeocode(
-        lat: position.latitude,
-        lon: position.longitude,
-      );
+  return ref
+      .read(geoapifyRepositoryProvider)
+      .reverseGeocode(lat: position.latitude, lon: position.longitude);
 });

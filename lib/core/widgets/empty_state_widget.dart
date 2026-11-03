@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EmptyStateWidget extends StatelessWidget {
-  const EmptyStateWidget({
-    super.key,
-    required this.message,
-  });
+  const EmptyStateWidget({super.key, required this.message});
 
   final String message;
 
@@ -16,16 +13,9 @@ class EmptyStateWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.travel_explore,
-              size: 60,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.travel_explore, size: 60, color: Colors.grey),
             const SizedBox(height: 16),
-            Text(
-              message,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text(message, style: Theme.of(context).textTheme.titleMedium),
           ],
         ),
       ),

@@ -12,10 +12,7 @@ import '../../../../app/theme/app_colors.dart';
 /// - Prominent, readable "Plan a Trip" typography with a secondary "AI SMART ROUTE" micro-tag
 /// - Polished micro-interactions including springy press compression and compass deflection
 class PlanWithAiFloatingButton extends StatefulWidget {
-  const PlanWithAiFloatingButton({
-    super.key,
-    this.onPressed,
-  });
+  const PlanWithAiFloatingButton({super.key, this.onPressed});
 
   /// Optional override for button tap. Defaults to navigating to `/trip-planner`.
   final VoidCallback? onPressed;
@@ -81,7 +78,9 @@ class _PlanWithAiFloatingButtonState extends State<PlanWithAiFloatingButton> {
               boxShadow: [
                 // Deep midnight-teal ground shadow for refined elevation
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: isDark ? 0.65 : 0.38),
+                  color: AppColors.primary.withValues(
+                    alpha: isDark ? 0.65 : 0.38,
+                  ),
                   blurRadius: 18,
                   offset: const Offset(0, 7),
                   spreadRadius: 0,
@@ -139,10 +138,7 @@ class _PlanWithAiFloatingButtonState extends State<PlanWithAiFloatingButton> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF164848),
-                                Color(0xFF092525),
-                              ],
+                              colors: [Color(0xFF164848), Color(0xFF092525)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),

@@ -22,7 +22,10 @@ class MockNotificationRepository implements NotificationRepository {
   }
 
   @override
-  Future<void> addNotification({required String title, required String body}) async {}
+  Future<void> addNotification({
+    required String title,
+    required String body,
+  }) async {}
 
   @override
   Future<void> markAsRead(String notificationId) async {
@@ -42,8 +45,9 @@ class MockNotificationRepository implements NotificationRepository {
 
 void main() {
   group('HomeAppBar Widget Tests', () {
-    testWidgets('Renders Voyara logo, app name, greeting, bell, and avatar',
-        (WidgetTester tester) async {
+    testWidgets('Renders Voyara logo, app name, greeting, bell, and avatar', (
+      WidgetTester tester,
+    ) async {
       final mockRepo = MockNotificationRepository();
       mockRepo.notificationList = [
         NotificationModel(
@@ -58,7 +62,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            notificationsProvider.overrideWith((ref) => Stream.value(mockRepo.notificationList)),
+            notificationsProvider.overrideWith(
+              (ref) => Stream.value(mockRepo.notificationList),
+            ),
             profileProvider.overrideWith(
               (ref) => Future.value(
                 UserProfileModel(
@@ -73,10 +79,7 @@ void main() {
           ],
           child: const MaterialApp(
             home: Scaffold(
-              body: Padding(
-                padding: EdgeInsets.all(16),
-                child: HomeAppBar(),
-              ),
+              body: Padding(padding: EdgeInsets.all(16), child: HomeAppBar()),
             ),
           ),
         ),
@@ -90,7 +93,10 @@ void main() {
 
       // Greeting & User name
       expect(find.textContaining('Aditi 👋'), findsOneWidget);
-      expect(find.text('Discover amazing destinations around the world'), findsOneWidget);
+      expect(
+        find.text('Discover amazing destinations around the world'),
+        findsOneWidget,
+      );
 
       // Notification icon and unread badge
       expect(find.byIcon(Icons.notifications_none_rounded), findsOneWidget);
@@ -102,89 +108,96 @@ void main() {
   });
 
   group('NotificationsPage Widget Tests', () {
-    testWidgets('Renders empty state with All Caught Up when no notifications',
-        (WidgetTester tester) async {
-      final mockRepo = MockNotificationRepository();
-      mockRepo.notificationList = [];
+    testWidgets(
+      'Renders empty state with All Caught Up when no notifications',
+      (WidgetTester tester) async {
+        final mockRepo = MockNotificationRepository();
+        mockRepo.notificationList = [];
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            notificationsProvider.overrideWith((ref) => Stream.value(mockRepo.notificationList)),
-            notificationRepositoryProvider.overrideWithValue(mockRepo),
-          ],
-          child: const MaterialApp(
-            home: NotificationsPage(),
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              notificationsProvider.overrideWith(
+                (ref) => Stream.value(mockRepo.notificationList),
+              ),
+              notificationRepositoryProvider.overrideWithValue(mockRepo),
+            ],
+            child: const MaterialApp(home: NotificationsPage()),
           ),
-        ),
-      );
+        );
 
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
 
-      expect(find.text('All Caught Up!'), findsOneWidget);
-      expect(find.textContaining('You don\'t have any notifications'), findsOneWidget);
-      expect(find.text('Discover Destinations'), findsOneWidget);
-      expect(find.text('Mark all read'), findsNothing);
-    });
+        expect(find.text('All Caught Up!'), findsOneWidget);
+        expect(
+          find.textContaining('You don\'t have any notifications'),
+          findsOneWidget,
+        );
+        expect(find.text('Discover Destinations'), findsOneWidget);
+        expect(find.text('Mark all read'), findsNothing);
+      },
+    );
 
-    testWidgets('Renders modern notification cards, groups by date, and styles Mark all read',
-        (WidgetTester tester) async {
-      final mockRepo = MockNotificationRepository();
-      final now = DateTime.now();
-      final yesterday = now.subtract(const Duration(days: 1));
+    testWidgets(
+      'Renders modern notification cards, groups by date, and styles Mark all read',
+      (WidgetTester tester) async {
+        final mockRepo = MockNotificationRepository();
+        final now = DateTime.now();
+        final yesterday = now.subtract(const Duration(days: 1));
 
-      mockRepo.notificationList = [
-        NotificationModel(
-          id: 'n1',
-          title: 'Special Flight Discount',
-          body: 'Get 20% off on Mumbai flights today!',
-          createdAt: now,
-          read: false,
-        ),
-        NotificationModel(
-          id: 'n2',
-          title: 'Booking Completed',
-          body: 'Your reservation at Taj Lake Palace is confirmed.',
-          createdAt: yesterday,
-          read: true,
-        ),
-      ];
-
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            notificationsProvider.overrideWith((ref) => Stream.value(mockRepo.notificationList)),
-            notificationRepositoryProvider.overrideWithValue(mockRepo),
-          ],
-          child: const MaterialApp(
-            home: NotificationsPage(),
+        mockRepo.notificationList = [
+          NotificationModel(
+            id: 'n1',
+            title: 'Special Flight Discount',
+            body: 'Get 20% off on Mumbai flights today!',
+            createdAt: now,
+            read: false,
           ),
-        ),
-      );
+          NotificationModel(
+            id: 'n2',
+            title: 'Booking Completed',
+            body: 'Your reservation at Taj Lake Palace is confirmed.',
+            createdAt: yesterday,
+            read: true,
+          ),
+        ];
 
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              notificationsProvider.overrideWith(
+                (ref) => Stream.value(mockRepo.notificationList),
+              ),
+              notificationRepositoryProvider.overrideWithValue(mockRepo),
+            ],
+            child: const MaterialApp(home: NotificationsPage()),
+          ),
+        );
 
-      // Title & Mark all read pill button
-      expect(find.text('Notifications'), findsOneWidget);
-      expect(find.text('Mark all read'), findsOneWidget);
+        await tester.pumpAndSettle();
 
-      // Date Group Headers
-      expect(find.text('Today'), findsOneWidget);
-      expect(find.text('Yesterday'), findsOneWidget);
+        // Title & Mark all read pill button
+        expect(find.text('Notifications'), findsOneWidget);
+        expect(find.text('Mark all read'), findsOneWidget);
 
-      // Notification cards
-      expect(find.text('Special Flight Discount'), findsOneWidget);
-      expect(find.text('Booking Completed'), findsOneWidget);
+        // Date Group Headers
+        expect(find.text('Today'), findsOneWidget);
+        expect(find.text('Yesterday'), findsOneWidget);
 
-      // Tap Mark all read
-      await tester.tap(find.text('Mark all read'));
-      await tester.pump();
-      expect(mockRepo.markAllCalled, isTrue);
+        // Notification cards
+        expect(find.text('Special Flight Discount'), findsOneWidget);
+        expect(find.text('Booking Completed'), findsOneWidget);
 
-      // Tap unread notification card to mark as read
-      await tester.tap(find.text('Special Flight Discount'));
-      await tester.pump();
-      expect(mockRepo.markedReadId, equals('n1'));
-    });
+        // Tap Mark all read
+        await tester.tap(find.text('Mark all read'));
+        await tester.pump();
+        expect(mockRepo.markAllCalled, isTrue);
+
+        // Tap unread notification card to mark as read
+        await tester.tap(find.text('Special Flight Discount'));
+        await tester.pump();
+        expect(mockRepo.markedReadId, equals('n1'));
+      },
+    );
   });
 }

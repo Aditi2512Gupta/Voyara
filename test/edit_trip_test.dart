@@ -104,131 +104,148 @@ void main() {
     createdAt: DateTime(2026, 10, 1),
   );
 
-  testWidgets('EditTripPage loads initial values and regenerates plan on planning changes', (tester) async {
-    final mockRepo = MockSavedTripRepository();
-    final mockTripPlannerRepo = MockTripPlannerRepository();
+  testWidgets(
+    'EditTripPage loads initial values and regenerates plan on planning changes',
+    (tester) async {
+      final mockRepo = MockSavedTripRepository();
+      final mockTripPlannerRepo = MockTripPlannerRepository();
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          savedTripRepositoryProvider.overrideWithValue(mockRepo),
-          tripPlannerRepositoryProvider.overrideWithValue(mockTripPlannerRepo),
-          travelInterestsProvider.overrideWith(
-            (ref) => Future.value([
-              const TravelInterestModel(id: '1', name: 'Beach'),
-              const TravelInterestModel(id: '2', name: 'Adventure'),
-              const TravelInterestModel(id: '3', name: 'Culture'),
-            ]),
-          ),
-        ],
-        child: MaterialApp(
-          home: EditTripPage(trip: initialTrip),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            savedTripRepositoryProvider.overrideWithValue(mockRepo),
+            tripPlannerRepositoryProvider.overrideWithValue(
+              mockTripPlannerRepo,
+            ),
+            travelInterestsProvider.overrideWith(
+              (ref) => Future.value([
+                const TravelInterestModel(id: '1', name: 'Beach'),
+                const TravelInterestModel(id: '2', name: 'Adventure'),
+                const TravelInterestModel(id: '3', name: 'Culture'),
+              ]),
+            ),
+          ],
+          child: MaterialApp(home: EditTripPage(trip: initialTrip)),
         ),
-      ),
-    );
+      );
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    // Verify initial values loaded into the form
-    expect(find.text('Goa'), findsOneWidget);
-    expect(find.text('25000'), findsOneWidget);
-    expect(find.text('4 Days'), findsOneWidget);
-    expect(find.text('2'), findsOneWidget);
-    expect(find.text('Start Date: 1/12/2026'), findsOneWidget);
-    expect(find.text('Beach'), findsOneWidget);
+      // Verify initial values loaded into the form
+      expect(find.text('Goa'), findsOneWidget);
+      expect(find.text('25000'), findsOneWidget);
+      expect(find.text('4 Days'), findsOneWidget);
+      expect(find.text('2'), findsOneWidget);
+      expect(find.text('Start Date: 1/12/2026'), findsOneWidget);
+      expect(find.text('Beach'), findsOneWidget);
 
-    // Edit budget
-    final budgetField = find.widgetWithText(TextField, '25000');
-    await tester.enterText(budgetField, '35000');
-    await tester.pump();
+      // Edit budget
+      final budgetField = find.widgetWithText(TextField, '25000');
+      await tester.enterText(budgetField, '35000');
+      await tester.pump();
 
-    // Tap on Save Changes
-    final saveButton = find.widgetWithText(FilledButton, 'Save Changes');
-    expect(saveButton, findsOneWidget);
-    await tester.ensureVisible(saveButton);
-    await tester.pumpAndSettle();
-    await tester.tap(saveButton);
-    await tester.pumpAndSettle();
+      // Tap on Save Changes
+      final saveButton = find.widgetWithText(FilledButton, 'Save Changes');
+      expect(saveButton, findsOneWidget);
+      await tester.ensureVisible(saveButton);
+      await tester.pumpAndSettle();
+      await tester.tap(saveButton);
+      await tester.pumpAndSettle();
 
-    // Verify AI generation was called
-    expect(mockTripPlannerRepo.lastRequest, isNotNull);
-    expect(mockTripPlannerRepo.lastRequest!.budget, 35000);
+      // Verify AI generation was called
+      expect(mockTripPlannerRepo.lastRequest, isNotNull);
+      expect(mockTripPlannerRepo.lastRequest!.budget, 35000);
 
-    // Verify repository was called with regenerated plan and same trip ID
-    expect(mockRepo.lastUpdatedTrip, isNotNull);
-    expect(mockRepo.lastUpdatedTrip!.id, 'trip_100');
-    expect(mockRepo.lastUpdatedTrip!.budget, 35000);
-    expect(mockRepo.lastUpdatedTrip!.destination, 'Goa');
-    expect(mockRepo.lastUpdatedTrip!.overview, 'Regenerated overview for Goa');
-    expect(mockRepo.lastUpdatedTrip!.dailyItinerary.first.morning, 'Regenerated morning activity');
-  });
+      // Verify repository was called with regenerated plan and same trip ID
+      expect(mockRepo.lastUpdatedTrip, isNotNull);
+      expect(mockRepo.lastUpdatedTrip!.id, 'trip_100');
+      expect(mockRepo.lastUpdatedTrip!.budget, 35000);
+      expect(mockRepo.lastUpdatedTrip!.destination, 'Goa');
+      expect(
+        mockRepo.lastUpdatedTrip!.overview,
+        'Regenerated overview for Goa',
+      );
+      expect(
+        mockRepo.lastUpdatedTrip!.dailyItinerary.first.morning,
+        'Regenerated morning activity',
+      );
+    },
+  );
 
-  testWidgets('SavedTripDetailsPage contains Edit option in AppBar and refreshes with regenerated plan', (tester) async {
-    final mockRepo = MockSavedTripRepository();
-    final mockTripPlannerRepo = MockTripPlannerRepository();
+  testWidgets(
+    'SavedTripDetailsPage contains Edit option in AppBar and refreshes with regenerated plan',
+    (tester) async {
+      final mockRepo = MockSavedTripRepository();
+      final mockTripPlannerRepo = MockTripPlannerRepository();
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          savedTripRepositoryProvider.overrideWithValue(mockRepo),
-          tripPlannerRepositoryProvider.overrideWithValue(mockTripPlannerRepo),
-          savedTripsProvider.overrideWith((ref) => Stream.value([initialTrip])),
-          travelInterestsProvider.overrideWith(
-            (ref) => Future.value([
-              const TravelInterestModel(id: '1', name: 'Beach'),
-            ]),
-          ),
-        ],
-        child: MaterialApp(
-          home: SavedTripDetailsPage(trip: initialTrip),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            savedTripRepositoryProvider.overrideWithValue(mockRepo),
+            tripPlannerRepositoryProvider.overrideWithValue(
+              mockTripPlannerRepo,
+            ),
+            savedTripsProvider.overrideWith(
+              (ref) => Stream.value([initialTrip]),
+            ),
+            travelInterestsProvider.overrideWith(
+              (ref) => Future.value([
+                const TravelInterestModel(id: '1', name: 'Beach'),
+              ]),
+            ),
+          ],
+          child: MaterialApp(home: SavedTripDetailsPage(trip: initialTrip)),
         ),
-      ),
-    );
+      );
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    // Verify initial values on details page
-    expect(find.text('Goa'), findsWidgets);
-    expect(find.text('₹25000'), findsOneWidget);
-    expect(find.text('A wonderful beach holiday in Goa.'), findsOneWidget);
+      // Verify initial values on details page
+      expect(find.text('Goa'), findsWidgets);
+      expect(find.text('₹25000'), findsOneWidget);
+      expect(find.text('A wonderful beach holiday in Goa.'), findsOneWidget);
 
-    // Verify Edit icon exists in AppBar
-    final editButton = find.byTooltip('Edit Trip');
-    expect(editButton, findsOneWidget);
+      // Verify Edit icon exists in AppBar
+      final editButton = find.byTooltip('Edit Trip');
+      expect(editButton, findsOneWidget);
 
-    // Tap Edit button to open EditTripPage
-    await tester.tap(editButton);
-    await tester.pumpAndSettle();
+      // Tap Edit button to open EditTripPage
+      await tester.tap(editButton);
+      await tester.pumpAndSettle();
 
-    // Verify EditTripPage opened
-    expect(find.text('Edit Trip'), findsOneWidget);
+      // Verify EditTripPage opened
+      expect(find.text('Edit Trip'), findsOneWidget);
 
-    // Change budget
-    final budgetField = find.widgetWithText(TextField, '25000');
-    await tester.enterText(budgetField, '40000');
-    await tester.pump();
+      // Change budget
+      final budgetField = find.widgetWithText(TextField, '25000');
+      await tester.enterText(budgetField, '40000');
+      await tester.pump();
 
-    // Save
-    final saveButton = find.widgetWithText(FilledButton, 'Save Changes');
-    await tester.ensureVisible(saveButton);
-    await tester.pumpAndSettle();
-    await tester.tap(saveButton);
-    await tester.pumpAndSettle();
+      // Save
+      final saveButton = find.widgetWithText(FilledButton, 'Save Changes');
+      await tester.ensureVisible(saveButton);
+      await tester.pumpAndSettle();
+      await tester.tap(saveButton);
+      await tester.pumpAndSettle();
 
-    // Verify returned to SavedTripDetailsPage and shows updated budget and regenerated plan content
-    expect(find.text('₹40000'), findsOneWidget);
-    expect(find.text('Regenerated overview for Goa'), findsOneWidget);
+      // Verify returned to SavedTripDetailsPage and shows updated budget and regenerated plan content
+      expect(find.text('₹40000'), findsOneWidget);
+      expect(find.text('Regenerated overview for Goa'), findsOneWidget);
 
-    final morningActivity = find.text('Regenerated morning activity');
-    await tester.scrollUntilVisible(morningActivity, 200);
-    expect(morningActivity, findsOneWidget);
-  });
+      final morningActivity = find.text('Regenerated morning activity');
+      await tester.scrollUntilVisible(morningActivity, 200);
+      expect(morningActivity, findsOneWidget);
+    },
+  );
 
-  test('TravelInterestService returns default interests when unauthenticated without throwing permission errors', () async {
-    final service = TravelInterestService();
-    final interests = await service.getInterests();
-    expect(interests, isNotEmpty);
-    expect(interests.any((i) => i.name == 'Beach'), isTrue);
-    expect(interests.any((i) => i.name == 'Adventure'), isTrue);
-  });
+  test(
+    'TravelInterestService returns default interests when unauthenticated without throwing permission errors',
+    () async {
+      final service = TravelInterestService();
+      final interests = await service.getInterests();
+      expect(interests, isNotEmpty);
+      expect(interests.any((i) => i.name == 'Beach'), isTrue);
+      expect(interests.any((i) => i.name == 'Adventure'), isTrue);
+    },
+  );
 }

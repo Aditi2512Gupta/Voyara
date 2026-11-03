@@ -15,7 +15,7 @@ class NearbyDestinationsSection extends ConsumerWidget {
     return nearby.when(
       loading: () => const SizedBox.shrink(),
 
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
 
       data: (result) {
         if (result.destinations.isEmpty) {
@@ -25,9 +25,7 @@ class NearbyDestinationsSection extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionTitle(
-              title: "Nearby Destinations",
-            ),
+            const SectionTitle(title: "Nearby Destinations"),
 
             const SizedBox(height: 14),
 
@@ -37,7 +35,7 @@ class NearbyDestinationsSection extends ConsumerWidget {
                 scrollDirection: Axis.horizontal,
                 clipBehavior: Clip.none,
                 itemCount: result.destinations.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 16),
+                separatorBuilder: (_, _) => const SizedBox(width: 16),
                 itemBuilder: (context, index) {
                   return DestinationCard(
                     destination: result.destinations[index],

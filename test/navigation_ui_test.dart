@@ -10,21 +10,22 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('PlanWithAiFloatingButton Widget Tests', () {
-    testWidgets('renders Plan a Trip label, AI SMART ROUTE tag, and compass flight visual', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            floatingActionButton: PlanWithAiFloatingButton(),
+    testWidgets(
+      'renders Plan a Trip label, AI SMART ROUTE tag, and compass flight visual',
+      (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(floatingActionButton: PlanWithAiFloatingButton()),
           ),
-        ),
-      );
+        );
 
-      // Verify clear "Plan a Trip" lettering, AI SMART ROUTE badge, and compass flight painter
-      expect(find.text('Plan a Trip'), findsOneWidget);
-      expect(find.text('AI SMART ROUTE'), findsOneWidget);
-      expect(find.byType(CustomPaint), findsWidgets);
-      expect(find.byKey(const Key('plan_with_ai_fab')), findsOneWidget);
-    });
+        // Verify clear "Plan a Trip" lettering, AI SMART ROUTE badge, and compass flight painter
+        expect(find.text('Plan a Trip'), findsOneWidget);
+        expect(find.text('AI SMART ROUTE'), findsOneWidget);
+        expect(find.byType(CustomPaint), findsWidgets);
+        expect(find.byKey(const Key('plan_with_ai_fab')), findsOneWidget);
+      },
+    );
 
     testWidgets('triggers custom onPressed when provided', (tester) async {
       bool tapped = false;
@@ -63,19 +64,13 @@ void main() {
             path: '/trip-planner',
             builder: (context, state) {
               currentRoute = '/trip-planner';
-              return const Scaffold(
-                body: Text('AI Trip Planner Screen'),
-              );
+              return const Scaffold(body: Text('AI Trip Planner Screen'));
             },
           ),
         ],
       );
 
-      await tester.pumpWidget(
-        MaterialApp.router(
-          routerConfig: router,
-        ),
-      );
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
       await tester.pumpAndSettle();
 
       expect(find.text('Plan a Trip'), findsOneWidget);
@@ -87,59 +82,59 @@ void main() {
       expect(find.text('AI Trip Planner Screen'), findsOneWidget);
     });
 
-    testWidgets('adapts responsively across mobile, device-sized, and tablet layouts', (tester) async {
-      // 1. Compact mobile view (360 x 640)
-      tester.view.physicalSize = const Size(360, 640);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
+    testWidgets(
+      'adapts responsively across mobile, device-sized, and tablet layouts',
+      (tester) async {
+        // 1. Compact mobile view (360 x 640)
+        tester.view.physicalSize = const Size(360, 640);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
 
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            floatingActionButton: PlanWithAiFloatingButton(),
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(floatingActionButton: PlanWithAiFloatingButton()),
           ),
-        ),
-      );
-      expect(find.text('Plan a Trip'), findsOneWidget);
-      expect(find.text('AI SMART ROUTE'), findsOneWidget);
+        );
+        expect(find.text('Plan a Trip'), findsOneWidget);
+        expect(find.text('AI SMART ROUTE'), findsOneWidget);
 
-      // 2. Target Device layout (Motorola Edge 40 Neo logical size: 412 x 915)
-      tester.view.physicalSize = const Size(412, 915);
-      await tester.pump();
-      expect(find.text('Plan a Trip'), findsOneWidget);
-      expect(find.text('AI SMART ROUTE'), findsOneWidget);
+        // 2. Target Device layout (Motorola Edge 40 Neo logical size: 412 x 915)
+        tester.view.physicalSize = const Size(412, 915);
+        await tester.pump();
+        expect(find.text('Plan a Trip'), findsOneWidget);
+        expect(find.text('AI SMART ROUTE'), findsOneWidget);
 
-      // 3. Tablet view (800 x 1280)
-      tester.view.physicalSize = const Size(800, 1280);
-      await tester.pump();
-      expect(find.text('Plan a Trip'), findsOneWidget);
-      expect(find.text('AI SMART ROUTE'), findsOneWidget);
-    });
+        // 3. Tablet view (800 x 1280)
+        tester.view.physicalSize = const Size(800, 1280);
+        await tester.pump();
+        expect(find.text('Plan a Trip'), findsOneWidget);
+        expect(find.text('AI SMART ROUTE'), findsOneWidget);
+      },
+    );
 
-    testWidgets('renders on actual HomePage as a floating action button above bottom navigation', (tester) async {
+    testWidgets('HomePage renders Plan a Trip with AI action card', (
+      tester,
+    ) async {
       // Test on device-sized screen (412 x 915)
       tester.view.physicalSize = const Size(412, 915);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomePage(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: HomePage())),
       );
       await tester.pump(const Duration(milliseconds: 300));
 
-      // Verify the button exists on the HomePage
-      expect(find.byType(PlanWithAiFloatingButton), findsOneWidget);
-      expect(find.text('Plan a Trip'), findsOneWidget);
-      expect(find.text('AI SMART ROUTE'), findsOneWidget);
+      // Verify Plan a Trip with AI action card is present on HomePage
+      expect(find.text('Plan a Trip\nwith AI'), findsOneWidget);
+      expect(find.text('My Trips'), findsOneWidget);
     });
   });
 
   group('MainNavigationPage Bottom Navigation UI Tests', () {
-    testWidgets('has exactly 4 navigation destinations without AI Planner', (tester) async {
+    testWidgets('has exactly 4 navigation destinations without AI Planner', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -147,9 +142,18 @@ void main() {
             bottomNavigationBar: NavigationBar(
               destinations: const [
                 NavigationDestination(icon: Icon(Icons.home), label: "Home"),
-                NavigationDestination(icon: Icon(Icons.luggage), label: "Trips"),
-                NavigationDestination(icon: Icon(Icons.favorite), label: "Favorites"),
-                NavigationDestination(icon: Icon(Icons.person), label: "Profile"),
+                NavigationDestination(
+                  icon: Icon(Icons.luggage),
+                  label: "Trips",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.favorite),
+                  label: "Favorites",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.person),
+                  label: "Profile",
+                ),
               ],
             ),
           ),
@@ -178,14 +182,14 @@ void main() {
       expect(hasTripPlanner, isTrue);
 
       // Verify /trips and /favorites redirect routes exist
-      final tripsRoute = routes.firstWhere(
-        (r) => r is GoRoute && r.path == '/trips',
-      ) as GoRoute;
+      final tripsRoute =
+          routes.firstWhere((r) => r is GoRoute && r.path == '/trips')
+              as GoRoute;
       expect(tripsRoute.redirect, isNotNull);
 
-      final favoritesRoute = routes.firstWhere(
-        (r) => r is GoRoute && r.path == '/favorites',
-      ) as GoRoute;
+      final favoritesRoute =
+          routes.firstWhere((r) => r is GoRoute && r.path == '/favorites')
+              as GoRoute;
       expect(favoritesRoute.redirect, isNotNull);
     });
   });

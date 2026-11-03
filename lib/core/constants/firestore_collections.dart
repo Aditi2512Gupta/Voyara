@@ -3,8 +3,7 @@ class FirestoreCollections {
 
   static const users = 'users';
 
-  static const destinations =
-      'destinations';
+  static const destinations = 'destinations';
 
   static const bookings = 'bookings';
 

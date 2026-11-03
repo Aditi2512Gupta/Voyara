@@ -35,8 +35,8 @@ class PopularDestinationsSection extends ConsumerWidget {
           children: [
             SectionTitle(
               title: countryAsync.maybeWhen(
-                data: (location) => "Popular in ${location.country}",
-                orElse: () => "Popular Destinations",
+                data: (location) => "🔥 Popular in ${location.country}",
+                orElse: () => "🔥 Popular in India",
               ),
               onSeeAll: () {
                 context.push('/popular-destinations');
@@ -51,7 +51,7 @@ class PopularDestinationsSection extends ConsumerWidget {
                 scrollDirection: Axis.horizontal,
                 clipBehavior: Clip.none,
                 itemCount: destinations.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 16),
+                separatorBuilder: (_, _) => const SizedBox(width: 16),
                 itemBuilder: (_, index) {
                   return DestinationCard(destination: destinations[index]);
                 },

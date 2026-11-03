@@ -10,10 +10,7 @@ class Debouncer {
   void run(void Function() action) {
     _timer?.cancel();
 
-    _timer = Timer(
-      Duration(milliseconds: milliseconds),
-      action,
-    );
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 
   void dispose() {

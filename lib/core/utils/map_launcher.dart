@@ -33,10 +33,7 @@ class MapLauncher {
       originLongitude: originLongitude,
     );
 
-    if (!await launchUrl(
-      uri,
-      mode: LaunchMode.externalApplication,
-    )) {
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not open Google Maps directions');
     }
   }
@@ -55,4 +52,4 @@ class MapLauncher {
       originLongitude: originLongitude,
     );
   }
-}
+}

@@ -99,7 +99,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.inputLight,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 15,
+        ),
         hintStyle: GoogleFonts.plusJakartaSans(
           color: AppColors.textTertiaryLight,
           fontSize: 14,
@@ -143,13 +146,17 @@ class AppTheme {
           return GoogleFonts.plusJakartaSans(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? AppColors.primary : AppColors.textSecondaryLight,
+            color: isSelected
+                ? AppColors.primary
+                : AppColors.textSecondaryLight,
           );
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           final isSelected = states.contains(WidgetState.selected);
           return IconThemeData(
-            color: isSelected ? AppColors.primary : AppColors.textSecondaryLight,
+            color: isSelected
+                ? AppColors.primary
+                : AppColors.textSecondaryLight,
             size: 24,
           );
         }),
@@ -277,7 +284,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.inputDark,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 15,
+        ),
         hintStyle: GoogleFonts.plusJakartaSans(
           color: AppColors.textTertiaryDark,
           fontSize: 14,
@@ -321,13 +331,17 @@ class AppTheme {
           return GoogleFonts.plusJakartaSans(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? AppColors.secondary : AppColors.textSecondaryDark,
+            color: isSelected
+                ? AppColors.secondary
+                : AppColors.textSecondaryDark,
           );
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           final isSelected = states.contains(WidgetState.selected);
           return IconThemeData(
-            color: isSelected ? AppColors.secondary : AppColors.textSecondaryDark,
+            color: isSelected
+                ? AppColors.secondary
+                : AppColors.textSecondaryDark,
             size: 24,
           );
         }),

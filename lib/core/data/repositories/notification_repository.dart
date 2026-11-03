@@ -10,10 +10,7 @@ class NotificationRepository {
   CollectionReference<Map<String, dynamic>> get _collection {
     final uid = _auth.currentUser!.uid;
 
-    return _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('notifications');
+    return _firestore.collection('users').doc(uid).collection('notifications');
   }
 
   Stream<List<NotificationModel>> notifications() {
@@ -22,12 +19,7 @@ class NotificationRepository {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map(
-                (doc) => NotificationModel.fromMap(
-                  doc.data(),
-                  doc.id,
-                ),
-              )
+              .map((doc) => NotificationModel.fromMap(doc.data(), doc.id))
               .toList(),
         );
   }
@@ -45,9 +37,7 @@ class NotificationRepository {
   }
 
   Future<void> markAsRead(String id) {
-    return _collection.doc(id).update({
-      'read': true,
-    });
+    return _collection.doc(id).update({'read': true});
   }
 
   Future<void> deleteNotification(String id) {
@@ -55,9 +45,7 @@ class NotificationRepository {
   }
 
   Future<void> markAllAsRead() async {
-    final snapshot = await _collection
-        .where('read', isEqualTo: false)
-        .get();
+    final snapshot = await _collection.where('read', isEqualTo: false).get();
 
     final batch = _firestore.batch();
 

@@ -1,23 +1,24 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
   Future<dynamic> get(String url) async {
-    print("REQUEST URL:");
-    print(url);
+    debugPrint('REQUEST URL:');
+    debugPrint(url);
 
     final response = await http
         .get(Uri.parse(url))
         .timeout(const Duration(seconds: 10));
 
-    print("STATUS CODE: ${response.statusCode}");
-    print(response.body);
+    debugPrint('STATUS CODE: ');
+    debugPrint(response.body);
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     }
 
-    throw Exception('Request failed: ${response.statusCode}');
+    throw Exception('Request failed: ');
   }
 }

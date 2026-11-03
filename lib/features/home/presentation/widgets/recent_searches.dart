@@ -4,10 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/recent_search_provider.dart';
 
 class RecentSearches extends ConsumerWidget {
-  const RecentSearches({
-    super.key,
-    required this.onTap,
-  });
+  const RecentSearches({super.key, required this.onTap});
 
   final ValueChanged<String> onTap;
 

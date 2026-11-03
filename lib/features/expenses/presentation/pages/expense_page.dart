@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/utils/responsive.dart';
 import '../../data/models/expense_model.dart';
 import '../../providers/expense_provider.dart';
 
@@ -23,7 +24,9 @@ class ExpensePage extends ConsumerWidget {
     final expensesAsync = ref.watch(expensesProvider(tripId));
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.scaffoldDark : AppColors.scaffoldLight,
+      backgroundColor: isDark
+          ? AppColors.scaffoldDark
+          : AppColors.scaffoldLight,
       appBar: AppBar(
         title: const Text(
           "Trip Expenses",
@@ -43,9 +46,8 @@ class ExpensePage extends ConsumerWidget {
         label: const Text("Add Expense"),
       ),
       body: expensesAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(strokeWidth: 2.5),
-        ),
+        loading: () =>
+            const Center(child: CircularProgressIndicator(strokeWidth: 2.5)),
         error: (error, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -73,96 +75,105 @@ class ExpensePage extends ConsumerWidget {
                 (categoryTotals[expense.category] ?? 0) + expense.amount;
           }
 
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
-            children: [
-              _buildBudgetCard(context, totalSpent, remaining, isDark),
+          return ResponsiveContentWrapper(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+              children: [
+                _buildBudgetCard(context, totalSpent, remaining, isDark),
 
-              if (expenses.isNotEmpty) ...[
+                if (expenses.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _buildCategoryBreakdown(
+                    context,
+                    categoryTotals,
+                    totalSpent,
+                    isDark,
+                  ),
+                ],
+
                 const SizedBox(height: 16),
-                _buildCategoryBreakdown(
-                  context,
-                  categoryTotals,
-                  totalSpent,
-                  isDark,
-                ),
-              ],
 
-              const SizedBox(height: 16),
-
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Planned vs Actual",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("AI Planned Cost"),
-                          Text(
-                            "₹${plannedCost.toStringAsFixed(0)}",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Actual Spent"),
-                          Text(
-                            "₹${totalSpent.toStringAsFixed(0)}",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const Divider(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            isUnderPlan ? "Under Plan" : "Over Plan",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "₹${difference.abs().toStringAsFixed(0)}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isUnderPlan
-                                  ? const Color(0xFF0E7A60)
-                                  : AppColors.error,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              if (expenses.isEmpty)
-                const Card(
+                Card(
                   child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Center(child: Text("No expenses added yet.")),
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Planned vs Actual",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("AI Planned Cost"),
+                            Text(
+                              "₹${plannedCost.toStringAsFixed(0)}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Actual Spent"),
+                            Text(
+                              "₹${totalSpent.toStringAsFixed(0)}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              isUnderPlan ? "Under Plan" : "Over Plan",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "₹${difference.abs().toStringAsFixed(0)}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isUnderPlan
+                                    ? const Color(0xFF0E7A60)
+                                    : AppColors.error,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                )
-              else
-                ...expenses.map(
-                  (expense) => _buildExpenseTile(context, ref, expense, isDark),
                 ),
-            ],
+
+                const SizedBox(height: 16),
+
+                if (expenses.isEmpty)
+                  const Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Center(child: Text("No expenses added yet.")),
+                    ),
+                  )
+                else
+                  ...expenses.map(
+                    (expense) =>
+                        _buildExpenseTile(context, ref, expense, isDark),
+                  ),
+              ],
+            ),
           );
         },
       ),
@@ -190,8 +201,9 @@ class ExpensePage extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             ...sortedCategories.map((entry) {
-              final percentage =
-                  totalSpent > 0 ? entry.value / totalSpent : 0.0;
+              final percentage = totalSpent > 0
+                  ? entry.value / totalSpent
+                  : 0.0;
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 14),
@@ -217,8 +229,9 @@ class ExpensePage extends ConsumerWidget {
                       value: percentage,
                       minHeight: 8,
                       borderRadius: BorderRadius.circular(10),
-                      backgroundColor:
-                          isDark ? AppColors.inputDark : AppColors.inputLight,
+                      backgroundColor: isDark
+                          ? AppColors.inputDark
+                          : AppColors.inputLight,
                       color: AppColors.primary,
                     ),
                   ],
@@ -270,8 +283,9 @@ class ExpensePage extends ConsumerWidget {
               value: budgetUsedPercentage,
               minHeight: 8,
               borderRadius: BorderRadius.circular(10),
-              backgroundColor:
-                  isDark ? AppColors.inputDark : AppColors.inputLight,
+              backgroundColor: isDark
+                  ? AppColors.inputDark
+                  : AppColors.inputLight,
               color: isOverBudget ? AppColors.error : AppColors.primary,
             ),
             const SizedBox(height: 8),
@@ -318,9 +332,13 @@ class ExpensePage extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor:
-              isDark ? AppColors.scaffoldDark : AppColors.primarySurface,
-          child: Icon(_categoryIcon(expense.category), color: AppColors.primary),
+          backgroundColor: isDark
+              ? AppColors.scaffoldDark
+              : AppColors.primarySurface,
+          child: Icon(
+            _categoryIcon(expense.category),
+            color: AppColors.primary,
+          ),
         ),
         title: Text(
           expense.title,
@@ -433,7 +451,7 @@ class _AddExpenseDialogState extends ConsumerState<AddExpenseDialog> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: _category,
+              initialValue: _category,
               decoration: const InputDecoration(labelText: "Category"),
               items: const [
                 DropdownMenuItem(value: "Food", child: Text("Food")),
@@ -477,9 +495,7 @@ class _AddExpenseDialogState extends ConsumerState<AddExpenseDialog> {
             TextField(
               controller: _notesController,
               maxLines: 2,
-              decoration: const InputDecoration(
-                labelText: "Notes (optional)",
-              ),
+              decoration: const InputDecoration(labelText: "Notes (optional)"),
             ),
           ],
         ),
@@ -549,8 +565,9 @@ class _EditExpenseDialogState extends ConsumerState<EditExpenseDialog> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.expense.title);
-    _amountController =
-        TextEditingController(text: widget.expense.amount.toString());
+    _amountController = TextEditingController(
+      text: widget.expense.amount.toString(),
+    );
     _notesController = TextEditingController(text: widget.expense.notes);
     _category = widget.expense.category;
     _selectedDate = widget.expense.date;
@@ -574,9 +591,7 @@ class _EditExpenseDialogState extends ConsumerState<EditExpenseDialog> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: "Expense title",
-              ),
+              decoration: const InputDecoration(labelText: "Expense title"),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -591,7 +606,7 @@ class _EditExpenseDialogState extends ConsumerState<EditExpenseDialog> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: _category,
+              initialValue: _category,
               decoration: const InputDecoration(labelText: "Category"),
               items: const [
                 DropdownMenuItem(value: "Food", child: Text("Food")),
@@ -635,9 +650,7 @@ class _EditExpenseDialogState extends ConsumerState<EditExpenseDialog> {
             TextField(
               controller: _notesController,
               maxLines: 2,
-              decoration: const InputDecoration(
-                labelText: "Notes (optional)",
-              ),
+              decoration: const InputDecoration(labelText: "Notes (optional)"),
             ),
           ],
         ),

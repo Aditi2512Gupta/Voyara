@@ -26,9 +26,7 @@ class CategoryList extends ConsumerWidget {
           ),
         ),
 
-        error: (error, _) => Center(
-          child: Text(error.toString()),
-        ),
+        error: (error, _) => Center(child: Text(error.toString())),
 
         data: (categories) {
           return ListView.builder(
@@ -46,7 +44,9 @@ class CategoryList extends ConsumerWidget {
                 selected: isSelected,
                 onTap: () {
                   final newCategory = category == "All" ? null : category;
-                  ref.read(searchFilterProvider.notifier).setCategory(newCategory);
+                  ref
+                      .read(searchFilterProvider.notifier)
+                      .setCategory(newCategory);
                   context.push('/search');
                 },
               );

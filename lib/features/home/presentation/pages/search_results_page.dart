@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/utils/responsive.dart';
 import '../../data/models/search_filter_model.dart';
 import '../../providers/recent_search_provider.dart';
 import '../../providers/search_filter_provider.dart';
@@ -59,7 +60,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               labelStyle: TextStyle(
                 color: (filter.category == null || filter.category == 'All')
                     ? (isDark ? AppColors.primaryDark : Colors.white)
-                    : (isDark ? AppColors.textSecondaryDark : AppColors.textPrimaryLight),
+                    : (isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textPrimaryLight),
                 fontWeight: FontWeight.w600,
                 fontSize: 12.5,
               ),
@@ -82,7 +85,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               labelStyle: TextStyle(
                 color: filter.category == 'Attraction'
                     ? (isDark ? AppColors.primaryDark : Colors.white)
-                    : (isDark ? AppColors.textSecondaryDark : AppColors.textPrimaryLight),
+                    : (isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textPrimaryLight),
                 fontWeight: FontWeight.w600,
                 fontSize: 12.5,
               ),
@@ -105,7 +110,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               labelStyle: TextStyle(
                 color: filter.category == 'Destination'
                     ? (isDark ? AppColors.primaryDark : Colors.white)
-                    : (isDark ? AppColors.textSecondaryDark : AppColors.textPrimaryLight),
+                    : (isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textPrimaryLight),
                 fontWeight: FontWeight.w600,
                 fontSize: 12.5,
               ),
@@ -162,7 +169,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: InputChip(
-                  label: Text("${filter.sortOption.label}"),
+                  label: Text(filter.sortOption.label),
                   onDeleted: () => notifier.clearSort(),
                 ),
               ),
@@ -187,7 +194,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
     final searchResultsAsync = ref.watch(searchResultsProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         titleSpacing: 0,
         leading: IconButton(
@@ -211,7 +220,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
             textInputAction: TextInputAction.search,
             style: TextStyle(
               fontSize: 14.5,
-              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
             ),
             decoration: InputDecoration(
               hintText: "Search destinations...",
@@ -232,7 +243,10 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 11,
+              ),
               isDense: true,
               filled: false,
             ),
@@ -273,47 +287,116 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 8),
+      body: ResponsiveContentWrapper(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
 
-          // Active filter pills bar
-          _buildActiveFiltersBar(filter, filterNotifier),
+            // Active filter pills bar
+            _buildActiveFiltersBar(filter, filterNotifier),
 
-          const SizedBox(height: 6),
+            const SizedBox(height: 6),
 
-          // Results list / Empty state
-          Expanded(
-            child: searchResultsAsync.when(
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
-              error: (e, _) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Text("Error: $e"),
+            // Results list / Empty state
+            Expanded(
+              child: searchResultsAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text("Error: $e"),
+                  ),
                 ),
-              ),
-              data: (places) {
-                if (places == null) {
-                  if (recentSearches.isEmpty) {
+                data: (places) {
+                  if (places == null) {
+                    if (recentSearches.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.travel_explore,
+                              size: 64,
+                              color: AppColors.textTertiaryLight,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "Start typing to search destinations",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textSecondaryLight,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ListView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Recent Searches",
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                ref.read(recentSearchProvider.notifier).clear();
+                              },
+                              child: const Text("Clear"),
+                            ),
+                          ],
+                        ),
+                        ...recentSearches.map(
+                          (item) => ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(Icons.history, size: 20),
+                            title: Text(item.query),
+                            trailing: const Icon(Icons.arrow_outward, size: 16),
+                            onTap: () {
+                              _controller.text = item.query;
+                              _onQueryChanged(item.query);
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  if (places.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.travel_explore,
+                            Icons.search_off_rounded,
                             size: 64,
                             color: AppColors.textTertiaryLight,
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            "Start typing to search destinations",
+                            "No destinations found",
                             style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                               color: AppColors.textSecondaryLight,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            "Try adjusting your filters or search terms",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textTertiaryLight,
                             ),
                           ),
                         ],
@@ -321,91 +404,27 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                     );
                   }
 
-                  return ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Recent Searches",
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              ref.read(recentSearchProvider.notifier).clear();
-                            },
-                            child: const Text("Clear"),
-                          ),
-                        ],
-                      ),
-                      ...recentSearches.map(
-                        (item) => ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: const Icon(Icons.history, size: 20),
-                          title: Text(item.query),
-                          trailing: const Icon(Icons.arrow_outward, size: 16),
-                          onTap: () {
-                            _controller.text = item.query;
-                            _onQueryChanged(item.query);
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                }
-
-                if (places.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.search_off_rounded,
-                          size: 64,
-                          color: AppColors.textTertiaryLight,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          "No destinations found",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textSecondaryLight,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          "Try adjusting your filters or search terms",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.textTertiaryLight,
-                          ),
-                        ),
-                      ],
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
+                    itemCount: places.length,
+                    itemBuilder: (context, index) {
+                      final destination = places[index];
+                      return SearchDestinationCard(
+                        destination: destination,
+                        onTap: () {
+                          context.push('/destination', extra: destination);
+                        },
+                      );
+                    },
                   );
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  itemCount: places.length,
-                  itemBuilder: (context, index) {
-                    final destination = places[index];
-                    return SearchDestinationCard(
-                      destination: destination,
-                      onTap: () {
-                        context.push('/destination', extra: destination);
-                      },
-                    );
-                  },
-                );
-              },
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
